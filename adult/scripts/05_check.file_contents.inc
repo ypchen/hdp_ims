@@ -1,0 +1,1 @@
+../../video/scripts/05_check.file_contents.inc

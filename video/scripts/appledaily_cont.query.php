@@ -1,0 +1,1 @@
+appledaily.query.php

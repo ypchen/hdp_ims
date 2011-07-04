@@ -1,0 +1,1 @@
+appledaily.query.2.inc
