@@ -1,5 +1,5 @@
 前提
-	奠基於 iMax.Live韌體20110401 (執行 lighttpd + php)
+	奠基於 iMax.Live 韌體 20110401 (執行 lighttpd + php)
 
 功能
 	可用來自行建立 IMS 的 php 架構、亦可直接使用目前已實作的範例
