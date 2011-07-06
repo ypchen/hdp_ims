@@ -1,13 +1,9 @@
 <?php
-	$link = $search = 'http://tw.nextmedia.com/animation/index/menusecid/1/ordertp/day';
+	$link = $search = 'http://tw.nextmedia.com/animation/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$link = $search = 'http://tw.nextmedia.com' . trim(str_between($html, 'style="float:left" src="', '"'));
-	$html = yp_file_get_contents($link);
-	include('05_check.file_contents.inc');
-
-	$html = str_between($html, '<section class="upper_field fillup">', '</section>');
+	$html = str_between($html, '<div class="mainsections"', '</div>');
 
 	$videos = explode('<a hr', $html);
 	unset($videos[0]);

@@ -3,8 +3,8 @@
 
 	$sites = array(
 		array('lamplighter543', 'TED Talks 中文字幕', '6661FF1871FDD4CB'),
-		array('RichardCFHuang', 'TED Talks 中文字幕', 'PL4E435084C20A2111'),
 		array('MAVERICKTPC', 'TED Talks 中文字幕', 'PLEA1976CE9B085F35'),
+		array('RichardCFHuang', 'TED Talks 中文字幕', 'PL4E435084C20A2111'),
 		array('windrider21', 'TED Talks 中文字幕', 'PLD5E54CA0E2DB9B54'),
 	);
 

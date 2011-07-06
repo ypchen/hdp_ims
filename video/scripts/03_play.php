@@ -27,13 +27,14 @@
 ?>
 
 <onEnter>
+	inputNumCount = 0;
+	inputNumVal = -1;
+	curNumVal = -1;
+
 	pre = "previewWindow";
 	m = 0;
 	if (linkArray == null) {
 		postMessage("return");
-	}
-	if (thunder != null) {
-		Thunder_adjustSpeed("max");
 	}
 	setRefreshTime(100);
 	startVideo = 1;
@@ -63,6 +64,12 @@
 		dataLink   = "<?php echo $currUrl; ?>";
 		<?php include('08_history.record.inc'); ?>
 	}
+
+	itemCount = itemSize;
+
+	x = itemCount;
+	<?php include('00_utils.digits.inc'); ?>
+	itemCountDigits = y;
 </onEnter>
 
 <onExit>
@@ -71,23 +78,18 @@
 </onExit>
 
 <onRefresh>
-	if (n &lt; 0 || n &gt; (itemSize-1)) {
+	if ((n &lt; 0) || (n &gt; (itemCount-1))) {
 		postMessage("return");
 	}
 	else {
 		vidProgress = getPlaybackStatus();
-		if (thunder == null) {
-			bufProgress = getCachedStreamDataSize(0, bufferSize);
-		}
-		else {
-			bufProgress = Thunder_getCachedStreamDataSize(0, bufferSize);
-		}
+		bufProgress = getCachedStreamDataSize(0, bufferSize);
 		playElapsed = getStringArrayAt(vidProgress, 0);
 		playStatus  = getStringArrayAt(vidProgress, 3);
 
 		if (startVideo == 1) {
 			currentUrl = getStringArrayAt(linkArray, n);
-			if (currentUrl == null || currentUrl == "") {
+			if ((currentUrl == null) || (currentUrl == "")) {
 				postMessage("return");
 			}
 			else {
@@ -95,7 +97,6 @@
 			}
 			writeStringToFile(storagePath, n);
 			setRefreshTime(100);
-			showLoading = 1;
 			startVideo = 0;
 			updatePlaybackProgress(bufProgress, "mediaDisplay", "progressBar");
 		}
@@ -107,7 +108,7 @@
 				}
 			}
 			else if (playStatus == 0) {
-				if ((n+1) &gt; (itemSize-1)) {
+				if ((n+1) &gt; (itemCount-1)) {
 					playItemURL(-1, 1);
 					setRefreshTime(-1);
 					postMessage("return");
@@ -178,7 +179,15 @@
 			widthPC="100" heightPC="20"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
-				segmentStr;
+				if ((inputNumCount == 0) ||
+						((inputNumCount == itemCountDigits) &amp;&amp;
+						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
+					str = "共 " + itemCount + " 段 -- [↔]±1;  [上下頁]±10;  [數字直選]+[信息]";
+				}
+				else {
+					str = "共 " + itemCount + " 段 -- [↔]±1;  [上下頁]±10;  [信息]播放第 " + curNumVal + " 項";
+				}
+				str;
 			</script>
 		</text>
 
@@ -191,64 +200,139 @@
 
 	<onUserInput>
 		<script>
-			input = currentUserInput();
+			ret = "false";
+			userInput = currentUserInput();
 
-			if (input == "video_stop") {
+			if (userInput == "video_stop") {
 				startVideo = 0;
 				postMessage("return");
-				"true";
+				ret = "true";
 			}
-			else if (input == "down") {
+			else if (
+				(userInput == "display") ||
+				(userInput == "pagedown") ||
+				(userInput == "pageup") ||
+				(userInput == "right") ||
+				(userInput == "left")
+			) {
+				if (userInput == "display") {
+					n = (curNumVal - 1);
+				}
+				else if (userInput == "pagedown") {
+					n = Add(n, 10);
+				}
+				else if (userInput == "pageup") {
+					n = Minus(n, 10);
+				}
+				else if (userInput == "right") {
+					n = Add(n, 1);
+				}
+				else if (userInput == "left") {
+					n = Minus(n, 1);
+				}
+
+				/* Make n valid */
+				if (n &lt; 0)
+					n = 0;
+				else if (n &gt; (itemCount-1))
+					n = (itemCount-1);
+
+				startVideo = 1;
+				if(itemCount &gt; 0)
+					postMessage("video_stop");
+				setRefreshTime(100);
+				ret = "true";
+			}
+			else if (
+				(userInput == "one") ||
+				(userInput == "two") ||
+				(userInput == "three") ||
+				(userInput == "four") ||
+				(userInput == "five") ||
+				(userInput == "six") ||
+				(userInput == "seven") ||
+				(userInput == "eight") ||
+				(userInput == "nine") ||
+				(userInput == "zero")
+			) {
+				if (userInput == "one") {
+					inputNumVal = 1;
+				}
+				else if (userInput == "two") {
+					inputNumVal = 2;
+				}
+				else if (userInput == "three") {
+					inputNumVal = 3;
+				}
+				else if (userInput == "four") {
+					inputNumVal = 4;
+				}
+				else if (userInput == "five") {
+					inputNumVal = 5;
+				}
+				else if (userInput == "six") {
+					inputNumVal = 6;
+				}
+				else if (userInput == "seven") {
+					inputNumVal = 7;
+				}
+				else if (userInput == "eight") {
+					inputNumVal = 8;
+				}
+				else if (userInput == "nine") {
+					inputNumVal = 9;
+				}
+				else if (userInput == "zero") {
+					inputNumVal = 0;
+				}
+
+				if ((inputNumCount == 0) || (inputNumCount == itemCountDigits)) {
+					inputNumCount = 1;
+					curNumVal = inputNumVal;
+				}
+				else {
+					inputNumCount = inputNumCount + 1;
+					curNumVal = (10*curNumVal) + inputNumVal;
+				}
+
+				if ((curNumVal &gt;= 1) &amp;&amp; (curNumVal &lt;= itemCount)) {
+					/* n = (curNumVal - 1); */
+				}
+				else if ((inputNumVal &gt;= 1) &amp;&amp; (inputNumVal &lt;= itemCount)) {
+					/* Keep the last digit which makes the value out of range unless invalid */
+					inputNumCount = 1;
+					curNumVal = inputNumVal;
+					/* n = (curNumVal - 1); */
+				}
+				else {
+					inputNumCount = 0;
+					inputNumVal = -1;
+					curNumVal = -1;
+				}
+				ret = "true";
+			}
+			else if (userInput == "down") {
 				pre = pre + "1";
 				if (pre == "previewWindow111") {
 					pre = "previewWindow";
 				}
 				startVideo = 1;
 				postMessage("video_stop");
-				"true";
+				ret = "true";
 			}
-			else if (input == "up") {
+			else if (userInput == "up") {
 				pre = "autoresume";
 				startVideo = 1;
 				postMessage("video_stop");
-				"true";
+				ret = "true";
 			}
-			else if (input == "one" || input == "two" || input == "three" || input == "four" || input == "five" || input == "six" || input == "seven" || input == "eight" || input == "nine" || input == "zero" || input == "pagedown" || input == "right" || input == "pageup" || input == "left" || input == "video_abrepeat" || input == "video_repeat") {
-				x = Integer(n/10)*10;
-				if (input == "right")			n = Add(n, 1);
-				if (input == "pagedown")		n = Add(n, 10);
-				if (input == "pageup")			n = Minus(n, 10);
-				if (input == "left")			n = Minus(n, 1);
-				if (input == "one" || input == "video_abrepeat") n = 0;
-				if (input == "video_repeat")	n = itemSize-1;
-				if (input == "one")				n = x;
-				if (input == "two")				n = Add(x, 1);
-				if (input == "three")			n = Add(x, 2);
-				if (input == "four")			n = Add(x, 3);
-				if (input == "five")			n = Add(x, 4);
-				if (input == "six")				n = Add(x, 5);
-				if (input == "seven")			n = Add(x, 6);
-				if (input == "eight")			n = Add(x, 7);
-				if (input == "nine")			n = Add(x, 8);
-				if (input == "zero")			n = Add(x, 9);
-				if(n &lt; 0)					n = 0;
-				if(n &gt; (itemSize-1))			n = itemSize-1;
-				startVideo = 1;
-				if(itemSize &gt; 1)				postMessage("video_stop");
-				"true";
-			}
-			else {
-				"false";
-			}
+			ret;
 		</script>
 	</onUserInput>
 </mediaDisplay>
 
 <channel>
-
 	<title>Media Play</title>
-	<link>.</link>
-
 </channel>
 
 </rss>

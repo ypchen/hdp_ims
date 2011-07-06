@@ -3,9 +3,17 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$html = str_between($html, '<nav class="sub_secs_box fillup">', '</nav>');
+	if (strpos($html, '<nav class="page_switcher"') !== false)
+		$pageStart = 1;
+	else
+		$pageStart = 0;
 
-	$videos = explode('<li>', $html);
+	$html = str_between($html, '<div class="subsections"', '</div>');
+	if (strpos($html, '/type/day"') !== false) {
+		$html = '<a href="/animation/">總覽</a>' . $html;
+	}
+
+	$videos = explode('<a hr', $html);
 	unset($videos[0]);
 	$videos = array_values($videos);
 

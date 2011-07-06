@@ -494,7 +494,7 @@
 	<title><?php echo $pageTitle; ?></title>
 
 <?php
-	if($page > 1) {
+	if ($page > 1) {
 ?>
 	<item>
 		<?php
@@ -527,7 +527,7 @@
 ?>
 
 <?php
-	if($page > 0) {
+	if (($page > 0) && (!isset($pageMax) || ($page < $pageMax))) {
 ?>
 	<item>
 		<?php

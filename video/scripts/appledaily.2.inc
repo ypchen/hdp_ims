@@ -5,7 +5,7 @@
 	if ($pass_check) {
 		$siteURLprefix = 'http://tw.nextmedia.com';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, 'title="', '"'));
+			$title = trim(str_between($video, '>', '</a>'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
 			$link  = $siteURLprefix . trim(str_between($video, 'ef="', '"'));

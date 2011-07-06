@@ -1,23 +1,21 @@
 <?php
-	if ($dataTotal > 0) {
-		$siteURLprefix = 'http://tw.nextmedia.com';
-		foreach($videos as $video) {
+	$siteURLprefix = 'http://tw.nextmedia.com';
+	foreach($videos as $video) {
 
-			$link  = $siteURLprefix . trim(str_between($video, '<artlink>', '</artlink>'));
-			$title = trim(str_between($video, '<title><![CDATA[', ']]></title>'));
-			$title = convertUnicodePoints($title);
-			$extra = '';
+		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
+		$title = trim(str_between($video, '<h2>', '</h2>'));
+		$title = convertUnicodePoints($title);
+		$extra = '';
 
-			$image  = trim(str_between($video, '<image>', '</image>'));
-			$note   = array();
-			$note[] = $caption_view . ': ' .
-						trim(str_between($video, '<page_view>', '</page_view>'));
-			$note[] = '';
-			$note[] = '';
-			$note[] = '';
+		$image  = trim(str_between($video, '<img src="', '"'));
+		$note   = array();
+		$note[] = $caption_view . ': ' .
+					str_between(trim(str_between($video, '</h2>', '/a>')), ':', '<');
+		$note[] = '';
+		$note[] = '';
+		$note[] = '';
 
-			$clickPlay = 'yes';
-			include('04_query.items.link.inc');
-		}
+		$clickPlay = 'yes';
+		include('04_query.items.link.inc');
 	}
 ?>

@@ -16,11 +16,12 @@
 	$itemTotal ++;
 
 	$sites = array(
-		array('maplestage', '楓林網 (台灣綜藝戲劇)'),
-		array('appledaily', '蘋果動新聞'),
-		array('appledaily_cont', '蘋果動新聞 (連續播放模式)'),
-		array('CNN', 'CNN 影音播放 (podcast)'),
-		array('ted', 'TED Talks 中文字幕 on youtube'),
+		array('maplestage', '楓林網 (台灣綜藝戲劇)', '※ 需 youtube.video.php'),
+		array('appledaily', '蘋果動新聞', ''),
+		array('appledaily_cont', '蘋果動新聞 (連續播放模式)', ''),
+		array('ims_search', 'IMS 搜索', '※ 需 hdp_input'),
+		array('CNN', 'CNN 影音播放 (podcast)', ''),
+		array('ted', 'TED Talks 中文字幕 on youtube', '※ 需 youtube.video.php'),
 	);
 
 	foreach($sites as $site) {
@@ -31,6 +32,7 @@
 				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id .
 					'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) . "</link>\r\n" .
 				"\t\t" . siteLogo($site[0]) . "\r\n" .
+				"\t\t<note>" . $site[2] . "</note>\r\n" .
 				"\t\t<mediaDisplay name=\"threePartsView\" />\r\n" .
 			"\t</item>\r\n\r\n";
 	}
