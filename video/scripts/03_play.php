@@ -123,7 +123,6 @@
 				}
 			}
 			else {
-				print("no playing yet, update buffer progress ", bufProgress);
 				updatePlaybackProgress(bufProgress, "mediaDisplay", "progressBar");
 			}
 		}
@@ -148,19 +147,19 @@
 	</previewWindow11>
 
 	<progressBar backgroundColor="-1:-1:-1"
-		offsetXPC="15" offsetYPC="70"
-		widthPC="70" heightPC="20">
+		offsetXPC="10" offsetYPC="70"
+		widthPC="80" heightPC="20">
 
-		<bar offsetXPC="33" offsetYPC="48"
-			widthPC="60" heightPC="6"
+		<bar offsetXPC="45" offsetYPC="46"
+			widthPC="55" heightPC="10"
 			barColor="200:200:200"
 			progressColor="26:129:211"
 			bufferColor="-1:-1:-1"
 			cornerRounding="10" />
 
-		<text fontSize="16"
+		<text align="left" fontSize="16"
 			offsetXPC="5" offsetYPC="40"
-			widthPC="27" heightPC="20"
+			widthPC="40" heightPC="20"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
 				if (playStatus == 2) {
@@ -168,24 +167,24 @@
 				}
 				else {
 					now = Add(n, 1);
-					showstr = "正在載入第 " + now + " 段";
+					showstr = "正在載入第 " + now + " / " + itemCount + " 段";
 				}
 				showstr;
 			</script>
 		</text>
 
-		<text fontSize="16"
-			offsetXPC="5.5" offsetYPC="80"
-			widthPC="100" heightPC="20"
+		<text align="left" fontSize="16"
+			offsetXPC="3" offsetYPC="80"
+			widthPC="97" heightPC="20"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
 				if ((inputNumCount == 0) ||
 						((inputNumCount == itemCountDigits) &amp;&amp;
 						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "共 " + itemCount + " 段 -- [↔]±1;  [上下頁]±10;  [數字直選]+[信息]";
+					str = "[↔]±1;  [上下頁]±10;  [數字直選]+[信息]";
 				}
 				else {
-					str = "共 " + itemCount + " 段 -- [↔]±1;  [上下頁]±10;  [信息]播放第 " + curNumVal + " 項";
+					str = "[↔]±1;  [上下頁]±10;  [信息]播放第 " + curNumVal + " 項";
 				}
 				str;
 			</script>
@@ -309,21 +308,6 @@
 					inputNumVal = -1;
 					curNumVal = -1;
 				}
-				ret = "true";
-			}
-			else if (userInput == "down") {
-				pre = pre + "1";
-				if (pre == "previewWindow111") {
-					pre = "previewWindow";
-				}
-				startVideo = 1;
-				postMessage("video_stop");
-				ret = "true";
-			}
-			else if (userInput == "up") {
-				pre = "autoresume";
-				startVideo = 1;
-				postMessage("video_stop");
 				ret = "true";
 			}
 			ret;
