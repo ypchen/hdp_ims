@@ -23,5 +23,6 @@
 
 	// url on the localhost to handle youtube videos
 	// it can be changed by using youtube_video
-	$defaultLocalhostYoutubeVideo = 'http://localhost/scripts/youtube.video.php';
+	// port 8081 is the default port for iMax firmware
+	$defaultLocalhostYoutubeVideo = 'http://localhost:8081/scripts/youtube.video.php';
 ?>

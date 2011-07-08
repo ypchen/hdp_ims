@@ -15,9 +15,10 @@
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
 		A. 楓林網
 		B. 蘋果動新聞 (單播 + 連播)
-		C. CNN 影音 podcast
-		D. TED Talks (youtube 版 + podcast)
-		E. 近三十個成人影片網站
+		C. IMS 搜索: 以 hdp_input (注音、速成輸入法) 搭配 HDPfans/HAOIMS 進行搜索
+		D. CNN 影音 podcast
+		E. TED Talks (youtube 版 + podcast)
+		F. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
 		A. 楓林網
 			a. 每日熱門、最新節目
@@ -26,12 +27,18 @@
 				01 -> 02 -> 02 -> 播放
 		B. 蘋果動新聞 (單播 + 連播)
 				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 單段、連續)
-		C. CNN 影音 podcast
+		C. IMS 搜索
+				01 -> HDPfans/HAOIMS 搜索各大站台
+		D. CNN 影音 podcast
 				01 -> podcast
-		D. TED Talks (youtube + podcast)
+		E. TED Talks (youtube + podcast)
 			a. 中文字幕 on youtube
 				01 -> 02 (youtube 的公開播放清單) -> 播放
 			b. podcast
+				01 -> podcast
+		F. 近三十個成人影片網站
+				01 -> 01 -> 02 -> 播放
+				01 -> 02 -> 播放
 				01 -> podcast
 	4. 可以播放任何人放在 youtube 上的公開播放清單 (參考 TED Talks on youtube)
 	5. 內建歷史自動記錄功能: 最近瀏覽、最近觀看、本地收藏
@@ -41,16 +48,16 @@
 使用
 	1. 直接放在本機使用
 		將 adult/ common/ scripts/ video/ 這四個目錄放在 /opt/share/www 下
-		即可在 menu.rss 或其他適當的地方加入
+		即可在 menu.rss 或其他適當的地方加入 (port 8081 是 iMax 韌體預設)
 			<item>
 				<title>IMS: video</title>
-				<link>http://localhost/video/scripts/siteList.php</link>
+				<link>http://localhost:8081/video/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
 		或
 			<item>
 				<title>IMS: adult</title>
-				<link>http://localhost/adult/scripts/siteList.php</link>
+				<link>http://localhost:8081/adult/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
 		就可以看了
@@ -68,8 +75,8 @@
 		為 youtube 的網站，如範例中的楓林網和 TED Talks on youtube) 還是必須放在本機
 
 	3. 有關 youtube.video.php
-		目前程式假設 youtube.video.php 在本機上的 url 是
-			http://localhost/scripts/youtube.video.php
+		目前程式假設 youtube.video.php 在本機上的 url 是 (port 8081 是 iMax 韌體預設)
+			http://localhost:8081/scripts/youtube.video.php
 		如果有人要建立 IMS 網站，但是想使用該 IMS 網站的使用者們的本機上
 		的 youtube.video.php 有可能在不同位置，在這種情形下，使用者可以藉由提供
 			youtube_video
@@ -77,9 +84,9 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
-	4. 我直接把這個 code 建立成一個範例網站，有興趣的人可以直接用用看 (為免爭議 adult/ 恕不提供)
+	4. 我直接把這個 code 建立成一個範例網站，有興趣的人可以直接用用看
 		由於這個範例網站架設在付費的 web hosting 服務上，所以 2011 年 7 月底會關閉
-		蘋果動新聞應可直接收看，其他如楓林網等 back-end 是 youtube 的則須參考上述說明
+		楓林網、TED Talks 中文字幕版等 back-end 是 youtube 的則須參考上述說明
 			<item>
 				<title>IMS: video</title>
 				<link>http://hdp-ims.ypchen.tw/video/scripts/siteList.php</link>
