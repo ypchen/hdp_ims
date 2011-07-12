@@ -16,12 +16,13 @@
 	$itemTotal ++;
 
 	$sites = array(
-		array('maplestage', '楓林網 (台灣綜藝戲劇)', '※ 需 youtube.video.php'),
+		array('maplestage', '楓林網 (台灣綜藝戲劇)', '※ 需安裝 youtube.video.php'),
 		array('appledaily', '蘋果動新聞', ''),
 		array('appledaily_cont', '蘋果動新聞 (連續播放模式)', ''),
-		array('ims_search', 'IMS 搜索', '※ 需 hdp_input'),
+		array('ims_search', 'IMS 搜索 (本地輸入)', '※ 需安裝 hdp_input'),
+		array('ims_search_ol', 'IMS 搜索 (線上輸入)', ''),
 		array('CNN', 'CNN 影音播放 (podcast)', ''),
-		array('ted', 'TED Talks 中文字幕 on youtube', '※ 需 youtube.video.php'),
+		array('ted', 'TED Talks 中文字幕 on youtube', '※ 需安裝 youtube.video.php'),
 	);
 
 	foreach($sites as $site) {

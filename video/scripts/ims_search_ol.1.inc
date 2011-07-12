@@ -1,0 +1,3 @@
+<?php
+	$itemTotal = 5;
+?>

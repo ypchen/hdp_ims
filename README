@@ -84,7 +84,7 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
-	4. 我直接把這個 code 建立成一個範例網站，有興趣的人可以直接用用看
+	4. 我直接把這組 code 建立成一個範例網站，有興趣的人可以直接用用看
 		由於這個範例網站架設在付費的 web hosting 服務上，所以 2011 年 7 月底會關閉
 		楓林網、TED Talks 中文字幕版等 back-end 是 youtube 的則須參考上述說明
 			<item>
