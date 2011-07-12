@@ -1,6 +1,6 @@
 <channel>
 
-<title>IMS 搜索 (本地輸入)</title>
+<title>IMS 搜索 (本機輸入)</title>
 
 	<item>
 		<title>HAOIMS: 全網搜索</title>
