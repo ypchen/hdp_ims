@@ -14,36 +14,43 @@
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
 		A. 楓林網
-		B. 蘋果動新聞 (單播 + 連播)
-		C. IMS 搜索: 以 hdp_input (注音、速成輸入法) 搭配 HDPfans/HAOIMS 進行搜索
-		D. CNN 影音 podcast
+		B. sugoideas.com
+		C. 蘋果動新聞 (單播 + 連播)
+		D. IMS 搜索: 以線上或本機 hdp_input (注音、速成輸入法) 搭配 HDPfans/HAOIMS 進行搜索
 		E. TED Talks (youtube 版 + podcast)
-		F. 近三十個成人影片網站
+		F. youtube 上的公開播放清單
+		G. CNN 影音 podcast
+		H. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
 		A. 楓林網
 			a. 每日熱門、最新節目
 				01 -> 02 -> 播放
-			a. 綜藝節目、偶像戲劇
+			b. 綜藝節目、偶像戲劇
 				01 -> 02 -> 02 -> 播放
-		B. 蘋果動新聞 (單播 + 連播)
+		B. sugoideas.com
+				01 -> 02 -> 02 -> 播放
+		C. 蘋果動新聞 (單播 + 連播)
 				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 單段、連續)
-		C. IMS 搜索
+		D. IMS 搜索
 				01 -> HDPfans/HAOIMS 搜索各大站台
-		D. CNN 影音 podcast
-				01 -> podcast
 		E. TED Talks (youtube + podcast)
 			a. 中文字幕 on youtube
 				01 -> 02 (youtube 的公開播放清單) -> 播放
 			b. podcast
 				01 -> podcast
-		F. 近三十個成人影片網站
+		F. youtube 上的公開播放清單
+				01 -> 02 -> 播放
+		G. CNN 影音 podcast
+				01 -> podcast
+		H. 近三十個成人影片網站
 				01 -> 01 -> 02 -> 播放
 				01 -> 02 -> 播放
 				01 -> podcast
-	4. 可以播放任何人放在 youtube 上的公開播放清單 (參考 TED Talks on youtube)
+	4. 可以播放任何人放在 youtube 上的公開播放清單
 	5. 內建歷史自動記錄功能: 最近瀏覽、最近觀看、本地收藏
 	6. 具有當網站錯誤發生時通知管理者進行處理的功能
 	7. 具有使用 MySQL database 記錄使用者動作的功能
+	8. IMS 線上搜索可讓使用者自訂由 hdp_input 模組所做成的線上輸入功能
 
 使用
 	1. 直接放在本機使用
@@ -85,11 +92,10 @@
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
 	4. 我直接把這組 code 建立成一個範例網站，有興趣的人可以直接用用看
-		由於這個範例網站架設在付費的 web hosting 服務上，所以 2011 年 7 月底會關閉
-		楓林網、TED Talks 中文字幕版等 back-end 是 youtube 的則須參考上述說明
+		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 youtube 的則須參考上述說明
 			<item>
 				<title>IMS: video</title>
-				<link>http://hdp-ims.ypchen.tw/video/scripts/siteList.php</link>
+				<link>http://ims.hostoi.com/video/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
 

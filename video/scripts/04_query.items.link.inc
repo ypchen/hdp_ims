@@ -5,6 +5,7 @@
 	$linkAll = $scriptsURLprefix . '/' .
 		$myBaseName . '.link.php' .
 			'?uid=' . $user_id  .
+			'&amp;input_method='  . urlencode($inputMethod) .
 			'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 			'&amp;query=' . urlencode($link) .
 				',' . urlencode($title) .

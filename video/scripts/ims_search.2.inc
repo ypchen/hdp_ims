@@ -6,7 +6,7 @@
 		<title>HAOIMS: 全網搜索</title>
 		<onClick>
 			/* input = getInput("Enter a keyword"); */
-			input = doModalRss("rss_file://./etc/ypInput/ypKeyboard.rss", "mediaDisplay", "search", 0);
+			input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);
 			if (input != null) {
 			    keyword = urlEncode(input);
 			    searchUrl = "http://ims.haoims.com/ims/search.php?q=chl-search-word-" + keyword;
@@ -49,7 +49,7 @@
 		<title>HDPfans: 全網搜索</title>
 		<onClick>
 			/* input = getInput("Enter a keyword"); */
-			input = doModalRss("rss_file://./etc/ypInput/ypKeyboard.rss", "mediaDisplay", "search", 0);
+			input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);
 			if (input != null) {
 				keyword = urlEncode(input);
 				searchUrl = "http://tv.hdpfans.com:80/sp_search.php?name=" + keyword;
@@ -85,7 +85,7 @@
 		<title>HDPfans: 站內搜索</title>
 		<onClick>
 			/* input = getInput("Enter a keyword"); */
-			input = doModalRss("rss_file://./etc/ypInput/ypKeyboard.rss", "mediaDisplay", "search", 0);
+			input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);
 			if (input != null) {
 				keyword = urlEncode(input);
 				searchUrl = "http://tv.hdpfans.com:80/~rss.index.search/rss/1/ajax/1/?keyword=" + keyword;

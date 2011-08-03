@@ -1,6 +1,6 @@
 <channel>
 
-<title>TED Talks 中文字幕 youtube / podcast</title>
+<title>公開播放清單 on youtube</title>
 
 <?php
 	if ($pass_check) {

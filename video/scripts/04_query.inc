@@ -14,6 +14,7 @@
 	$linkAll = $scriptsURLprefix . '/' .
 		$myBaseName . $queryLevel . '.php' .
 			'?uid=' . $user_id  .
+			'&amp;input_method='  . urlencode($inputMethod) .
 			'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 			'&amp;query=' . $pageStart .
 				',' . urlencode($link) .

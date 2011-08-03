@@ -50,6 +50,11 @@
 	$maxFavorite      = 50;
 	$historyCheckMax  = 5;
 
+	// Default url for input methods
+	$defaultInputMethod =
+		strrleft($wholeURL, $imsDirectory . '/scripts') .
+			'ypInput/getFile.php?file=keyboard.rss';
+
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {
 		$imsDBConn = mysql_connect($imsDBHost, $imsDBUser, $imsDBPass);
