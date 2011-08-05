@@ -7,7 +7,12 @@
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = 'http:' . trim(str_between($video, '<img src="', '"'));
+		if (strpos($video, ' data-thumb="') !== false) {
+			$image  = 'http:' . trim(str_between($video, ' data-thumb="', '"'));
+		}
+		else {
+			$image  = 'http:' . trim(str_between($video, '<img src="', '"'));
+		}
 		$note   = array();
 		$note[] = $caption_length . '：' .
 					trim(str_between($video, '<span class="video-time">', '</span>'));
