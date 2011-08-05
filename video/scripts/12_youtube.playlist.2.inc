@@ -3,16 +3,23 @@
 	foreach($videos as $video) {
 
 		$link  = $siteURLprefix . trim(str_between($video, '<a href="/watch?v=', '&amp;'));
-		$title = trim(str_between($video, '<a title="', '"'));
+		$title = trim(str_between($video, '<span class="title video-title">', '</span>'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = 'http:' . trim(str_between($video, '<img data-thumb="', '"'));
+		$image  = 'http:' . trim(str_between($video, '<img src="', '"'));
 		$note   = array();
 		$note[] = $caption_length . '：' .
 					trim(str_between($video, '<span class="video-time">', '</span>'));
-		$note[] = trim(str_between($video, '<span class="vpl-videos-list-info-views">', '</span>'));
-		$note[] = '';
+		$note[] = $caption_view . '：' .
+					trim(str_between(
+						str_between(
+							$video,
+							'<span class="video-view-count">',
+							'</span>'),
+						'<strong>',
+						'</strong>'));
+		$note[] = trim(str_between($video, '<span class="video-owner">', '</span>'));
 		$note[] = '';
 
 		$clickPlay = 'no';

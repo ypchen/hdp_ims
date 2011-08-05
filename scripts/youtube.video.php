@@ -12,44 +12,55 @@
 	// Default id: FBI warning
 	$id = 'ILGA5UFmfRM';
 	if (!empty($_GET['query'])) {
-		$query = $_GET['query'];
-		$queryArr = explode(',', $query);
-		$id = urldecode($queryArr[0]);
+		$id = $_GET['query'];
 	}
 
-	// Supported formats
+	// User preferred formats
 	// http://en.wikipedia.org/wiki/YouTube
-	$formats          = array(
-							0 => '38',
-							1 => '37',
-							2 => '22',
-							3 => '35',
-							4 => '34',
-							5 => '18',
-							6 => '5'
-						);
+	// Default: 37,22,35,34,18,5
+	$fmtPrefs = '37,22,35,34,18,5';
+	if (!empty($_GET['yv_fmt_prefs'])) {
+		$fmtPrefs = $_GET['yv_fmt_prefs'];
+	}
+	$formats = explode(',', $fmtPrefs);
 
-	$userAgentFF3     = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-TW; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16';
-	$userAgent        = $userAgentFF3;
-
+	// Chrome 14.0.825.0
+	// http://www.useragentstring.com/pages/Chrome/
+	$userAgent        = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
 	ini_set('user_agent', $userAgent);
 
 	// $link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
 	$link = 'http://www.youtube.com/watch?v=' . $id;
-
 	$html = file_get_contents($link);
-	$vids = explode(',', urldecode(trim(str_between($html, 'fmt_url_map=', '&'))));
+
+	// Get the format list
+	$fmtList = explode(',', urldecode(trim(str_between($html, 'fmt_list=', '&'))));
+
+	// Get the format <-> url map
+	$urlList = explode(',', urldecode(trim(str_between($html, 'url_encoded_fmt_stream_map=', '&'))));
+
+	// Select the video url according to the user preference
 	$supportedVids = array();
-	foreach ($vids as $vidData) {
-		$vid = explode('|', $vidData);
-		$key = array_search($vid[0], $formats);
+	foreach ($fmtList as $fmtEntry => $fmtData) {
+		$fmtDetail = explode('/', $fmtData);
+		$key = array_search($fmtDetail[0], $formats);
 		if ($key !== false) {
-			$supportedVids[$key] = $vid[1];
+			// Ignore 'url='
+			$supportedVids[$key] = urldecode(substr($urlList[$fmtEntry], 4));
 		}
 	}
+
 	ksort($supportedVids);
 	$v = array_values($supportedVids);
 
-	// Return the video with the highest resolution
-	header('Location: ' . $v[0]);
+	// User preferred format
+	$urlToGo = $v[0];
+	// Cut the problematic tail
+	$cutPos = strpos($urlToGo, '&quality=');
+	if ($cutPos !== false) {
+		$urlToGo = substr($urlToGo, 0, $cutPos);
+	}
+
+	// Return the video stream
+	header('Location: ' . $urlToGo);
 ?>

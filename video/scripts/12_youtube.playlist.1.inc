@@ -3,9 +3,9 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlBody = explode('id="vpl-videos-list"', $html);
+	$htmlBody = explode('<div id="playlist-container"', $html);
 
-	$videos = explode('<div class="vpl-thumb">', $htmlBody[1]);
+	$videos = explode('<li class="video"', $htmlBody[1]);
 	unset($videos[0]);
 	$videos = array_values($videos);
 

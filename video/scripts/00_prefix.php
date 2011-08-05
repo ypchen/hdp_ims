@@ -51,9 +51,16 @@
 	$historyCheckMax  = 5;
 
 	// Default url for input methods
+	// it can be changed by using input_method
 	$defaultInputMethod =
 		strrleft($wholeURL, $imsDirectory . '/scripts') .
 			'ypInput/getFile.php?file=keyboard.rss';
+
+	// Default url for updating youtube.video.php
+	// it can be changed by using yv_rmt_src
+	$defaultYoutubeVideoRemoteSource =
+		strrleft($wholeURL, $imsDirectory . '/scripts') .
+			'scripts/youtube.video.php';
 
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {

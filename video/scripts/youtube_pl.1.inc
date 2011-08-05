@@ -14,6 +14,8 @@
 					$scriptsURLprefix . '/' . $myBaseName . '.' . $site[0] . '.php?uid=' . $user_id .
 						'&amp;input_method='  . urlencode($inputMethod) .
 						'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
+						'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+						'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 						'&amp;query=0,' . urlencode($site[2]) . ',' . $site[0] . ',' .
 				"</link>\r\n" .
 				"\t\t" . siteLogo($myBaseName) . "\r\n" .

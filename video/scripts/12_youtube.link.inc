@@ -32,7 +32,9 @@
 
 			// 一定要使用來源本機做解析
 			// 不能用 ims 網站做解析，因為 youtube 會鎖 client IP
-			$link = $localhostYoutubeVideo . '?query=' . $id;
+			$link = $localhostYoutubeVideo . '?query=' . $id .
+						'&amp;yv_fmt_prefs=' . urlencode($youtubeVideoFmtPrefs) .
+						'&amp;yv_rmt_src='   . urlencode($youtubeVideoRemoteSource);
 
 			echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $link . "\");\r\n";
 		}

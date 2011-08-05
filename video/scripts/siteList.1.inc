@@ -11,6 +11,8 @@
 			"\t\t<link>"  . $scriptsURLprefix . '/history.php?uid=' . $user_id .
 				'&amp;input_method='  . urlencode($inputMethod) .
 				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
+				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 				"</link>\r\n" .
 			"\t\t" . myLogo('history') . "\r\n" .
 			"\t\t<mediaDisplay name=\"threePartsView\" />\r\n" .
@@ -24,9 +26,9 @@
 		array('appledaily_cont', '台灣蘋果動新聞 (連續播放模式)', ''),
 //		array('hk_appleactionews', '香港蘋果動新聞', ''),
 		array('ims_search', 'IMS 搜索 (本機輸入)', '※ 需安裝 hdp_input'),
-		array('ims_search_ol', 'IMS 搜索 (線上輸入)', 'URL: ' . $inputMethod),
+		array('ims_search_ol', 'IMS 搜索 (線上輸入)', 'Input method: ' . $inputMethod),
 		array('ted', 'TED Talks 中文字幕 youtube / podcast', '※ 需安裝 youtube.video.php'),
-		array('youtube_pl', '公開播放清單 on youtube', '※ 需安裝 youtube.video.php'),
+		array('youtube_pl', 'YouTube 公開播放清單', '※ 需安裝 youtube.video.php'),
 		array('CNN', 'CNN 影音播放 (podcast)', ''),
 	);
 
@@ -38,6 +40,8 @@
 				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id .
 					'&amp;input_method='  . urlencode($inputMethod) .
 					'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
+					'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+					'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 					"</link>\r\n" .
 				"\t\t" . siteLogo($site[0]) . "\r\n" .
 				"\t\t<note>" . $site[2] . "</note>\r\n" .

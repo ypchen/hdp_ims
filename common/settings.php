@@ -16,13 +16,17 @@
 	$imsDBPass     = 'yourDB_password';
 
 	// Use curl (or not) to get remote contents
-	$imsUseCurl    = false;
+	$imsUseCurl    = true;
 
 	// Need to authenticate users?
 	$imsUseAuthentication = false;
 
-	// url on the localhost to handle youtube videos
+	// Default url on the localhost to handle youtube videos
 	// it can be changed by using youtube_video
 	// port 8081 is the default port for iMax firmware
 	$defaultLocalhostYoutubeVideo = 'http://localhost:8081/scripts/youtube.video.php';
+
+	// Default format preference
+	// http://en.wikipedia.org/wiki/YouTube
+	$defaultYoutubeVideoFmtPrefs = '37,22,35,34,18,5';
 ?>

@@ -27,6 +27,20 @@
 		$inputMethod = $defaultInputMethod;
 	}
 
+	if(!empty($_GET['yv_fmt_prefs'])) {
+		$youtubeVideoFmtPrefs = urldecode($_GET['yv_fmt_prefs']);
+	}
+	else {
+		$youtubeVideoFmtPrefs = $defaultYoutubeVideoFmtPrefs;
+	}
+
+	if(!empty($_GET['yv_rmt_src'])) {
+		$youtubeVideoRemoteSource = urldecode($_GET['yv_rmt_src']);
+	}
+	else {
+		$youtubeVideoRemoteSource = $defaultYoutubeVideoRemoteSource;
+	}
+
 	if(!empty($_GET['youtube_video'])) {
 		$localhostYoutubeVideo = urldecode($_GET['youtube_video']);
 	}
