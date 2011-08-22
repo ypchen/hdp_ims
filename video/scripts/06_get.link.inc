@@ -9,8 +9,12 @@
 		$link = urldecode($queryArr[0]);
 		if (count($queryArr) > 1)
 			$title = urldecode($queryArr[1]);
-		if (count($queryArr) > 2)
+		if (count($queryArr) > 2) {
 			$extra = urldecode($queryArr[2]);
+			if (strcmp($extra, '') == 0) {
+				unset($extra);
+			}
+		}
 	}
 
 	$history = 0;

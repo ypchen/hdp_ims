@@ -9,6 +9,7 @@
 	$caption_publish  = '發佈時間';
 	$caption_view     = '觀看次數';
 	$caption_eval     = '觀眾評價';
+	$caption_uploader = '影片上傳';
 
 	// 86400 x 3
 	$allowedSeconds   = 259200;

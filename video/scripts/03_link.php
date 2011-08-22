@@ -12,6 +12,14 @@
 
 	ini_set('user_agent', $userAgent);
 
+	if (isset($extra)) {
+		// $extra may be changed by included scripts
+		$extra_03_link = $extra;
+	}
+	else {
+		unset($extra_03_link);
+	}
+
 	$titleComponents = explode('.', $myBaseName);
 	$pageTitleBase = $titleComponents[0];
 	$pageTitle = $pageTitleBase;

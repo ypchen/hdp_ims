@@ -13,48 +13,56 @@
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
-		A. 楓林網
-		B. sugoideas.com
-		C. 蘋果動新聞 (單播 + 連播)
-		D. IMS 搜索: 以線上或本機 hdp_input (注音、速成輸入法) 搭配 HDPfans/HAOIMS 進行搜索
-		E. TED Talks (youtube 版 + podcast)
-		F. youtube 上的公開播放清單
+		A. 蘋果動新聞 (連播、單播)
+		B. 楓林網
+		C. sugoideas
+		D. 台灣媒體新聞 on YouTube
+			動感小站、台視、中視、華視、民視、公視、東森、中天、聯合新聞網、蘋果動新聞
+		E. YouTube 設定、搜索、頻道與播放清單
+			香港蘋果動新聞、半島電視新聞、1080p Trailers
+			YouTube 搜索 (本機 hdp_input、播放機內建、線上 hdp_input)
+			YouTube 解析度設定
+		F. TED Talks on YouTube / podcast
 		G. CNN 影音 podcast
-		H. 近三十個成人影片網站
+		H. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
+		I. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
-		A. 楓林網
+		A. 蘋果動新聞 (連播、單播)
+				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 連續、單段)
+		B. 楓林網
 			a. 每日熱門、最新節目
 				01 -> 02 -> 播放
 			b. 綜藝節目、偶像戲劇
 				01 -> 02 -> 02 -> 播放
-		B. sugoideas.com
+		C. sugoideas
 				01 -> 02 -> 02 -> 播放
-		C. 蘋果動新聞 (單播 + 連播)
-				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 單段、連續)
-		D. IMS 搜索
-				01 -> HDPfans/HAOIMS 搜索各大站台
-		E. TED Talks (youtube + podcast)
-			a. 中文字幕 on youtube
-				01 -> 02 (youtube 的公開播放清單) -> 播放
+		D. 台灣媒體新聞 on YouTube
+		E. YouTube 搜索、頻道與播放清單
+				01 -> 02 -> 播放
+		F. TED Talks on YouTube / podcast
+			a. 中文字幕 on YouTube
+				01 -> 02 -> 播放
 			b. podcast
 				01 -> podcast
-		F. youtube 上的公開播放清單
-				01 -> 02 -> 播放
 		G. CNN 影音 podcast
 				01 -> podcast
-		H. 近三十個成人影片網站
+		H. IMS 搜索
+				01 -> HDPfans/HAOIMS 搜索各大站台
+		I. 近三十個成人影片網站
 				01 -> 01 -> 02 -> 播放
 				01 -> 02 -> 播放
 				01 -> podcast
-	4. 可以播放任何人放在 youtube 上的公開播放清單
+	4. 可以播放 YouTube 的搜索結果、頻道、以及公開的播放清單
 	5. 內建歷史自動記錄功能: 最近瀏覽、最近觀看、本地收藏
 	6. 具有當網站錯誤發生時通知管理者進行處理的功能
 	7. 具有使用 MySQL database 記錄使用者動作的功能
 	8. IMS 線上搜索可讓使用者自訂由 hdp_input 模組所做成的線上輸入功能
+	9. youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
 
 使用
 	1. 直接放在本機使用
-		將 adult/ common/ scripts/ video/ 這四個目錄放在 /opt/share/www 下
+		步驟一:
+		將 adult/ common/ scripts/ video/ 這些目錄放在 /opt/share/www 下
 		即可在 menu.rss 或其他適當的地方加入 (port 8081 是 iMax 韌體預設)
 			<item>
 				<title>IMS: video</title>
@@ -67,32 +75,56 @@
 				<link>http://localhost:8081/adult/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
-		就可以看了
+
+		步驟二:
+		common/settings.php 裡的 $imsUseCurl 要設定成 false，亦即
+			$imsUseCurl = false;
 
 		如果本機有裝
 			https://github.com/ypchen/hdp_filemanager
 		的話，最新版本的同名檔案都已經同步成一樣的了，所以不必擔心會有衝突
 
 	2. 建立 IMS 網站
-		將 adult/ common/ video/ 這三個目錄放在適當的地方 (參考安裝在本機的做法)
-		然後使用正確的 url 即可
+		將 adult/ common/ video/ 這些目錄放在適當的地方 (參考安裝在本機的做法)
+		然後使用正確的 URL 即可
 
-		如果是建立 IMS 網站的話，youtube 上的影片仍然必由本機進行處理而得到 url
+		如果是建立 IMS 網站的話，YouTube 上的影片仍然必由本機進行處理而得到 URL
 		因此，scripts/ 這個目錄 (裡面只有一個 youtube.video.php 用來處理 back-end
-		為 youtube 的網站，如範例中的楓林網和 TED Talks on youtube) 還是必須放在本機
+		為 YouTube 的網站，如範例中的楓林網和 sugoideas) 還是必須放在本機
 
 	3. 有關 youtube.video.php
-		目前程式假設 youtube.video.php 在本機上的 url 是 (port 8081 是 iMax 韌體預設)
+		目前程式假設 youtube.video.php 在本機上的 URL 是 (port 8081 是 iMax 韌體預設)
 			http://localhost:8081/scripts/youtube.video.php
 		如果有人要建立 IMS 網站，但是想使用該 IMS 網站的使用者們的本機上
 		的 youtube.video.php 有可能在不同位置，在這種情形下，使用者可以藉由提供
 			youtube_video
-		這個變數讓 IMS 網站知道自己的 youtube.video.php 放置的 url，例如
+		這個變數讓 IMS 網站知道自己的 youtube.video.php 放置的 URL，例如
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
+		v1.4 增加了 youtube.video.php 兩個重要的新功能:
+
+		A. 由 IMS 來源網站載入 scripts/youtube.video.php 來執行
+			如此一來，只要將 v1.4 這份 youtube.video.php 刷入機中，以後應該就不必再更新這個檔案
+
+			這個功能是由 IMS 來源網站透過 yv_rmt_src 這個 URL 變數來告知 youtube.video.php
+			下載位置，如果有需要的話，可以手動設定或取消此功能
+
+			如果整個 IMS code 是放在本機執行的話，自然就沒有這個功能了 (因為 IMS 來源是本機)
+
+		B. 可以用 yv_fmt_prefs 來指定 YouTube 的解析度喜好，預設為 22,35,34,18,5
+			請參考 http://en.wikipedia.org/wiki/YouTube
+
+			也可以把喜好放在本機檔案 /usr/local/etc/dvdplayer/ims_yv_fmt_prefs.dat
+			放在這個本機檔案的優先次序高於使用 yv_fmt_prefs 來進行的設定
+
+			在 IMS code 中，有提供了幾個讓使用者可以簡單在本機上設定的功能:
+				最高 1920x1080、最高 1280x720、最高 854x480、以及取消本機解析度設定
+
+			觀賞 1080p Trailers 和動感小站等頻道，應該可以看出差別
+
 	4. 我直接把這組 code 建立成一個範例網站，有興趣的人可以直接用用看
-		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 youtube 的則須參考上述說明
+		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 YouYube 的則須參考上述說明
 			<item>
 				<title>IMS: video</title>
 				<link>http://ims.hostoi.com/video/scripts/siteList.php</link>

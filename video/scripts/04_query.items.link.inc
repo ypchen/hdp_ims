@@ -2,6 +2,9 @@
 	if (!isset($clickPlay))
 		$clickPlay = 'no';
 
+	if (!isset($dataSupp))
+		$dataSupp = '';
+
 	$linkAll = $scriptsURLprefix . '/' .
 		$myBaseName . '.link.php' .
 			'?uid=' . $user_id  .
@@ -11,7 +14,8 @@
 			'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 			'&amp;query=' . urlencode($link) .
 				',' . urlencode($title) .
-				',' . urlencode($extra);
+				',' . urlencode($extra) .
+			$dataSupp;
 
 	if($title != ''){
 		echo
@@ -25,6 +29,7 @@
 				"\t\t<note_four>"  . $note[3]   . "</note_four>\r\n" .
 				"\t\t<site_link>"  . $link      . "</site_link>\r\n" .
 				"\t\t<site_extra>" . $extra     . "</site_extra>\r\n" .
+				"\t\t<site_supp>"  . $dataSupp  . "</site_supp>\r\n" .
 				"\t\t<image>"                 . $image . "</image>\r\n" .
 				"\t\t<media:thumbnail url=\"" . $image . "\" />\r\n" .
 				"\t\t<mediaDisplay name=\"threePartsView\" />\r\n" .

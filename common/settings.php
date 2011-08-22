@@ -28,5 +28,5 @@
 
 	// Default format preference
 	// http://en.wikipedia.org/wiki/YouTube
-	$defaultYoutubeVideoFmtPrefs = '37,22,35,34,18,5';
+	$defaultYoutubeVideoFmtPrefs = '22,35,34,18,5';
 ?>

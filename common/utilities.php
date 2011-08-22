@@ -169,14 +169,15 @@
 		global $imagePrefix;
 
 		// image file
-		$testExtensions = array('.jpg', '.png', '.gif');
+		$testExtensions = array('.jpg', '.gif', '.png');
 		foreach ($testExtensions as $ext) {
-			if (file_exists('../image/' . $imgDir . $imgName . $ext))
+			if (file_exists('../image/' . $imgDir . $imgName . $ext)) {
 				return ($imagePrefix . $imgDir . $imgName . $ext);
+			}
 		}
 
 		// image url
-		$testExtensions = array('.url', '.link');
+		$testExtensions = array('.url', '.txt');
 		foreach ($testExtensions as $ext) {
 			$txtFile = '../image/' . $imgDir . $imgName . $ext;
 			if (file_exists($txtFile)) {

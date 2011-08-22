@@ -5,7 +5,10 @@
 
 	$htmlBody = explode('<div id="playlist-container"', $html);
 
-	$videos = explode('<li class="video"', $htmlBody[1]);
+	// No paging for playlists
+	$page = 0;
+
+	$videos = explode('<li class="playlist-video-item', $htmlBody[1]);
 	unset($videos[0]);
 	$videos = array_values($videos);
 

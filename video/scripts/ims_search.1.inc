@@ -1,3 +1,3 @@
 <?php
-	$itemTotal = 5;
+	$itemTotal = 11;
 ?>

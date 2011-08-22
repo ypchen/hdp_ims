@@ -12,6 +12,14 @@
 
 	ini_set('user_agent', $userAgent);
 
+	if (isset($extra)) {
+		// $extra may be changed by included scripts
+		$extra_02_query = $extra;
+	}
+	else {
+		unset($extra_02_query);
+	}
+
 	$itemTotal  = 0;
 	$pass_check = true;
 	try {
@@ -420,7 +428,12 @@
 	<item>
 		<?php
 			$sThisFile = $_SERVER['SCRIPT_URI'];
-			$url = $sThisFile . '?uid=' . $user_id  . '&amp;query=' . ($page-1) . ',';
+			$url = $sThisFile . '?uid=' . $user_id  .
+				'&amp;input_method='  . urlencode($inputMethod) .
+				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
+				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+				'&amp;query=' . ($page-1) . ',';
 			if (isset($search)) {
 				$url = $url . urlencode($search);
 			}
@@ -429,8 +442,8 @@
 				$url = $url . urlencode($cat);
 			}
 			$url = $url . ',';
-			if (isset($extra)) {
-				$url = $url . urlencode($extra);
+			if (isset($extra_02_query)) {
+				$url = $url . urlencode($extra_02_query);
 			}
 		?>
 		<title>上一頁</title>
@@ -453,7 +466,12 @@
 	<item>
 		<?php
 			$sThisFile = $_SERVER['SCRIPT_URI'];
-			$url = $sThisFile . '?uid=' . $user_id  . '&amp;query=' . ($page+1) . ',';
+			$url = $sThisFile . '?uid=' . $user_id  .
+				'&amp;input_method='  . urlencode($inputMethod) .
+				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
+				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+				'&amp;query=' . ($page+1) . ',';
 			if (isset($search)) {
 				$url = $url . urlencode($search);
 			}
@@ -462,8 +480,8 @@
 				$url = $url . urlencode($cat);
 			}
 			$url = $url . ',';
-			if (isset($extra)) {
-				$url = $url . urlencode($extra);
+			if (isset($extra_02_query)) {
+				$url = $url . urlencode($extra_02_query);
 			}
 		?>
 		<title>下一頁</title>

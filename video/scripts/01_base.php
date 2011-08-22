@@ -12,6 +12,14 @@
 
 	ini_set('user_agent', $userAgent);
 
+	if (isset($extra)) {
+		// $extra may be changed by included scripts
+		$extra_01_base = $extra;
+	}
+	else {
+		unset($extra_01_base);
+	}
+
 	$itemTotal  = 0;
 	$pass_check = true;
 	try {
@@ -43,7 +51,7 @@
 
 <onEnter>
 	focus = 0;
-
+	message = "";
 	inputNumCount = 0;
 	inputNumVal = -1;
 	curNumVal = -1;
@@ -252,7 +260,7 @@
 			else {
 				str = "[↕]±1; [↔]±<?php echo $itemPerPage; ?>; [上下頁]最前後;" + historyTips + " 第 " + curNumVal + " 項";
 			}
-			str;
+			str + message;
 		</script>
 	</text>
 
@@ -337,6 +345,7 @@
 	<onUserInput>
 		<script>
 			ret = "false";
+			message = "";
 			userInput = currentUserInput();
 
 			idx = Integer(getFocusItemIndex());

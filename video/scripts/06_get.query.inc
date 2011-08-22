@@ -9,10 +9,18 @@
 		$queryArr = explode(',', $query);
 		$page = $queryArr[0];
 		$search = urldecode($queryArr[1]);
-		if (count($queryArr) > 2)
+		if (count($queryArr) > 2) {
 			$cat = urldecode($queryArr[2]);
-		if (count($queryArr) > 3)
+			if (strcmp($cat, '') == 0) {
+				unset($cat);
+			}
+		}
+		if (count($queryArr) > 3) {
 			$extra = urldecode($queryArr[3]);
+			if (strcmp($extra, '') == 0) {
+				unset($extra);
+			}
+		}
 	}
 
 	$history = 0;

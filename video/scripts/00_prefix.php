@@ -1,6 +1,12 @@
 <?php
 	error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 
+	$myScriptName     = $_SERVER['SCRIPT_NAME'];
+
+	$serverName       = $_SERVER['SERVER_NAME'];
+	$serverPort       = $_SERVER['SERVER_PORT'];
+	$remoteIP         = $_SERVER['REMOTE_ADDR'];
+
 	// I do this because I would like to combine my own running site with the released code
 	if (file_exists('../../common/ypSettings.php')) {
 		require('../../common/ypSettings.php');
@@ -21,9 +27,6 @@
 	$scriptsURLprefix = $rawPrefixURL . '/scripts';
 	$imagePrefix      = $rawPrefixURL . '/image/';
 	$filesPrefix      = $rawPrefixURL . '/files/';
-
-	$myScriptName     = $_SERVER['SCRIPT_NAME'];
-	$remoteIP         = $_SERVER['REMOTE_ADDR'];
 
 	$idleImagePrefix  = 'busy';
 
@@ -52,15 +55,26 @@
 
 	// Default url for input methods
 	// it can be changed by using input_method
-	$defaultInputMethod =
-		strrleft($wholeURL, $imsDirectory . '/scripts') .
-			'ypInput/getFile.php?file=keyboard.rss';
+	if ((strcmp($serverName, 'localhost') == 0) ||
+		(strcmp($serverName, '127.0.0.1') == 0)) {
+		$defaultInputMethod =
+			strrleft($wholeURL, $imsDirectory . '/scripts') .
+				'common/ypInput/getFile.php?file=keyboard.rss';
+	}
+	else {
+		$defaultInputMethod =
+			strrleft($wholeURL, $imsDirectory . '/scripts') .
+				'ypInput/getFile.php?file=keyboard.rss';
+	}
 
 	// Default url for updating youtube.video.php
 	// it can be changed by using yv_rmt_src
 	$defaultYoutubeVideoRemoteSource =
 		strrleft($wholeURL, $imsDirectory . '/scripts') .
 			'scripts/youtube.video.php';
+
+	// Default local youtube format prefs file
+	$fileLocalYoutubeVideoFmtPrefs = $filePath . 'ims_yv_fmt_prefs.dat';
 
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {

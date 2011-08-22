@@ -12,6 +12,14 @@
 
 	ini_set('user_agent', $userAgent);
 
+	if (isset($extra)) {
+		// $extra may be changed by included scripts
+		$extra_03_play = $extra;
+	}
+	else {
+		unset($extra_03_play);
+	}
+
 	include($myName . '.inc');
 
 	$titleComponents = explode('.', $myBaseName);

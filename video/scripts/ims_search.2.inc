@@ -1,9 +1,9 @@
 <channel>
 
-<title>IMS 搜索 (本機輸入)</title>
+<title>IMS 搜索</title>
 
 	<item>
-		<title>HAOIMS: 全網搜索</title>
+		<title>HAOIMS: 全網搜索 / 本機輸入</title>
 		<onClick>
 			/* input = getInput("Enter a keyword"); */
 			input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);
@@ -34,6 +34,81 @@
 			    redrawDisplay();
 			}
 		</onClick>
+		<note>※ 需安裝 hdp_input</note>
+		<?php echo siteLogo('haoims'); ?>
+		<mediaDisplay />
+	</item>
+
+	<item>
+		<title>HAOIMS: 全網搜索 / 內建輸入</title>
+		<onClick>
+			input = getInput("Enter a keyword");
+			/* input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0); */
+			if (input != null) {
+			    keyword = urlEncode(input);
+			    searchUrl = "http://ims.haoims.com/ims/search.php?q=chl-search-word-" + keyword;
+				sPath = "/usr/local/etc/dvdplayer/";
+				searchPath=sPath+"haoims_search.dat";
+				searchArray=readStringFromFile(searchPath);
+				if (getStringArrayAt(searchArray, 19) != null) {
+					searchArray = deleteStringArrayAt(searchArray, 0);
+				}
+				k=0;
+				while (getStringArrayAt(searchArray, k) != null) {
+					title=getStringArrayAt(searchArray, k);
+					if(title==input) {
+						searchArray = deleteStringArrayAt(searchArray, k);
+					}
+					else {
+						k=k+1;
+					}
+				}
+				searchArray=pushBackStringArray(searchArray, input);
+				writeStringToFile(searchPath,searchArray);
+				searchUrl;
+			}
+			else {
+			    redrawDisplay();
+			}
+		</onClick>
+		<note>使用播放機內建輸入功能</note>
+		<?php echo siteLogo('haoims'); ?>
+		<mediaDisplay />
+	</item>
+
+	<item>
+		<title>HAOIMS: 全網搜索 / 線上輸入</title>
+		<onClick>
+			/* input = getInput("Enter a keyword"); */
+			input = doModalRss("<?php echo $inputMethod; ?>", "mediaDisplay", "search", 0);
+			if (input != null) {
+			    keyword = urlEncode(input);
+			    searchUrl = "http://ims.haoims.com/ims/search.php?q=chl-search-word-" + keyword;
+				sPath = "/usr/local/etc/dvdplayer/";
+				searchPath=sPath+"haoims_search.dat";
+				searchArray=readStringFromFile(searchPath);
+				if (getStringArrayAt(searchArray, 19) != null) {
+					searchArray = deleteStringArrayAt(searchArray, 0);
+				}
+				k=0;
+				while (getStringArrayAt(searchArray, k) != null) {
+					title=getStringArrayAt(searchArray, k);
+					if(title==input) {
+						searchArray = deleteStringArrayAt(searchArray, k);
+					}
+					else {
+						k=k+1;
+					}
+				}
+				searchArray=pushBackStringArray(searchArray, input);
+				writeStringToFile(searchPath,searchArray);
+				searchUrl;
+			}
+			else {
+			    redrawDisplay();
+			}
+		</onClick>
+		<note>Input method: <?php echo $inputMethod; ?></note>
 		<?php echo siteLogo('haoims'); ?>
 		<mediaDisplay />
 	</item>
@@ -46,7 +121,7 @@
 	</item>
 
 	<item>
-		<title>HDPfans: 全網搜索</title>
+		<title>HDPfans: 全網搜索 / 本機輸入</title>
 		<onClick>
 			/* input = getInput("Enter a keyword"); */
 			input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);
@@ -77,12 +152,87 @@
 				redrawDisplay();
 			}
 		</onClick>
+		<note>※ 需安裝 hdp_input</note>
 		<?php echo siteLogo('hdpfans'); ?>
 		<mediaDisplay />
 	</item>
 
 	<item>
-		<title>HDPfans: 站內搜索</title>
+		<title>HDPfans: 全網搜索 / 內建輸入</title>
+		<onClick>
+			input = getInput("Enter a keyword");
+			/* input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0); */
+			if (input != null) {
+				keyword = urlEncode(input);
+				searchUrl = "http://tv.hdpfans.com:80/sp_search.php?name=" + keyword;
+				sPath = "/usr/local/etc/dvdplayer/";
+				searchPath=sPath+"hdpfans_search.dat";
+				searchArray=readStringFromFile(searchPath);
+				if (getStringArrayAt(searchArray, 19) != null) {
+					searchArray = deleteStringArrayAt(searchArray, 0);
+				}
+				k=0;
+				while (getStringArrayAt(searchArray, k) != null) {
+					title=getStringArrayAt(searchArray, k);
+					if(title == input){
+						searchArray = deleteStringArrayAt(searchArray, k);
+					}
+					else{
+						k=k+1;
+					}
+				}
+				searchArray=pushBackStringArray(searchArray, input);
+				writeStringToFile(searchPath,searchArray);
+				searchUrl;
+			}
+			else {
+				redrawDisplay();
+			}
+		</onClick>
+		<note>使用播放機內建輸入功能</note>
+		<?php echo siteLogo('hdpfans'); ?>
+		<mediaDisplay />
+	</item>
+
+	<item>
+		<title>HDPfans: 全網搜索 / 線上輸入</title>
+		<onClick>
+			/* input = getInput("Enter a keyword"); */
+			input = doModalRss("<?php echo $inputMethod; ?>", "mediaDisplay", "search", 0);
+			if (input != null) {
+				keyword = urlEncode(input);
+				searchUrl = "http://tv.hdpfans.com:80/sp_search.php?name=" + keyword;
+				sPath = "/usr/local/etc/dvdplayer/";
+				searchPath=sPath+"hdpfans_search.dat";
+				searchArray=readStringFromFile(searchPath);
+				if (getStringArrayAt(searchArray, 19) != null) {
+					searchArray = deleteStringArrayAt(searchArray, 0);
+				}
+				k=0;
+				while (getStringArrayAt(searchArray, k) != null) {
+					title=getStringArrayAt(searchArray, k);
+					if(title == input){
+						searchArray = deleteStringArrayAt(searchArray, k);
+					}
+					else{
+						k=k+1;
+					}
+				}
+				searchArray=pushBackStringArray(searchArray, input);
+				writeStringToFile(searchPath,searchArray);
+				searchUrl;
+			}
+			else {
+				redrawDisplay();
+			}
+		</onClick>
+		<note>Input method: <?php echo $inputMethod; ?></note>
+		<?php echo siteLogo('hdpfans'); ?>
+		<mediaDisplay />
+	</item>
+
+	<item>
+		<title>HDPfans: 站內搜索 / 本機輸入</title>
 		<onClick>
 			/* input = getInput("Enter a keyword"); */
 			input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);
@@ -95,6 +245,45 @@
 				redrawDisplay();
 			}
 		</onClick>
+		<note>※ 需安裝 hdp_input</note>
+		<?php echo siteLogo('hdpfans'); ?>
+		<mediaDisplay />
+	</item>
+
+	<item>
+		<title>HDPfans: 站內搜索 / 內建輸入</title>
+		<onClick>
+			input = getInput("Enter a keyword");
+			/* input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0); */
+			if (input != null) {
+				keyword = urlEncode(input);
+				searchUrl = "http://tv.hdpfans.com:80/~rss.index.search/rss/1/ajax/1/?keyword=" + keyword;
+				searchUrl;
+			}
+			else {
+				redrawDisplay();
+			}
+		</onClick>
+		<note>使用播放機內建輸入功能</note>
+		<?php echo siteLogo('hdpfans'); ?>
+		<mediaDisplay />
+	</item>
+
+	<item>
+		<title>HDPfans: 站內搜索 / 線上輸入</title>
+		<onClick>
+			/* input = getInput("Enter a keyword"); */
+			input = doModalRss("<?php echo $inputMethod; ?>", "mediaDisplay", "search", 0);
+			if (input != null) {
+				keyword = urlEncode(input);
+				searchUrl = "http://tv.hdpfans.com:80/~rss.index.search/rss/1/ajax/1/?keyword=" + keyword;
+				searchUrl;
+			}
+			else {
+				redrawDisplay();
+			}
+		</onClick>
+		<note>Input method: <?php echo $inputMethod; ?></note>
 		<?php echo siteLogo('hdpfans'); ?>
 		<mediaDisplay />
 	</item>

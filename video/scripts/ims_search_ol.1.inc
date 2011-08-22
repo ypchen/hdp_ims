@@ -1,3 +1,0 @@
-<?php
-	$itemTotal = 5;
-?>

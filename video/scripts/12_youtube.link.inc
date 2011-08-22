@@ -14,8 +14,7 @@
 	$ids = array();
 	$pass_check = true;
 	try {
-		$ids  = explode(',', $link);
-		include('05_check.link.idcount.inc');
+		include($myBaseName . '.link.ids.inc');
 
 		// 日本廣告 (測試用)
 		//$ids = array('tBsA2Bk2rpk', '2tkt86hirVY', 'hrv6P0Ckz7w');
@@ -24,10 +23,11 @@
 		$pass_check = false;
 	}
 
-	echo "\titemSize    = " . count($ids) . ";\r\n";
-	echo "\tlinkArray   = null;\r\n";
-
 	if ($pass_check) {
+
+		echo "\titemSize    = " . count($ids) . ";\r\n";
+		echo "\tlinkArray   = null;\r\n";
+
 		foreach ($ids as $id) {
 
 			// 一定要使用來源本機做解析

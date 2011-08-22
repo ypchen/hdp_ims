@@ -20,16 +20,15 @@
 	$itemTotal ++;
 
 	$sites = array(
+		array('appledaily_cont', '台灣蘋果動新聞 (連續播放)', ''),
+		array('appledaily', '台灣蘋果動新聞', ''),
 		array('maplestage', '台灣綜藝戲劇 (楓林網)', '※ 需安裝 youtube.video.php'),
 		array('sugoideas', '台灣綜藝戲劇 (sugoideas)', '※ 需安裝 youtube.video.php'),
-		array('appledaily', '台灣蘋果動新聞', ''),
-		array('appledaily_cont', '台灣蘋果動新聞 (連續播放模式)', ''),
-//		array('hk_appleactionews', '香港蘋果動新聞', ''),
-		array('ims_search', 'IMS 搜索 (本機輸入)', '※ 需安裝 hdp_input'),
-		array('ims_search_ol', 'IMS 搜索 (線上輸入)', 'Input method: ' . $inputMethod),
-		array('ted', 'TED Talks 中文字幕 youtube / podcast', '※ 需安裝 youtube.video.php'),
-		array('youtube_pl', 'YouTube 公開播放清單', '※ 需安裝 youtube.video.php'),
-		array('CNN', 'CNN 影音播放 (podcast)', ''),
+		array('Taiwan', '台灣媒體新聞 on YouTube', '※ 需安裝 youtube.video.php'),
+		array('youtube', 'YouTube 設定、搜索、頻道與播放清單', '※ 需安裝 youtube.video.php'),
+		array('ted', 'TED Talks 中文字幕 on YouTube / podcast', '※ 需安裝 youtube.video.php'),
+		array('CNN', 'CNN 影音播放 podcast', ''),
+		array('ims_search', 'IMS 搜索 (HAOIMS / HDPfans)', ''),
 	);
 
 	foreach($sites as $site) {
