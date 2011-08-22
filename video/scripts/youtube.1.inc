@@ -63,7 +63,7 @@
 					"\t\t\t" . $site[0] . "\r\n" .
 					"\t\t\tif (input != null) {\r\n" .
 					"\t\t\t\tsearchUrl = \"" . $searchUrlBase  . "\"" .
-						" + \",\" + urlEncode(\"&amp;q=\" + input)" .
+						" + \",%26q%3D\" + urlEncode(urlEncode(input))" .
 						" + \",\" + urlEncode(\"" . $searchTitle . "\")" .
 						" + \",\" + urlEncode(\"" . $site[4] . '|' . $site[5] . "\");" .
 					"\r\n" .

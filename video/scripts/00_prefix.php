@@ -102,9 +102,9 @@
 		if (!empty($imsUseAuthentication)) {
 			// uid from the HTTP GET request
 			if ((!isset($_GET['uid'])) ||
-				(strlen($uidStr = urldecode($_GET['uid'])) == 0)
+				(strlen($uidStr = $_GET['uid']) == 0)
 				) {
-				$condition = '((!isset($_GET[\'uid\'])) || (strlen($uid = urldecode($_GET[\'uid\'])) == 0))';
+				$condition = '((!isset($_GET[\'uid\'])) || (strlen($uid = $_GET[\'uid\']) == 0))';
 
 				$emailSent =
 					notification_email_text(

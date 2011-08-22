@@ -1,4 +1,11 @@
 <?php
+	// http://php.net/manual/en/function.urldecode.php
+	/*
+		Warning
+		The superglobals $_GET and $_REQUEST are already decoded.
+		Using urldecode() on an element in $_GET or $_REQUEST
+		could have unexpected and dangerous results.
+	*/
 	$query = '';
 	$page = 1;
 	$search = '';
@@ -8,15 +15,18 @@
 		$query = $_GET['query'];
 		$queryArr = explode(',', $query);
 		$page = $queryArr[0];
-		$search = urldecode($queryArr[1]);
+		//$search = urldecode($queryArr[1]);
+		$search = $queryArr[1];
 		if (count($queryArr) > 2) {
-			$cat = urldecode($queryArr[2]);
+			//$cat = urldecode($queryArr[2]);
+			$cat = $queryArr[2];
 			if (strcmp($cat, '') == 0) {
 				unset($cat);
 			}
 		}
 		if (count($queryArr) > 3) {
-			$extra = urldecode($queryArr[3]);
+			//$extra = urldecode($queryArr[3]);
+			$extra = $queryArr[3];
 			if (strcmp($extra, '') == 0) {
 				unset($extra);
 			}
@@ -29,28 +39,32 @@
 	}
 
 	if(!empty($_GET['input_method'])) {
-		$inputMethod = urldecode($_GET['input_method']);
+		//$inputMethod = urldecode($_GET['input_method']);
+		$inputMethod = $_GET['input_method'];
 	}
 	else {
 		$inputMethod = $defaultInputMethod;
 	}
 
 	if(!empty($_GET['yv_fmt_prefs'])) {
-		$youtubeVideoFmtPrefs = urldecode($_GET['yv_fmt_prefs']);
+		//$youtubeVideoFmtPrefs = urldecode($_GET['yv_fmt_prefs']);
+		$youtubeVideoFmtPrefs = $_GET['yv_fmt_prefs'];
 	}
 	else {
 		$youtubeVideoFmtPrefs = $defaultYoutubeVideoFmtPrefs;
 	}
 
 	if(!empty($_GET['yv_rmt_src'])) {
-		$youtubeVideoRemoteSource = urldecode($_GET['yv_rmt_src']);
+		//$youtubeVideoRemoteSource = urldecode($_GET['yv_rmt_src']);
+		$youtubeVideoRemoteSource = $_GET['yv_rmt_src'];
 	}
 	else {
 		$youtubeVideoRemoteSource = $defaultYoutubeVideoRemoteSource;
 	}
 
 	if(!empty($_GET['youtube_video'])) {
-		$localhostYoutubeVideo = urldecode($_GET['youtube_video']);
+		//$localhostYoutubeVideo = urldecode($_GET['youtube_video']);
+		$localhostYoutubeVideo = $_GET['youtube_video'];
 	}
 	else {
 		$localhostYoutubeVideo = $defaultLocalhostYoutubeVideo;
