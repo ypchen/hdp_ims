@@ -427,7 +427,7 @@
 ?>
 	<item>
 		<?php
-			$sThisFile = $_SERVER['SCRIPT_URI'];
+			$sThisFile = $wholeURL;
 			$url = $sThisFile . '?uid=' . $user_id  .
 				'&amp;input_method='  . urlencode($inputMethod) .
 				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
@@ -465,7 +465,7 @@
 ?>
 	<item>
 		<?php
-			$sThisFile = $_SERVER['SCRIPT_URI'];
+			$sThisFile = $wholeURL;
 			$url = $sThisFile . '?uid=' . $user_id  .
 				'&amp;input_method='  . urlencode($inputMethod) .
 				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
