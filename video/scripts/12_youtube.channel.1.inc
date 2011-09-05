@@ -9,6 +9,12 @@
 					'&max-results=' . strval($yvItemPerPage) .
 					'&v=2';
 			break;
+		case 'playlist':
+			$link = 'http://gdata.youtube.com/feeds/api/playlists/' . $search .
+					'?start-index=' . strval($yvStartIndex) .
+					'&max-results=' . strval($yvItemPerPage) .
+					'&v=2';
+			break;
 		case 'search':
 			$link = 'http://gdata.youtube.com/feeds/api/videos' .
 					'?start-index=' . strval($yvStartIndex) .
@@ -17,6 +23,7 @@
 					$search;
 			break;
 	}
+
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
