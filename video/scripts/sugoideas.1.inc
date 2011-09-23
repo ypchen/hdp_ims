@@ -8,7 +8,8 @@
 
 	$videos = explode('<li><a ', $htmlVideos);
 	unset($videos[count($videos)-1]);	// English Sub
-	unset($videos[5]);	// Upcoming
+// "Upcoming" is now "2011 Drama"
+//	unset($videos[5]);	// Upcoming
 	unset($videos[4]);	// Home
 	unset($videos[3]);	// Download Center
 	unset($videos[1]);	// Idol Dramas
