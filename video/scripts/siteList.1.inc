@@ -21,14 +21,15 @@
 
 	$sites = array(
 		array('appledaily_cont', '台灣蘋果動新聞 (連續播放)', ''),
-		array('appledaily', '台灣蘋果動新聞', ''),
-		array('maplestage', '台灣綜藝戲劇 (楓林網)', '※ 需安裝 youtube.video.php'),
-		array('sugoideas', '台灣綜藝戲劇 (sugoideas)', '※ 需安裝 youtube.video.php'),
-		array('Taiwan', '台灣媒體新聞 on YouTube', '※ 需安裝 youtube.video.php'),
-		array('youtube', 'YouTube 設定、搜索、頻道與播放清單', '※ 需安裝 youtube.video.php'),
-		array('ted', 'TED Talks 中文字幕 on YouTube / podcast', '※ 需安裝 youtube.video.php'),
-		array('CNN', 'CNN 影音播放 podcast', ''),
-		array('ims_search', 'IMS 搜索 (HAOIMS / HDPfans)', ''),
+		array('appledaily',      '台灣蘋果動新聞', ''),
+		array('maplestage',      '台灣綜藝戲劇 (楓林網)', '※ 需安裝 youtube.video.php'),
+		array('sugoideas',       '台灣綜藝戲劇 (sugoideas)', '※ 需安裝 youtube.video.php'),
+		array('ck101',           '卡提諾影音　 (ck101)', '※ 需安裝 youtube.video.php'),
+		array('Taiwan',          '台灣媒體新聞 on YouTube', '※ 需安裝 youtube.video.php'),
+		array('youtube',         'YouTube 設定、搜索、頻道與播放清單', '※ 需安裝 youtube.video.php'),
+		array('ted',             'TED Talks 中文字幕 on YouTube / podcast', '※ 需安裝 youtube.video.php'),
+		array('CNN',             'CNN 影音播放 podcast', ''),
+		array('ims_search',      'IMS 搜索 (HAOIMS / HDPfans)', ''),
 	);
 
 	foreach($sites as $site) {

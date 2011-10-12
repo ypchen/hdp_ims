@@ -2,10 +2,10 @@
 	$itemXML   = '';
 
 	$sites = array(
-		array('qwq33', '動感小站 Show Time', $myBaseName,
-			'建立者：qwq33', 'channel', 'continue=0'),
-		array('qwq33', '動感小站 Show Time (連續播放)', $myBaseName,
-			'建立者：qwq33', 'channel', 'continue=1'),
+//		array('qwq33', '動感小站 Show Time', $myBaseName,
+//			'建立者：qwq33', 'channel', 'continue=0'),
+//		array('qwq33', '動感小站 Show Time (連續播放)', $myBaseName,
+//			'建立者：qwq33', 'channel', 'continue=1'),
 		array('ttvnewsview', '台視 (連續播放)', $myBaseName,
 			'建立者：ttvnewsview', 'channel', 'continue=1'),
 		array('chinatv', '中視 (連續播放)', $myBaseName,

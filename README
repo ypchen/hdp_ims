@@ -16,16 +16,17 @@
 		A. 蘋果動新聞 (連播、單播)
 		B. 楓林網
 		C. sugoideas
-		D. 台灣媒體新聞 on YouTube
-			動感小站、台視、中視、華視、民視、公視、東森、中天、聯合新聞網、蘋果動新聞
-		E. YouTube 設定、搜索、頻道與播放清單
+		D. 卡提諾影音
+		E. 台灣媒體新聞 on YouTube
+			台視、中視、華視、民視、公視、東森、中天、聯合新聞網、蘋果動新聞
+		F. YouTube 設定、搜索、頻道與播放清單
 			香港蘋果動新聞、半島電視新聞、1080p Trailers
 			YouTube 搜索 (本機 hdp_input、播放機內建、線上 hdp_input)
 			YouTube 解析度設定
-		F. TED Talks on YouTube / podcast
-		G. CNN 影音 podcast
-		H. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
-		I. 近三十個成人影片網站
+		G. TED Talks on YouTube / podcast
+		H. CNN 影音 podcast
+		I. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
+		J. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
 		A. 蘋果動新聞 (連播、單播)
 				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 連續、單段)
@@ -36,19 +37,21 @@
 				01 -> 02 -> 02 -> 播放
 		C. sugoideas
 				01 -> 02 -> 02 -> 播放
-		D. 台灣媒體新聞 on YouTube
-		E. YouTube 搜索、頻道與播放清單
+		D. 卡提諾影音
+				01 -> 02 -> 02 -> 播放
+		E. 台灣媒體新聞 on YouTube
+		F. YouTube 搜索、頻道與播放清單
 				01 -> 02 -> 播放
-		F. TED Talks on YouTube / podcast
+		G. TED Talks on YouTube / podcast
 			a. 中文字幕 on YouTube
 				01 -> 02 -> 播放
 			b. podcast
 				01 -> podcast
-		G. CNN 影音 podcast
+		H. CNN 影音 podcast
 				01 -> podcast
-		H. IMS 搜索
+		I. IMS 搜索
 				01 -> HDPfans/HAOIMS 搜索各大站台
-		I. 近三十個成人影片網站
+		J. 近三十個成人影片網站
 				01 -> 01 -> 02 -> 播放
 				01 -> 02 -> 播放
 				01 -> podcast

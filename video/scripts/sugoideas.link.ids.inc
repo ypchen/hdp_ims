@@ -8,6 +8,10 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
+	$ts = explode('|', str_between($html, '<title>', '</title>'));
+	$title = trim($ts[0]);
+	$title = convertUnicodePoints($title);
+
 	// This one, i.e., Part 1
 	$ids[] = trim(str_between($html, 'http://www.youtube.com/embed/', '?'));
 

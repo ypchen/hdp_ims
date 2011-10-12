@@ -103,6 +103,10 @@
 			else {
 				playItemURL(currentUrl, 0, "mediaDisplay", pre);
 			}
+			currentTitle = getStringArrayAt(titleArray, n);
+			if (currentTitle == null) {
+				currentTitle = "";
+			}
 			writeStringToFile(storagePath, n);
 			setRefreshTime(100);
 			startVideo = 0;
@@ -164,6 +168,15 @@
 			progressColor="26:129:211"
 			bufferColor="-1:-1:-1"
 			cornerRounding="10" />
+
+		<text align="left" fontSize="16"
+			offsetXPC="3" offsetYPC="0"
+			widthPC="97" heightPC="20"
+			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
+			<script>
+				currentTitle;
+			</script>
+		</text>
 
 		<text align="left" fontSize="16"
 			offsetXPC="5" offsetYPC="40"

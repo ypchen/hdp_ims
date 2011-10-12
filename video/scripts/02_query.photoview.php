@@ -449,7 +449,7 @@
 		<title>上一頁</title>
 		<link><?php echo $url;?></link>
 		<annotation>上一頁</annotation>
-		<image><?php echo $imagePrefix; ?>left.jpg</image>
+		<image><?php echo myImage('left'); ?></image>
 		<mediaDisplay name="threePartsView" />
 	</item>
 <?php } ?>
@@ -487,7 +487,7 @@
 		<title>下一頁</title>
 		<link><?php echo $url;?></link>
 		<annotation>下一頁</annotation>
-		<image><?php echo $imagePrefix; ?>right.jpg</image>
+		<image><?php echo myImage('right'); ?></image>
 		<mediaDisplay name="threePartsView" />
 	</item>
 <?php } ?>
