@@ -1,8 +1,10 @@
 <?php
-	$siteURLprefix = 'http://www.maplestage.com';
+	$siteURLprefix = 'http://www.maplestage.net';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, '" href="', '"'));
+		$link  = trim(str_between($video, '" href="', '"'));
+		if (strpos($link, 'http://') === false)
+			$link .= $siteURLprefix;
 		$title = trim(str_between($video, '">', '</a>'));
 		$title = convertUnicodePoints($title);
 		$extra = '';

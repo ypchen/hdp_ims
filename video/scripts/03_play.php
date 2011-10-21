@@ -39,7 +39,6 @@
 	inputNumVal = -1;
 	curNumVal = -1;
 
-	pre = "previewWindow";
 	m = 0;
 	if (linkArray == null) {
 		postMessage("return");
@@ -78,6 +77,10 @@
 	x = itemCount;
 	<?php include('00_utils.digits.inc'); ?>
 	itemCountDigits = y;
+
+	runningHead = "";
+	runningHeadWidthPC = 0;
+	displayRunningHeadWidthPC = 100;
 </onEnter>
 
 <onExit>
@@ -86,6 +89,28 @@
 </onExit>
 
 <onRefresh>
+	pbStatus = getPlaybackStatus();
+	pbCur = getStringArrayAt(pbStatus, 0);
+	pbMax = getStringArrayAt(pbStatus, 1);
+	if ((pbCur == "0") &amp;&amp; (pbMax == "100")) {
+		runningHead = "";
+	}
+	else {
+		pbMaxInt = Integer(pbMax);
+		pbMaxH = Integer(pbMaxInt / 3600);
+		pbMaxM = Integer((pbMaxInt % 3600) / 60);
+		if (pbMaxM &lt; 10) pbMaxM = "0" + pbMaxM;
+		pbMaxS = pbMaxInt % 60;
+		if (pbMaxS &lt; 10) pbMaxS = "0" + pbMaxS;
+		pbCurInt = Integer(pbCur);
+		pbCurH = Integer(pbCurInt / 3600);
+		pbCurM = Integer((pbCurInt % 3600) / 60);
+		if (pbCurM &lt; 10) pbCurM = "0" + pbCurM;
+		pbCurS = pbCurInt % 60;
+		if (pbCurS &lt; 10) pbCurS = "0" + pbCurS;
+		runningHead = pbCurH + ":" + pbCurM + ":" + pbCurS + " / " + pbMaxH + ":" + pbMaxM + ":" + pbMaxS + " [" + now + "/" + itemCount + "] " + currentTitle;
+	}
+
 	if ((n &lt; 0) || (n &gt; (itemCount-1))) {
 		postMessage("return");
 	}
@@ -101,7 +126,7 @@
 				postMessage("return");
 			}
 			else {
-				playItemURL(currentUrl, 0, "mediaDisplay", pre);
+				playItemURL(currentUrl, 0, "mediaDisplay", "previewWindow");
 			}
 			currentTitle = getStringArrayAt(titleArray, n);
 			if (currentTitle == null) {
@@ -131,7 +156,6 @@
 						n = 0;
 					}
 					startVideo = 1;
-					pre = "previewWindow";
 				}
 			}
 			else {
@@ -148,19 +172,23 @@
 		widthPC="100" heightPC="100">
 	</previewWindow>
 
-	<previewWindow1 windowColor="-1:-1:-1"
-		offsetXPC="2.5" offsetYPC="2.5"
-		widthPC="95" heightPC="95">
-	</previewWindow1>
-
-	<previewWindow11 windowColor="-1:-1:-1"
-		offsetXPC="5" offsetYPC="5"
-		widthPC="90" heightPC="90">
-	</previewWindow11>
+	<text redraw="yes" align="left" fontSize="20"
+		offsetXPC="0" offsetYPC="6"
+		widthPC="0" heightPC="6"
+		backgroundColor="0:0:0" foregroundColor="255:255:255">
+		<script>
+			runningHead;
+		</script>
+		<widthPC>
+			<script>
+				runningHeadWidthPC;
+			</script>
+		</widthPC>
+	</text>
 
 	<progressBar backgroundColor="-1:-1:-1"
-		offsetXPC="10" offsetYPC="70"
-		widthPC="80" heightPC="20">
+		offsetXPC="10" offsetYPC="64"
+		widthPC="80" heightPC="24">
 
 		<bar offsetXPC="45" offsetYPC="46"
 			widthPC="55" heightPC="10"
@@ -169,18 +197,18 @@
 			bufferColor="-1:-1:-1"
 			cornerRounding="10" />
 
-		<text align="left" fontSize="16"
+		<text align="left" fontSize="20"
 			offsetXPC="3" offsetYPC="0"
-			widthPC="97" heightPC="20"
+			widthPC="97" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
 				currentTitle;
 			</script>
 		</text>
 
-		<text align="left" fontSize="16"
+		<text align="left" fontSize="20"
 			offsetXPC="5" offsetYPC="40"
-			widthPC="40" heightPC="20"
+			widthPC="40" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
 				if (playStatus == 2) {
@@ -194,9 +222,9 @@
 			</script>
 		</text>
 
-		<text align="left" fontSize="16"
+		<text align="left" fontSize="20"
 			offsetXPC="3" offsetYPC="80"
-			widthPC="97" heightPC="20"
+			widthPC="97" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
 				if ((inputNumCount == 0) ||
@@ -228,17 +256,18 @@
 				postMessage("return");
 				ret = "true";
 			}
+			else if (userInput == "display") {
+				/* Toggle the playback status display */
+				runningHeadWidthPC = displayRunningHeadWidthPC - runningHeadWidthPC;
+				ret = "true";
+			}
 			else if (
-				(userInput == "display") ||
 				(userInput == "pagedown") ||
 				(userInput == "pageup") ||
 				(userInput == "right") ||
 				(userInput == "left")
 			) {
-				if (userInput == "display") {
-					n = (curNumVal - 1);
-				}
-				else if (userInput == "pagedown") {
+				if (userInput == "pagedown") {
 					n = Add(n, 10);
 				}
 				else if (userInput == "pageup") {

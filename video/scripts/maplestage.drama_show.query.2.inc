@@ -1,13 +1,14 @@
 <?php
 	$sortedVideos = array();
 
-//	$siteURLprefix = 'http://www.maplestage.com';
-	$siteURLprefix = '';
+	$siteURLprefix = 'http://www.maplestage.net';
 	foreach($videos as $video) {
 		$title = trim(str_between($video, '">', '</a>'));
 		$title = convertUnicodePoints($title);
 		$data  = '';
-		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
+		$link  = trim(str_between($video, '<a href="', '"'));
+		if (strpos($link, 'http://') === false)
+			$link .= $siteURLprefix;
 		$image = '';
 		$note  = '';
 		$extra = '';
