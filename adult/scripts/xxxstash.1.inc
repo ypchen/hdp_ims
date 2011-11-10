@@ -10,5 +10,6 @@
 	$itemTotal = count($videos);
 	include('05_check.base.inc');
 
-	$myImgHeight  = 50;
+	$myImgWidth   = 30;
+	$myImgHeight  = 40;
 ?>

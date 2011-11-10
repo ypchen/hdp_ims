@@ -11,13 +11,13 @@
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					trim(str_between($video, '<b>runtime:</b>', '</span>'));
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($video, '<span class="uploadtimehome">', '</span>'));
 		$note[] = $caption_view . ': ' .
 					trim(str_between($video, '<b>views:</b>', '</span>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($video, '<span class="uploadtimehome">', '</span>'));
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

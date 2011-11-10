@@ -12,14 +12,14 @@
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					trim(str_between($video, '<strong>', '</strong>'));
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($dataA[3], '<div class="video-right-text float-right">', '</div>'));
-		$note[] = $caption_view . ': ' .
-					trim(str_between($dataA[2], '<div class="video-right-text float-right">', ' views</div>'));
 		$note[] = $caption_eval . ': ' .
 					trim(str_between($video, 'style="padding:2px 0 0 0; color:green;">', '</div>'));
+		$note[] = $caption_view . ': ' .
+					trim(str_between($dataA[2], '<div class="video-right-text float-right">', ' views</div>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($dataA[3], '<div class="video-right-text float-right">', '</div>'));
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

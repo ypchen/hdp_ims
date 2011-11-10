@@ -3,6 +3,9 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
+	if (strpos($html, ' class="prevnext">下頁') === false)
+		$pageMax = $page;
+
 	$main_col_ary = explode('id="content">', $html);
 	$main_col = $main_col_ary[1];
 	$videos = explode('class="video_box">', $main_col);

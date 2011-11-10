@@ -2,20 +2,23 @@
 	$siteURLprefix = '';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
-		$title = trim(str_between($video, '<b>', '</b>'));
+		$link  = $siteURLprefix . trim(str_between($video, "<a href='", "'"));
+		$title = trim(str_between($video, "title='", "'"));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, 'style=\'vertical-align:top;\' src="', '"'));
+		$image  = trim(str_between($video, "src='", "'"));
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim(str_between($video, '<div style="float:right;text-align: right; width:100%;">', '<br>'));
-		$note[] = '';
-		$note[] = '';
-		$note[] = '';
+					trim(str_between($video, ' class="duration_text">', '</span>'));
+		$note[] = $caption_eval . ': ' .
+					trim(str_between($video, 'Rating: ', '</span>'));
+		$note[] = $caption_view . ': ' .
+					trim(str_between($video, ' class="views_text">', '</span>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($video, ' class="daysold">', '</span>'));
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

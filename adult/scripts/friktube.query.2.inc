@@ -15,7 +15,7 @@
 		$note[] = '';
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

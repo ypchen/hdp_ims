@@ -15,13 +15,13 @@
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					$len;
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($video, 'Added:', 'ago')) . ' 前';
 		$note[] = $caption_view . ': ' .
 					$view;
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($video, 'Added:', 'ago')) . ' 前';
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

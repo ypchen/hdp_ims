@@ -7,6 +7,7 @@
 	$myName = basename($myScriptName, '.php');
 	$myBaseName = basename($myName, '.query');
 ?>
+<onEnter>
 <?php
 	include('06_get.query.inc');
 
@@ -62,7 +63,6 @@
 	$historyUrl = $scriptsURLprefix . '/history.php?uid=' . $user_id;
 ?>
 
-<onEnter>
 	focus = 0;
 	message = "";
 	inputNumCount = 0;

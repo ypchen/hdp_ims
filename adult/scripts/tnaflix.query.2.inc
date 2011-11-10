@@ -7,15 +7,15 @@
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, ');"  src="', '"'));
+		$image  = trim(str_between($video, ' data-src="', '"'));
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim(str_between($video, 'screen">', '</span>'));
+					trim(str_between($video, 'class="duringTime">', '</span>'));
 		$note[] = '';
 		$note[] = '';
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

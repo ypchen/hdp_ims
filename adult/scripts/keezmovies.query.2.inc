@@ -9,14 +9,15 @@
 
 		$image  = trim(str_between($video, '<img src="', '"'));
 		$note   = array();
+		$note[] = $caption_length . ': ' .
+					trim(str_between($video, ' class="duration">', '</var>'));
+		$note[] = $caption_eval . ': ' .
+				trim(str_between($video, ' style="margin:2px 0 0;"><strong style="color:#000000;">', '</strong>'));
 		$note[] = $caption_view . ': ' .
 					trim(str_between($video, '<span class="views"><var>', '</var>'));
-		$note[] = $caption_eval . ': ' .
-				trim(str_between($video, 'style="margin:2px 0 0;"><strong >', '</strong>'));
-		$note[] = '';
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

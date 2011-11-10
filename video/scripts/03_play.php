@@ -81,6 +81,15 @@
 	runningHead = "";
 	runningHeadWidthPC = 0;
 	displayRunningHeadWidthPC = 100;
+
+	clipToPlay = 0;
+	clipToPlayTitle = "";
+	selectClip = 0;
+	selectClipTimeCounter = 0;
+	selectClipTimeCounterMax = 50;
+	selectClipStatus = "";
+	selectClipStatusWidthPC = 0;
+	displaySelectClipStatusWidthPC = 100;
 </onEnter>
 
 <onExit>
@@ -98,17 +107,30 @@
 	else {
 		pbMaxInt = Integer(pbMax);
 		pbMaxH = Integer(pbMaxInt / 3600);
-		pbMaxM = Integer((pbMaxInt % 3600) / 60);
+		pbMaxM = pbMaxInt % 3600;
+		pbMaxM = Integer(pbMaxM / 60);
 		if (pbMaxM &lt; 10) pbMaxM = "0" + pbMaxM;
 		pbMaxS = pbMaxInt % 60;
 		if (pbMaxS &lt; 10) pbMaxS = "0" + pbMaxS;
 		pbCurInt = Integer(pbCur);
 		pbCurH = Integer(pbCurInt / 3600);
-		pbCurM = Integer((pbCurInt % 3600) / 60);
+		pbCurM = pbCurInt % 3600;
+		pbCurM = Integer(pbCurM / 60);
 		if (pbCurM &lt; 10) pbCurM = "0" + pbCurM;
 		pbCurS = pbCurInt % 60;
 		if (pbCurS &lt; 10) pbCurS = "0" + pbCurS;
 		runningHead = pbCurH + ":" + pbCurM + ":" + pbCurS + " / " + pbMaxH + ":" + pbMaxM + ":" + pbMaxS + " [" + now + "/" + itemCount + "] " + currentTitle;
+	}
+
+	if (selectClip == 1) {
+		selectClipTimeCounter = Add(selectClipTimeCounter, 1);
+		if (selectClipTimeCounter &gt;= selectClipTimeCounterMax) {
+			selectClip = 0;
+			selectClipStatusWidthPC = 0;
+			inputNumCount = 0;
+			inputNumVal = -1;
+			curNumVal = -1;
+		}
 	}
 
 	if ((n &lt; 0) || (n &gt; (itemCount-1))) {
@@ -126,6 +148,9 @@
 				postMessage("return");
 			}
 			else {
+				inputNumCount = 0;
+				inputNumVal = -1;
+				curNumVal = -1;
 				playItemURL(currentUrl, 0, "mediaDisplay", "previewWindow");
 			}
 			currentTitle = getStringArrayAt(titleArray, n);
@@ -186,6 +211,34 @@
 		</widthPC>
 	</text>
 
+	<text redraw="yes" align="left" fontSize="20"
+		offsetXPC="0" offsetYPC="12"
+		widthPC="0" heightPC="6"
+		backgroundColor="0:0:0" foregroundColor="255:255:255">
+		<script>
+			selectClipStatus;
+		</script>
+		<widthPC>
+			<script>
+				selectClipStatusWidthPC;
+			</script>
+		</widthPC>
+	</text>
+
+	<text redraw="yes" align="left" fontSize="20"
+		offsetXPC="0" offsetYPC="18"
+		widthPC="0" heightPC="6"
+		backgroundColor="0:0:0" foregroundColor="255:255:255">
+		<script>
+			clipToPlayTitle;
+		</script>
+		<widthPC>
+			<script>
+				selectClipStatusWidthPC;
+			</script>
+		</widthPC>
+	</text>
+
 	<progressBar backgroundColor="-1:-1:-1"
 		offsetXPC="10" offsetYPC="64"
 		widthPC="80" heightPC="24">
@@ -230,10 +283,10 @@
 				if ((inputNumCount == 0) ||
 						((inputNumCount == itemCountDigits) &amp;&amp;
 						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "[↔]±1;  [上下頁]±10;  [數字直選]+[信息]";
+					str = "[上下頁]±1直播 -或- [↔]±1; [↕]±10; [數字設定]+[放大]";
 				}
 				else {
-					str = "[↔]±1;  [上下頁]±10;  [信息]播放第 " + curNumVal + " 項";
+					str = "[上下頁]±1直播 -或- [↔]±1; [↕]±10; [放大]播放第 " + curNumVal + " 項";
 				}
 				str;
 			</script>
@@ -261,38 +314,54 @@
 				runningHeadWidthPC = displayRunningHeadWidthPC - runningHeadWidthPC;
 				ret = "true";
 			}
-			else if (
-				(userInput == "pagedown") ||
-				(userInput == "pageup") ||
-				(userInput == "right") ||
-				(userInput == "left")
-			) {
-				if (userInput == "pagedown") {
-					n = Add(n, 10);
-				}
-				else if (userInput == "pageup") {
-					n = Minus(n, 10);
-				}
-				else if (userInput == "right") {
-					n = Add(n, 1);
-				}
-				else if (userInput == "left") {
-					n = Minus(n, 1);
-				}
+			else if ((selectClip == 1) &amp;&amp; (userInput == "zoom")) {
 
-				/* Make n valid */
-				if (n &lt; 0)
-					n = 0;
-				else if (n &gt; (itemCount-1))
-					n = (itemCount-1);
+				selectClip = 0;
+				selectClipStatusWidthPC = 0;
 
 				startVideo = 1;
-				if(itemCount &gt; 0)
+				/* Set n to play */
+				n = clipToPlay;
+
+				if (itemCount &gt; 0)
 					postMessage("video_stop");
-				setRefreshTime(100);
+
+				ret = "true";
+			}
+			else if (userInput == "pagedown") {
+
+				startVideo = 1;
+
+				/* Set n to play */
+				n = Add(n, 1);
+
+				if (n &gt;= itemCount)
+					postMessage("return");
+				else if (itemCount &gt; 0)
+					postMessage("video_stop");
+
+				ret = "true";
+			}
+			else if (userInput == "pageup") {
+
+				startVideo = 1;
+
+				/* Set n to play */
+				n = Minus(n, 1);
+
+				if (n &lt; 0)
+					n = 0;
+
+				else if (itemCount &gt; 0)
+					postMessage("video_stop");
+
 				ret = "true";
 			}
 			else if (
+				(userInput == "down") ||
+				(userInput == "up") ||
+				(userInput == "right") ||
+				(userInput == "left") ||
 				(userInput == "one") ||
 				(userInput == "two") ||
 				(userInput == "three") ||
@@ -304,60 +373,119 @@
 				(userInput == "nine") ||
 				(userInput == "zero")
 			) {
-				if (userInput == "one") {
-					inputNumVal = 1;
-				}
-				else if (userInput == "two") {
-					inputNumVal = 2;
-				}
-				else if (userInput == "three") {
-					inputNumVal = 3;
-				}
-				else if (userInput == "four") {
-					inputNumVal = 4;
-				}
-				else if (userInput == "five") {
-					inputNumVal = 5;
-				}
-				else if (userInput == "six") {
-					inputNumVal = 6;
-				}
-				else if (userInput == "seven") {
-					inputNumVal = 7;
-				}
-				else if (userInput == "eight") {
-					inputNumVal = 8;
-				}
-				else if (userInput == "nine") {
-					inputNumVal = 9;
-				}
-				else if (userInput == "zero") {
-					inputNumVal = 0;
+				if (
+					(userInput == "one") ||
+					(userInput == "two") ||
+					(userInput == "three") ||
+					(userInput == "four") ||
+					(userInput == "five") ||
+					(userInput == "six") ||
+					(userInput == "seven") ||
+					(userInput == "eight") ||
+					(userInput == "nine") ||
+					(userInput == "zero")
+				) {
+					if (userInput == "one") {
+						inputNumVal = 1;
+					}
+					else if (userInput == "two") {
+						inputNumVal = 2;
+					}
+					else if (userInput == "three") {
+						inputNumVal = 3;
+					}
+					else if (userInput == "four") {
+						inputNumVal = 4;
+					}
+					else if (userInput == "five") {
+						inputNumVal = 5;
+					}
+					else if (userInput == "six") {
+						inputNumVal = 6;
+					}
+					else if (userInput == "seven") {
+						inputNumVal = 7;
+					}
+					else if (userInput == "eight") {
+						inputNumVal = 8;
+					}
+					else if (userInput == "nine") {
+						inputNumVal = 9;
+					}
+					else if (userInput == "zero") {
+						inputNumVal = 0;
+					}
+
+					if ((inputNumCount == 0) || (inputNumCount == itemCountDigits)) {
+						inputNumCount = 1;
+						curNumVal = inputNumVal;
+					}
+					else {
+						inputNumCount = inputNumCount + 1;
+						curNumVal = (10*curNumVal) + inputNumVal;
+					}
+
+					if ((curNumVal &gt;= 1) &amp;&amp; (curNumVal &lt;= itemCount)) {
+						if (selectClip == 1)
+							clipToPlay = (curNumVal - 1);
+					}
+					else if ((inputNumVal &gt;= 1) &amp;&amp; (inputNumVal &lt;= itemCount)) {
+						/* Keep the last digit which makes the value out of range unless invalid */
+						inputNumCount = 1;
+						curNumVal = inputNumVal;
+						if (selectClip == 1)
+							clipToPlay = (curNumVal - 1);
+					}
+					else {
+						inputNumCount = 0;
+						inputNumVal = -1;
+						curNumVal = -1;
+					}
 				}
 
-				if ((inputNumCount == 0) || (inputNumCount == itemCountDigits)) {
-					inputNumCount = 1;
-					curNumVal = inputNumVal;
+				if (selectClip == 0) {
+					selectClip = 1;
+					selectClipStatusWidthPC = displaySelectClipStatusWidthPC;
+					if ((inputNumCount == 0) ||
+							((inputNumCount == itemCountDigits) &amp;&amp;
+							((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
+						clipToPlay = n;
+					}
+					else {
+						clipToPlay = (curNumVal - 1);
+					}
 				}
-				else {
-					inputNumCount = inputNumCount + 1;
-					curNumVal = (10*curNumVal) + inputNumVal;
+				else if (
+					(userInput == "down") ||
+					(userInput == "up") ||
+					(userInput == "right") ||
+					(userInput == "left")
+				) {
+					if (userInput == "down") {
+						clipToPlay = Add(clipToPlay, 10);
+					}
+					else if (userInput == "up") {
+						clipToPlay = Minus(clipToPlay, 10);
+					}
+					else if (userInput == "right") {
+						clipToPlay = Add(clipToPlay, 1);
+					}
+					else if (userInput == "left") {
+						clipToPlay = Minus(clipToPlay, 1);
+					}
+
+					/* Make clipToPlay valid */
+					if (clipToPlay &lt; 0)
+						clipToPlay = 0;
+					else if (clipToPlay &gt; (itemCount-1))
+						clipToPlay = (itemCount-1);
 				}
 
-				if ((curNumVal &gt;= 1) &amp;&amp; (curNumVal &lt;= itemCount)) {
-					/* n = (curNumVal - 1); */
-				}
-				else if ((inputNumVal &gt;= 1) &amp;&amp; (inputNumVal &lt;= itemCount)) {
-					/* Keep the last digit which makes the value out of range unless invalid */
-					inputNumCount = 1;
-					curNumVal = inputNumVal;
-					/* n = (curNumVal - 1); */
-				}
-				else {
-					inputNumCount = 0;
-					inputNumVal = -1;
-					curNumVal = -1;
-				}
+				selectClipTimeCounter = 0;
+
+				selectClipStatus = "按 [放大] 播放第 " + Add(clipToPlay, 1) + " 段; 現正播放第 " + now + " / " + itemCount + " 段";
+				clipToPlayTitle = getStringArrayAt(titleArray, clipToPlay);
+
 				ret = "true";
 			}
 			ret;

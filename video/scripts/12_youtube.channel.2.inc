@@ -1,21 +1,6 @@
 <?php
-	// Extract all ids here
-	$iCount = 0;
-	$idString = '';
-	$idArray  = array();
-	foreach($videos as $video) {
-		$currId    = trim(str_between($video, '<yt:videoid>', '</yt:videoid>'));
-		$idString .= '&amp;vid' . strval($iCount) . '=' . $currId;
-		$idArray[] = $currId;
-		$iCount ++;
-	}
-
-	if (strcmp($extraSettings[1], 'continue=1') == 0) {
-		$playContinue = true;
+	if ($playContinue) {
 		$dataSupp = $idString;
-	}
-	else {
-		$playContinue = false;
 	}
 
 	$iCount = 0;
@@ -23,8 +8,7 @@
 	foreach($videos as $video) {
 
 		$link  = $idArray[$iCount];
-		$title = trim(str_between($video, '<title>', '</title>'));
-		$title = convertUnicodePoints($title);
+		$title = $titleArray[$iCount];
 		if ($playContinue) {
 			// Pass the current item number
 			$extra = strval($iCount);

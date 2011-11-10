@@ -9,7 +9,7 @@
 			$title = convertUnicodePoints($title);
 			$data  = ' (' . trim(str_between($video, "<span class='categorytotal'>", ' videos</span>')) . ' 片段)';
 			$link  = $siteURLprefix . trim(str_between($video, 'porn movies" href="', '"'));
-			$image = trim(str_between($video, 'style=\'vertical-align:top;\' src="', '"'));
+			$image = trim(str_between($video, "<img src='", "'"));
 			$note  = '';
 			$extra = '';
 

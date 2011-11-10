@@ -9,6 +9,7 @@
 	}
 	else {
 		$ids  = explode(',', $link);
+		$title = $title_03_play;
 	}
 	include('05_check.link.idcount.inc');
 ?>

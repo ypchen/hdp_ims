@@ -11,13 +11,13 @@
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					trim(str_between($video, '<div class="clip-time">', '</div>'));
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($video, '<div class="clip-added">', '</div>'));
 		$note[] = $caption_view . ': ' .
 					trim(str_between($video, '<div class="clip-views">views: ', '</div>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($video, '<div class="clip-added">', '</div>'));
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

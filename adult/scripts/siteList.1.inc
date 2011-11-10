@@ -16,40 +16,39 @@
 
 	// 01 -> 02 -> play
 	$sites = array(
-		'thisav',
-		'friktube',
-		'hardsextube',
-		'moviesand',
-		'myjizztube',
-		'penthousevideos',
-		'pornhub',
-		'pornomovies',
-		'pornrabbit',
-		'sexbot',
-		'tnaflix',
-		'xxxstash',
-		'pornmehorny',
-		'tube8',
-		'flytube',
-		'keezmovies',
-		'snizzshare',
-		'tjoob',
-		'xvideos',
+		array('thisav', ''),
+		array('flytube', ''),
+		array('friktube', ''),
+		array('hardsextube', ''),
+		array('keezmovies', ''),
+		array('moviesand', ''),
+		array('myjizztube', ' (無法選時)'),
+		array('penthousevideos', ''),
+		array('pornhub', ''),
+		array('pornomovies', ''),
+		array('pornrabbit', ''),
+		array('sexbot', ''),
+		array('snizzshare', ''),
+		array('tjoob', ' (無法選時)'),
+		array('tnaflix', ''),
+		array('tube8', ''),
+		array('xvideos', ''),
+		array('xxxstash', ' (無法選時)'),
 	);
 	foreach($sites as $site) {
 		$itemTotal ++;
 		$itemXML   .=
 			"\t<item>\r\n"  .
-				"\t\t<title>" . $site . "</title>\r\n" .
-				"\t\t<link>"  . $scriptsURLprefix . '/' . $site . ".php?uid=" . $user_id . "</link>\r\n" .
-				"\t\t" . siteLogo($site) . "\r\n" .
+				"\t\t<title>" . $site[0] . $site[1] . "</title>\r\n" .
+				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id . "</link>\r\n" .
+				"\t\t" . siteLogo($site[0]) . "\r\n" .
 				"\t\t<mediaDisplay />\r\n" .
 			"\t</item>\r\n\r\n";
 	}
 
 	// 02 -> play
 	$sites = array(
-		array('home-video-tube', 'http://www.home-video-tube.com/'),
+//		array('home-video-tube', 'http://www.home-video-tube.com/'),
 		array('timtube', 'http://www.timtube.com/'),
 	);
 	foreach($sites as $site) {

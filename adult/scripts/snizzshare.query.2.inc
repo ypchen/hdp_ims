@@ -10,14 +10,14 @@
 		$image  = trim(str_between($video, '<img src="', '"'));
 		$dataA  = explode('<td', $video);
 		$note   = array();
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($dataA[3], '>', ' ago</td>')) . ' 前';
 		$note[] = $caption_view . ': ' .
 					trim(str_between($dataA[4], '>', ' views</td>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($dataA[3], '>', ' ago</td>')) . ' 前';
 		$note[] = '';
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

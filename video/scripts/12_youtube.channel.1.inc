@@ -39,4 +39,31 @@
 
 	$itemTotal = count($videos);
 	include('05_check.base.inc');
+
+	if (strcmp($extraSettings[1], 'continue=1') == 0) {
+		$playContinue = true;
+	}
+	else {
+		$playContinue = false;
+	}
+
+	// Save titles to the local disk
+	$yvTitleFilePath = '/usr/local/etc/dvdplayer/youtubeTitles.dat';
+	echo "\ttitleArray  = null;\r\n";
+	// Extract all ids and titles here
+	$iCount     = 0;
+	$idString   = '';
+	$idArray    = array();
+	$titleArray = array();
+	foreach($videos as $video) {
+		$currId    = trim(str_between($video, '<yt:videoid>', '</yt:videoid>'));
+		$idString .= '&amp;vid' . strval($iCount) . '=' . $currId;
+		$idArray[] = $currId;
+		$title = convertUnicodePoints(
+					trim(str_between($video, '<title>', '</title>')));
+		echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
+		$titleArray[] = $title;
+		$iCount ++;
+	}
+	echo "\twriteStringToFile(\"" . $yvTitleFilePath . "\", titleArray);\r\n";
 ?>

@@ -13,13 +13,13 @@
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					trim(str_between($dataA[$index+0], 'class="video-item-info">', '</div>'));
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($dataA[$index+1], 'class="video-item-info-right">', '</div>'));
 		$note[] = $caption_view . ': ' .
 					trim(str_between($dataA[$index+3], 'class="video-item-info-right">', ' Views</div>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($dataA[$index+1], 'class="video-item-info-right">', '</div>'));
 		$note[] = '';
 
-		$clickPlay = 'yes';
+		$clickPlay = 'no';
 		include('04_query.items.link.inc');
 	}
 ?>

@@ -14,6 +14,14 @@
 	$ids = array();
 	$pass_check = true;
 	try {
+
+		if (isset($title)) {
+			$title_03_play = $title;
+		}
+		else {
+			unset($title_03_play);
+		}
+
 		unset($title);
 		unset($titles);
 
@@ -21,9 +29,6 @@
 
 		// 日本廣告 (測試用)
 		//$ids = array('tBsA2Bk2rpk', '2tkt86hirVY', 'hrv6P0Ckz7w');
-
-		if (!isset($title))
-			$title = '';
 	}
 	catch (Exception $e) {
 		$pass_check = false;
@@ -33,7 +38,16 @@
 
 		echo "\titemSize    = " . count($ids) . ";\r\n";
 		echo "\tlinkArray   = null;\r\n";
-		echo "\ttitleArray  = null;\r\n";
+
+		$hasTitleInfo = (isset($titles) || isset($title));
+		if ($hasTitleInfo) {
+			echo "\ttitleArray  = null;\r\n";
+		}
+		else {
+			// Read titles from the local disk if no title information is passed
+			$yvTitleFilePath = '/usr/local/etc/dvdplayer/youtubeTitles.dat';
+			echo "\ttitleArray  = readStringFromFile(\"" . $yvTitleFilePath . "\");\r\n";
+		}
 
 		$i = 0;
 
@@ -47,11 +61,13 @@
 
 			echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $link . "\");\r\n";
 
-			if (isset($titles)) {
-				echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $titles[$i ++] . "\");\r\n";
-			}
-			else {
-				echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
+			if ($hasTitleInfo) {
+				if (isset($titles)) {
+					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $titles[$i ++] . "\");\r\n";
+				}
+				else {
+					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
+				}
 			}
 		}
 	}
