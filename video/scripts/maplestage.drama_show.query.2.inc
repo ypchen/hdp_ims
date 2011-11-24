@@ -8,7 +8,7 @@
 		$data  = '';
 		$link  = trim(str_between($video, '<a href="', '"'));
 		if (strpos($link, 'http://') === false)
-			$link .= $siteURLprefix;
+			$link = $siteURLprefix . $link;
 		$image = '';
 		$note  = '';
 		$extra = '';

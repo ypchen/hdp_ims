@@ -39,12 +39,9 @@
 	inputNumVal = -1;
 	curNumVal = -1;
 
-	m = 0;
 	if (linkArray == null) {
 		postMessage("return");
 	}
-	setRefreshTime(100);
-	startVideo = 1;
 	n = readStringFromFile(storagePath);
 	if (n == null) {
 		n = <?php echo (isset($iStart) ? $iStart : 0) ;?>;
@@ -78,18 +75,45 @@
 	<?php include('00_utils.digits.inc'); ?>
 	itemCountDigits = y;
 
-	runningHead = "";
+	extraInfoFile = "<?php echo $fileLocalExtraInfo; ?>";
+
+	lastPlayStatus = -2;
+	playStatus = -1;
+
+	runningHeadOne = "";
+	runningHeadTwo = "";
 	runningHeadWidthPC = 0;
 	displayRunningHeadWidthPC = 100;
 
 	clipToPlay = 0;
-	clipToPlayTitle = "";
 	selectClip = 0;
-	selectClipTimeCounter = 0;
-	selectClipTimeCounterMax = 50;
-	selectClipStatus = "";
+	selectClipTimeMark = 0;
+	selectClipStatusOne = "";
+	selectClipStatusTwo = "";
 	selectClipStatusWidthPC = 0;
 	displaySelectClipStatusWidthPC = 100;
+
+	ccDataStartFile = "<?php echo $fileLocalCCStart; ?>";
+	ccDataEndFile   = "<?php echo $fileLocalCCEnd; ?>";
+	ccDataTextFile  = "<?php echo $fileLocalCCText; ?>";
+
+	pbLastInt = -1;
+	pbTimeCount = 0;
+	ccTextFontSize = 24;
+	ccTextOffsetYPC = 81.25;
+	ccTextHeightPC = 5.8;
+	ccBackgroundColor = "-1:-1:-1";
+	ccForegroundColor = "255:255:0";
+	ccForegroundShadowColor = "0:0:0";
+	ccTextWidthPC = 100;
+	ccDataCount = 0;
+
+	showCCStatus = "":
+	showCCStatusWidthPC = 0;
+	showCCStatusTimeMark = 0;
+
+	startVideo = 1;
+	setRefreshTime(100);
 </onEnter>
 
 <onExit>
@@ -102,7 +126,13 @@
 	pbCur = getStringArrayAt(pbStatus, 0);
 	pbMax = getStringArrayAt(pbStatus, 1);
 	if ((pbCur == "0") &amp;&amp; (pbMax == "100")) {
-		runningHead = "";
+		runningHeadOne = "";
+		runningHeadTwo = "";
+
+		pbLastInt = -1;
+		pbTimeCount = 0;
+
+		pbCurTick = 0;
 	}
 	else {
 		pbMaxInt = Integer(pbMax);
@@ -119,17 +149,80 @@
 		if (pbCurM &lt; 10) pbCurM = "0" + pbCurM;
 		pbCurS = pbCurInt % 60;
 		if (pbCurS &lt; 10) pbCurS = "0" + pbCurS;
-		runningHead = pbCurH + ":" + pbCurM + ":" + pbCurS + " / " + pbMaxH + ":" + pbMaxM + ":" + pbMaxS + " [" + now + "/" + itemCount + "] " + currentTitle;
+		runningHeadOne = pbCurH + ":" + pbCurM + ":" + pbCurS + " / " + pbMaxH + ":" + pbMaxM + ":" + pbMaxS + " [" + now + "/" + itemCount + "] " + currentTitle;
+
+		if (pbLastInt != pbCurInt) {
+			pbLastInt = pbCurInt;
+			pbTimeCount = 0;
+		}
+		else {
+			pbTimeCount = Add(pbTimeCount, 1);
+			if (pbTimeCount &gt; 9)
+				pbTimeCount = 9;
+		}
+
+		pbCurTick = Add(Integer(pbCurInt * 10), pbTimeCount);
+	}
+
+	if (ccDataCount &gt; 0) {
+		ccLower = 1;
+		ccUpper = ccDataCount;
+		ccFound = 0;
+		while (ccFound == 0) {
+			ccIndex = Integer(Add(ccLower, ccUpper) / 2);
+			ccStart = Integer(getStringArrayAt(ccDataStart, ccIndex));
+			if (pbCurTick &lt; ccStart) {
+				ccUpper = ccIndex;
+			}
+			else if (pbCurTick &gt; ccStart) {
+				if (ccLower == (ccUpper-1)) {
+					ccFound = 1;
+				}
+				else {
+					ccLower = ccIndex;
+				}
+			}
+			else {
+				ccFound = 1;
+			}
+		}
+
+		ccEnd = Integer(getStringArrayAt(ccDataEnd, ccIndex-2));
+		if (pbCurTick &lt; ccEnd) {
+			ccTextThree = getStringArrayAt(ccDataText, ccIndex-2);
+		}
+		else {
+			ccTextThree = "";
+		}
+		ccEnd = Integer(getStringArrayAt(ccDataEnd, ccIndex-1));
+		if (pbCurTick &lt; ccEnd) {
+			ccTextTwo = getStringArrayAt(ccDataText, ccIndex-1);
+		}
+		else {
+			ccTextTwo = "";
+		}
+		ccEnd = Integer(getStringArrayAt(ccDataEnd, ccIndex));
+		if (pbCurTick &lt; ccEnd) {
+			ccTextOne = getStringArrayAt(ccDataText, ccIndex);
+		}
+		else {
+			ccTextOne = "";
+		}
 	}
 
 	if (selectClip == 1) {
-		selectClipTimeCounter = Add(selectClipTimeCounter, 1);
-		if (selectClipTimeCounter &gt;= selectClipTimeCounterMax) {
+		if (pbCurInt &gt; Add(selectClipTimeMark, 6)) {
 			selectClip = 0;
 			selectClipStatusWidthPC = 0;
 			inputNumCount = 0;
 			inputNumVal = -1;
 			curNumVal = -1;
+		}
+	}
+
+	if (showCCStatusWidthPC &gt; 0) {
+		if (pbCurInt &gt; Add(showCCStatusTimeMark, 3)) {
+			showCCStatusWidthPC = 0;
 		}
 	}
 
@@ -140,7 +233,25 @@
 		vidProgress = getPlaybackStatus();
 		bufProgress = getCachedStreamDataSize(0, bufferSize);
 		playElapsed = getStringArrayAt(vidProgress, 0);
+		lastPlayStatus = playStatus;
 		playStatus  = getStringArrayAt(vidProgress, 3);
+
+		if ((playStatus == 2) &amp;&amp; (lastPlayStatus != 2)) {
+			runningHeadTwo = readStringFromFile(extraInfoFile);
+			if ((runningHeadTwo == null) || (runningHeadTwo == "")) {
+				runningHeadTwo = getStringArrayAt(extraInfoArray, n);
+			}
+			ccDataStart = readStringFromFile(ccDataStartFile);
+			ccDataEnd = readStringFromFile(ccDataEndFile);
+			ccDataText = readStringFromFile(ccDataTextFile);
+			ccDataCountString = getStringArrayAt(ccDataStart, 0);
+			if ((ccDataCountString == null) || (ccDataCountString == "")) {
+				ccDataCount = 0;
+			}
+			else {
+				ccDataCount = Integer(ccDataCountString);
+			}
+		}
 
 		if (startVideo == 1) {
 			currentUrl = getStringArrayAt(linkArray, n);
@@ -151,6 +262,16 @@
 				inputNumCount = 0;
 				inputNumVal = -1;
 				curNumVal = -1;
+
+				pbLastInt = -1;
+				pbTimeCount = 0;
+
+				showCCStatus = "":
+				showCCStatusWidthPC = 0;
+				showCCStatusTimeMark = 0;
+
+				writeStringToFile(extraInfoFile, "");
+
 				playItemURL(currentUrl, 0, "mediaDisplay", "previewWindow");
 			}
 			currentTitle = getStringArrayAt(titleArray, n);
@@ -158,8 +279,8 @@
 				currentTitle = "";
 			}
 			writeStringToFile(storagePath, n);
-			setRefreshTime(100);
 			startVideo = 0;
+			setRefreshTime(100);
 			updatePlaybackProgress(bufProgress, "mediaDisplay", "progressBar");
 		}
 		else {
@@ -201,42 +322,230 @@
 		offsetXPC="0" offsetYPC="6"
 		widthPC="0" heightPC="6"
 		backgroundColor="0:0:0" foregroundColor="255:255:255">
-		<script>
-			runningHead;
-		</script>
-		<widthPC>
-			<script>
-				runningHeadWidthPC;
-			</script>
-		</widthPC>
+		<script>runningHeadOne;</script>
+		<widthPC><script>runningHeadWidthPC;</script></widthPC>
 	</text>
 
 	<text redraw="yes" align="left" fontSize="20"
 		offsetXPC="0" offsetYPC="12"
 		widthPC="0" heightPC="6"
 		backgroundColor="0:0:0" foregroundColor="255:255:255">
-		<script>
-			selectClipStatus;
-		</script>
+		<script>runningHeadTwo;</script>
 		<widthPC>
 			<script>
-				selectClipStatusWidthPC;
+				if ((runningHeadTwo == null) || (runningHeadTwo == ""))
+					0;
+				else
+					runningHeadWidthPC;
 			</script>
 		</widthPC>
 	</text>
 
 	<text redraw="yes" align="left" fontSize="20"
-		offsetXPC="0" offsetYPC="18"
+		offsetXPC="0" offsetYPC="6"
 		widthPC="0" heightPC="6"
 		backgroundColor="0:0:0" foregroundColor="255:255:255">
-		<script>
-			clipToPlayTitle;
-		</script>
-		<widthPC>
-			<script>
-				selectClipStatusWidthPC;
-			</script>
-		</widthPC>
+		<script>selectClipStatusOne;</script>
+		<widthPC><script>selectClipStatusWidthPC;</script></widthPC>
+	</text>
+
+	<text redraw="yes" align="left" fontSize="20"
+		offsetXPC="0" offsetYPC="12"
+		widthPC="0" heightPC="6"
+		backgroundColor="0:0:0" foregroundColor="255:255:255">
+		<script>selectClipStatusTwo;</script>
+		<widthPC><script>selectClipStatusWidthPC;</script></widthPC>
+	</text>
+
+	<text redraw="yes" align="left" fontSize="20"
+		offsetXPC="0" offsetYPC="6"
+		widthPC="0" heightPC="6"
+		backgroundColor="0:0:0" foregroundColor="255:255:0">
+		<script>showCCStatus;</script>
+		<widthPC><script>showCCStatusWidthPC;</script></widthPC>
+	</text>
+
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.4" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextThree;</script>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.2" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextThree;</script>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.4" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextThree;</script>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.2" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextThree;</script>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.3" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextThree;</script>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundColor;</script></foregroundColor>
+	</text>
+
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.4" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextTwo;</script>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.2" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextTwo;</script>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.4" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextTwo;</script>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.2" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextTwo;</script>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.3" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextTwo;</script>
+		<offsetYPC><script>ccTextOffsetYPC - ccTextHeightPC;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundColor;</script></foregroundColor>
+	</text>
+
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.4" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextOne;</script>
+		<offsetYPC><script>ccTextOffsetYPC - 0.1;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.2" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextOne;</script>
+		<offsetYPC><script>ccTextOffsetYPC - 0.1;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.4" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextOne;</script>
+		<offsetYPC><script>ccTextOffsetYPC - (-0.2);</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.2" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextOne;</script>
+		<offsetYPC><script>ccTextOffsetYPC - (-0.2);</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
+	</text>
+	<text redraw="yes" align="center" fontSize="20"
+		offsetXPC="-3.3" offsetYPC="100"
+		widthPC="0" heightPC="0"
+		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
+		<script>ccTextOne;</script>
+		<offsetYPC><script>ccTextOffsetYPC;</script></offsetYPC>
+		<fontSize><script>ccTextFontSize;</script></fontSize>
+		<widthPC><script>ccTextWidthPC;</script></widthPC>
+		<heightPC><script>ccTextHeightPC;</script></heightPC>
+		<backgroundColor><script>ccBackgroundColor;</script></backgroundColor>
+		<foregroundColor><script>ccForegroundColor;</script></foregroundColor>
 	</text>
 
 	<progressBar backgroundColor="-1:-1:-1"
@@ -283,10 +592,10 @@
 				if ((inputNumCount == 0) ||
 						((inputNumCount == itemCountDigits) &amp;&amp;
 						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "[上下頁]±1直播 -或- [↔]±1; [↕]±10; [數字設定]+[放大]";
+					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10,[數字]}+[放大]";
 				}
 				else {
-					str = "[上下頁]±1直播 -或- [↔]±1; [↕]±10; [放大]播放第 " + curNumVal + " 項";
+					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10} [放大]播第 " + curNumVal + " 項";
 				}
 				str;
 			</script>
@@ -309,7 +618,34 @@
 				postMessage("return");
 				ret = "true";
 			}
+			else if (userInput == "option_blue") {
+				/* Toggle the closed caption display */
+				ccTextWidthPC = 100 - ccTextWidthPC;
+
+				if (ccDataCount &gt; 0) {
+					if (ccTextWidthPC == 0) {
+						showCCStatus = "字幕：隱藏";
+					}
+					else {
+						showCCStatus = "字幕：顯示";
+					}
+				}
+				else {
+					showCCStatus = "無字幕資訊";
+				}
+				showCCStatusWidthPC = 100;
+				showCCStatusTimeMark = pbCurInt;
+
+				ret = "true";
+			}
 			else if (userInput == "display") {
+				/* Pressing display always hides the select clip status */
+				selectClip = 0;
+				selectClipStatusWidthPC = 0;
+				inputNumCount = 0;
+				inputNumVal = -1;
+				curNumVal = -1;
+
 				/* Toggle the playback status display */
 				runningHeadWidthPC = displayRunningHeadWidthPC - runningHeadWidthPC;
 				ret = "true";
@@ -335,9 +671,7 @@
 				/* Set n to play */
 				n = Add(n, 1);
 
-				if (n &gt;= itemCount)
-					postMessage("return");
-				else if (itemCount &gt; 0)
+				if (itemCount &gt; 0)
 					postMessage("video_stop");
 
 				ret = "true";
@@ -351,7 +685,6 @@
 
 				if (n &lt; 0)
 					n = 0;
-
 				else if (itemCount &gt; 0)
 					postMessage("video_stop");
 
@@ -444,6 +777,10 @@
 				}
 
 				if (selectClip == 0) {
+					/* Selecting clips always hides the playback status display */
+					runningHeadWidthPC = 0;
+
+					/* Toggle the select clip display */
 					selectClip = 1;
 					selectClipStatusWidthPC = displaySelectClipStatusWidthPC;
 					if ((inputNumCount == 0) ||
@@ -481,10 +818,10 @@
 						clipToPlay = (itemCount-1);
 				}
 
-				selectClipTimeCounter = 0;
+				selectClipTimeMark = pbCurInt;
 
-				selectClipStatus = "按 [放大] 播放第 " + Add(clipToPlay, 1) + " 段; 現正播放第 " + now + " / " + itemCount + " 段";
-				clipToPlayTitle = getStringArrayAt(titleArray, clipToPlay);
+				selectClipStatusOne = "按 [放大] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
+				selectClipStatusTwo = "現正播放 [" + now + "/" + itemCount + "] " + currentTitle;
 
 				ret = "true";
 			}

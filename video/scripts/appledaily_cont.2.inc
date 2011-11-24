@@ -6,7 +6,7 @@
 		$siteURLprefix = 'http://tw.nextmedia.com';
 		foreach($videos as $video) {
 			$title = trim(str_between($video, '>', '</a>'));
-			$title = convertUnicodePoints($title);
+			$title = convertUnicodePoints(strip_tags($title));
 			$data  = '';
 			$link  = $siteURLprefix . trim(str_between($video, 'ef="', '"'));
 			$image = '';

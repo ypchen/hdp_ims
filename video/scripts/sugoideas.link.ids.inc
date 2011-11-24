@@ -1,5 +1,7 @@
 <?php
 	// For sugoideas
+	$ids = array();
+
 	$link = str_replace(
 			'http://sugoitw.sugoideas.com/',
 			'http://tw.sugoitw.com/',

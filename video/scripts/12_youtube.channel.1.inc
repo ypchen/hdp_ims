@@ -61,8 +61,8 @@
 		$idArray[] = $currId;
 		$title = convertUnicodePoints(
 					trim(str_between($video, '<title>', '</title>')));
-		echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
 		$titleArray[] = $title;
+		echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . str_replace('"', '\"', $title) . "\");\r\n";
 		$iCount ++;
 	}
 	echo "\twriteStringToFile(\"" . $yvTitleFilePath . "\", titleArray);\r\n";

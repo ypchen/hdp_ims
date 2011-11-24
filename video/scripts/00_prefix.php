@@ -76,6 +76,17 @@
 	// Default local youtube format prefs file
 	$fileLocalYoutubeVideoFmtPrefs = $filePath . 'ims_yv_fmt_prefs.dat';
 
+	// Default local youtube cc prefs file
+	$fileLocalYoutubeVideoCCPrefs = $filePath . 'ims_yv_cc_prefs.dat';
+
+	// Local file for extra information
+	$fileLocalExtraInfo = $filePath . 'ims_extra_info.dat';
+
+	// Local files for handling closed captioning
+	$fileLocalCCStart = $filePath . 'ims_cc_start.dat';
+	$fileLocalCCEnd   = $filePath . 'ims_cc_end.dat';
+	$fileLocalCCText  = $filePath . 'ims_cc_text.dat';
+
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {
 		$imsDBConn = mysql_connect($imsDBHost, $imsDBUser, $imsDBPass);

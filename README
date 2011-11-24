@@ -17,11 +17,12 @@
 		B. 楓林網
 		C. sugoideas
 		D. 卡提諾影音
-		E. 台灣媒體新聞 on YouTube
-			台視、中視、華視、民視、公視、東森、中天、聯合新聞網、蘋果動新聞
-		F. YouTube 設定、搜索、頻道與播放清單
-			香港蘋果動新聞、半島電視新聞、1080p Trailers
+		E. 媒體新聞 on YouTube
+			香港蘋果動新聞、台灣蘋果動新聞、半島電視新聞、台視、中視、華視、民視、公視、東森、中天、聯合新聞網
+		F. YouTube 搜索、設定、播放清單
+			1080p Trailers、字幕測試影片
 			YouTube 搜索 (本機 hdp_input、播放機內建、線上 hdp_input)
+			YouTube 字幕語言設定
 			YouTube 解析度設定
 		G. TED Talks on YouTube / podcast
 		H. CNN 影音 podcast
@@ -39,8 +40,8 @@
 				01 -> 02 -> 02 -> 播放
 		D. 卡提諾影音
 				01 -> 02 -> 02 -> 播放
-		E. 台灣媒體新聞 on YouTube
-		F. YouTube 搜索、頻道與播放清單
+		E. 媒體新聞 on YouTube
+		F. YouTube 搜索、設定、播放清單
 				01 -> 02 -> 播放
 		G. TED Talks on YouTube / podcast
 			a. 中文字幕 on YouTube
@@ -60,7 +61,8 @@
 	6. 具有當網站錯誤發生時通知管理者進行處理的功能
 	7. 具有使用 MySQL database 記錄使用者動作的功能
 	8. IMS 線上搜索可讓使用者自訂由 hdp_input 模組所做成的線上輸入功能
-	9. youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
+	9. [v1.4] youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
+	10. [v1.6] 可播放 YouTube 字幕
 
 使用
 	1. 直接放在本機使用
@@ -125,6 +127,27 @@
 				最高 1920x1080、最高 1280x720、最高 854x480、以及取消本機解析度設定
 
 			觀賞 1080p Trailers 和動感小站等頻道，應該可以看出差別
+
+		v1.6 增加了 youtube 影片的字幕功能: 設定載入喜好後即可顯示有提供 CC 的 youtube 影片
+
+		A. 若使用 v1.4 之後的 youtube.video.php 配合遠端 IMS
+			不必更新本機內的這個檔案，因為會自動更新
+
+		B. 因為播放機的時間解析度只能到約 0.1 秒，所以字幕的出現和消失可能會有點不順
+
+		C. 影片開始會比平常慢一點點，因為要先下載字幕
+
+		D. 在影片一開始的兩、三分鐘內，因為 onRefresh 被叫用的間隔並不穩定，所以可能會不太順
+
+		E. 有些播放機可能無法順利顯示字幕 (我自己好幾部 HD300B plus 就有不行的)
+
+		F. 按 [藍] 可切換字幕的顯示; 按 [信息] 則有影片相關資訊
+			34/640x360/9/0/115 為 youtube 解析度資訊
+			[-] 表示使用者設定為不自動載入字幕
+			{-} 表示此影片不提供字幕
+			[#] 表示此影片提供的字幕中，並無使用者想載片的
+			[X] 表示字幕下載失敗 (例如字幕測試影片中的最後一個，我沒下載成功過)
+			[zh-Hant]{zh-Hant,en} 表示正在使用正體中文(zh-Hant)字幕，而此影片提供正體中文與英文字幕
 
 	4. 我直接把這組 code 建立成一個範例網站，有興趣的人可以直接用用看
 		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 YouYube 的則須參考上述說明

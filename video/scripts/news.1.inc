@@ -6,6 +6,14 @@
 //			'建立者：qwq33', 'channel', 'continue=0'),
 //		array('qwq33', '動感小站 Show Time (連續播放)', $myBaseName,
 //			'建立者：qwq33', 'channel', 'continue=1'),
+		array('appleactionews', '香港蘋果動新聞 (連續播放)', 'hk_appleactionews',
+			'建立者：appleactionews', 'channel', 'continue=1'),
+		array('appleactionews', '香港蘋果動新聞', 'hk_appleactionews',
+			'建立者：appleactionews', 'channel', 'continue=0'),
+		array('NMANews', '台灣蘋果動新聞 (連續播放)', 'appledaily',
+			'建立者：NMANews', 'channel', 'continue=1'),
+		array('AlJazeeraEnglish', '半島電視新聞 (連續播放)', $myBaseName,
+			'建立者：AlJazeeraEnglish', 'channel', 'continue=1'),
 		array('ttvnewsview', '台視 (連續播放)', $myBaseName,
 			'建立者：ttvnewsview', 'channel', 'continue=1'),
 		array('chinatv', '中視 (連續播放)', $myBaseName,
@@ -22,8 +30,6 @@
 			'建立者：ChinaTimes', 'channel', 'continue=1'),
 		array('udncom', '聯合新聞網 (連續播放)', $myBaseName,
 			'建立者：udncom', 'channel', 'continue=1'),
-		array('NMANews', '蘋果動新聞 (連續播放)', 'appledaily',
-			'建立者：NMANews', 'channel', 'continue=1'),
 	);
 
 	foreach($sites as $site) {

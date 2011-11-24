@@ -154,7 +154,7 @@
 	</text>
 
 	<text redraw="yes" fontSize="20"
-		offsetXPC="82" offsetYPC="12"
+		offsetXPC="82" offsetYPC="13.5"
 		widthPC="20" heightPC="6"
 		backgroundColor="<?php echo $themeMainBackgroundColor; ?>"
 		foregroundColor="<?php echo $themeMainForegroundColor; ?>">

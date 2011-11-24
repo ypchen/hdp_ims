@@ -3,13 +3,13 @@
 	$columnCount = 4;
 	$itemWidthPC = 23.75;
 
-	$link = 'http://www.maplestage.net/';
+	$link = 'http://www.maplestage.net/show/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlBody = explode('<div class="shows_list">', $html);
+	$htmlBody = explode(' id="show_table"', $html);
 
-	$videos = explode('<td>', $htmlBody[1]);
+	$videos = explode('<tr>', trim(str_between($htmlBody[1], '<tbody>', '</tbody>')));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

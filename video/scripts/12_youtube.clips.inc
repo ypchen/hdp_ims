@@ -11,10 +11,8 @@
 	storagePath = storagePath + nameArray + ".dat";
 
 <?php
-	$ids = array();
 	$pass_check = true;
 	try {
-
 		if (isset($title)) {
 			$title_03_play = $title;
 		}
@@ -24,6 +22,9 @@
 
 		unset($title);
 		unset($titles);
+
+		unset($ids);
+		unset($links);
 
 		include($myBaseName . '.link.ids.inc');
 
@@ -36,12 +37,44 @@
 
 	if ($pass_check) {
 
-		echo "\titemSize    = " . count($ids) . ";\r\n";
-		echo "\tlinkArray   = null;\r\n";
+		if (isset($ids)) {
+			$itemTotal = count($ids);
+			echo "\titemSize    = " . ($itemTotal) . ";\r\n";
+			echo "\tlinkArray   = null;\r\n";
+			foreach ($ids as $id) {
+				// 一定要使用來源本機做解析
+				// 不能用 ims 網站做解析，因為 youtube 會鎖 client IP
+				$link = $localhostYoutubeVideo . '?query=' . $id .
+							'&amp;yv_fmt_prefs=' . urlencode($youtubeVideoFmtPrefs) .
+							'&amp;yv_rmt_src='   . urlencode($youtubeVideoRemoteSource);
+
+				echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $link . "\");\r\n";
+			}
+		}
+		else {
+			$itemTotal = count($links);
+			echo "\titemSize    = " . ($itemTotal) . ";\r\n";
+			echo "\tlinkArray   = null;\r\n";
+
+			foreach ($links as $link) {
+				echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $link . "\");\r\n";
+			}
+		}
 
 		$hasTitleInfo = (isset($titles) || isset($title));
 		if ($hasTitleInfo) {
 			echo "\ttitleArray  = null;\r\n";
+
+			if (isset($titles)) {
+				for ($i = 0 ; $i < $itemTotal ; $i ++) {
+					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $titles[$i] . "\");\r\n";
+				}
+			}
+			else {
+				for ($i = 0 ; $i < $itemTotal ; $i ++) {
+					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
+				}
+			}
 		}
 		else {
 			// Read titles from the local disk if no title information is passed
@@ -49,25 +82,10 @@
 			echo "\ttitleArray  = readStringFromFile(\"" . $yvTitleFilePath . "\");\r\n";
 		}
 
-		$i = 0;
-
-		foreach ($ids as $id) {
-
-			// 一定要使用來源本機做解析
-			// 不能用 ims 網站做解析，因為 youtube 會鎖 client IP
-			$link = $localhostYoutubeVideo . '?query=' . $id .
-						'&amp;yv_fmt_prefs=' . urlencode($youtubeVideoFmtPrefs) .
-						'&amp;yv_rmt_src='   . urlencode($youtubeVideoRemoteSource);
-
-			echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $link . "\");\r\n";
-
-			if ($hasTitleInfo) {
-				if (isset($titles)) {
-					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $titles[$i ++] . "\");\r\n";
-				}
-				else {
-					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
-				}
+		if (isset($extraInfo)) {
+			echo "\textraInfoArray = null;\r\n";
+			for ($i = 0 ; $i < $itemTotal ; $i ++) {
+				echo "\textraInfoArray = pushBackStringArray(extraInfoArray, \"" . $extraInfo[$i] . "\");\r\n";
 			}
 		}
 	}

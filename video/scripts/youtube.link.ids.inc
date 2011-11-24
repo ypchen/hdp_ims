@@ -3,6 +3,7 @@
 	if (isset($extra)) {
 		$iStart = intval($extra);
 		$iCount = 0;
+		$ids = array();
 		while (!empty($_GET[($idKey = 'vid' . strval($iCount ++))])) {
 			$ids[] = $_GET[$idKey];
 		}
