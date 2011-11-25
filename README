@@ -62,7 +62,7 @@
 	7. 具有使用 MySQL database 記錄使用者動作的功能
 	8. IMS 線上搜索可讓使用者自訂由 hdp_input 模組所做成的線上輸入功能
 	9. [v1.4] youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
-	10. [v1.6] 可播放 YouTube 字幕
+	10. [v1.6] 可播放 YouTube 字幕 (請將 v1.6.1 版之 youtube.video.php 刷入本機)
 
 使用
 	1. 直接放在本機使用
@@ -97,7 +97,15 @@
 		因此，scripts/ 這個目錄 (裡面只有一個 youtube.video.php 用來處理 back-end
 		為 YouTube 的網站，如範例中的楓林網和 sugoideas) 還是必須放在本機
 
-	3. 有關 youtube.video.php
+	3. 我直接把這組 code 建立成一個範例網站，有興趣的人可以直接用用看
+		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 YouYube 的則須參考下述說明
+			<item>
+				<title>IMS: video</title>
+				<link>http://ims.hostoi.com/video/scripts/siteList.php</link>
+				<mediaDisplay />
+			</item>
+
+	4. 有關 youtube.video.php
 		目前程式假設 youtube.video.php 在本機上的 URL 是 (port 8081 是 iMax 韌體預設)
 			http://localhost:8081/scripts/youtube.video.php
 		如果有人要建立 IMS 網站，但是想使用該 IMS 網站的使用者們的本機上
@@ -107,7 +115,7 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
-		v1.4 增加了 youtube.video.php 兩個重要的新功能:
+		--- v1.4 增加了 youtube.video.php 兩個重要的新功能:
 
 		A. 由 IMS 來源網站載入 scripts/youtube.video.php 來執行
 			如此一來，只要將 v1.4 這份 youtube.video.php 刷入機中，以後應該就不必再更新這個檔案
@@ -128,34 +136,28 @@
 
 			觀賞 1080p Trailers 和動感小站等頻道，應該可以看出差別
 
-		v1.6 增加了 youtube 影片的字幕功能: 設定載入喜好後即可顯示有提供 CC 的 youtube 影片
+		--- v1.6 增加了 youtube 影片的字幕功能: 設定載入喜好後即可顯示有提供 CC 的 youtube 影片
 
-		A. 若使用 v1.4 之後的 youtube.video.php 配合遠端 IMS
-			不必更新本機內的這個檔案，因為會自動更新
+		A. 請將 v1.6.1 版之 youtube.video.php 刷入本機
+			希望將來真的不必再更新本機內的這個檔案
 
-		B. 因為播放機的時間解析度只能到約 0.1 秒，所以字幕的出現和消失可能會有點不順
+		B. 影片開始會比平常慢一些，因為要先下載字幕
 
-		C. 影片開始會比平常慢一點點，因為要先下載字幕
+		C. 因為播放機的時間解析度只能到約 0.1 秒，所以字幕的出現和消失可能會有點不順
+			在影片一開始的兩、三分鐘內，因為 onRefresh 被叫用的間隔並不穩定，所以可能會不太順
+			有些播放機可能無法順利顯示字幕 (我自己好幾部 HD300B plus 就有不行的)
 
-		D. 在影片一開始的兩、三分鐘內，因為 onRefresh 被叫用的間隔並不穩定，所以可能會不太順
-
-		E. 有些播放機可能無法順利顯示字幕 (我自己好幾部 HD300B plus 就有不行的)
-
-		F. 按 [藍] 可切換字幕的顯示; 按 [信息] 則有影片相關資訊
-			34/640x360/9/0/115 為 youtube 解析度資訊
-			[-] 表示使用者設定為不自動載入字幕
-			{-} 表示此影片不提供字幕
-			[#] 表示此影片提供的字幕中，並無使用者想載片的
-			[X] 表示字幕下載失敗 (例如字幕測試影片中的最後一個，我沒下載成功過)
-			[zh-Hant]{zh-Hant,en} 表示正在使用正體中文(zh-Hant)字幕，而此影片提供正體中文與英文字幕
-
-	4. 我直接把這組 code 建立成一個範例網站，有興趣的人可以直接用用看
-		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 YouYube 的則須參考上述說明
-			<item>
-				<title>IMS: video</title>
-				<link>http://ims.hostoi.com/video/scripts/siteList.php</link>
-				<mediaDisplay />
-			</item>
+		D. 按 [藍] 可切換字幕的顯示; 按 [信息] 則有影片相關資訊:
+			(1) 34/640x360/9/0/115 為 youtube 解析度資訊
+			(2) 字幕相關資訊
+				[-] 表示使用者設定為不自動載入字幕
+				{-} 表示此影片不提供字幕
+				[#] 表示此影片提供的字幕中，並無使用者接受的
+				[X] 表示字幕下載失敗
+						例如: How to Use EndNote in 7 Minutes，我沒下載成功過
+						而 Bill Gates 的 TEDTalk，英文字幕可下載，正體中文字幕則不行
+				[zh-Hant]{zh-Hant,en} 表示正在使用正體中文(zh-Hant)字幕
+						而此影片提供正體中文與英文字幕
 
 備註
 	1. 這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，在此表示感謝！
