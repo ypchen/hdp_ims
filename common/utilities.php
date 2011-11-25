@@ -149,9 +149,7 @@
 	}
 
 	function str_between($string, $start, $end) {
-		$string = ' ' . $string;
-		$ini = strpos($string, $start);
-		if ($ini == 0)
+		if (($ini = strpos($string, $start)) === false)
 			return '';
 		$ini += strlen($start);
 		$len = strpos($string, $end, $ini) - $ini;

@@ -1,8 +1,70 @@
 <?php
+	// Partial unicode points
+	// http://www.htmlcodetutorial.com/characterentities_famsupp_69.html
+	// http://www.w3.org/TR/REC-html40/sgml/entities.html
+	// '--- BEGIN ---
+	$supportedUnicodePoints = array(
+		'&quot;' => '"', '&amp;' => '&', '&nbsp;' => ' ', '&cent;' => '¢',
+		'&pound;' => '£', '&yen;' => '¥', '&brvbar;' => '¦', '&copy;' => '©',
+		'&laquo;' => '«', '&not;' => '¬', '&shy;' => '­', '&reg;' => '®',
+		'&macr;' => '¯', '&deg;' => '°', '&plusmn;' => '±', '&sup2;' => '²',
+		'&sup3;' => '³', '&acute;' => '´', '&micro;' => 'µ', '&para;' => '¶',
+		'&middot;' => '·', '&sup1;' => '¹', '&ordm;' => 'º', '&raquo;' => '»',
+		'&frac14;' => '¼', '&frac12;' => '½', '&frac34;' => '¾', '&iquest;' => '¿',
+		'&fnof;' => 'ƒ', '&circ;' => 'ˆ', '&tilde;' => '˜', '&Alpha;' => 'Α',
+		'&Beta;' => 'Β', '&Gamma;' => 'Γ', '&Delta;' => 'Δ', '&Epsilon;' => 'Ε',
+		'&Zeta;' => 'Ζ', '&Eta;' => 'Η', '&Theta;' => 'Θ', '&Iota;' => 'Ι',
+		'&Kappa;' => 'Κ', '&Lambda;' => 'Λ', '&Mu;' => 'Μ', '&Nu;' => 'Ν',
+		'&Xi;' => 'Ξ', '&Omicron;' => 'Ο', '&Pi;' => 'Π', '&Rho;' => 'Ρ',
+		'&Sigma;' => 'Σ', '&Tau;' => 'Τ', '&Upsilon;' => 'Υ', '&Phi;' => 'Φ',
+		'&Chi;' => 'Χ', '&Psi;' => 'Ψ', '&Omega;' => 'Ω', '&alpha;' => 'α',
+		'&beta;' => 'β', '&gamma;' => 'γ', '&delta;' => 'δ', '&epsilon;' => 'ε',
+		'&zeta;' => 'ζ', '&eta;' => 'η', '&theta;' => 'θ', '&iota;' => 'ι',
+		'&kappa;' => 'κ', '&lambda;' => 'λ', '&mu;' => 'μ', '&nu;' => 'ν',
+		'&xi;' => 'ξ', '&omicron;' => 'ο', '&pi;' => 'π', '&rho;' => 'ρ',
+		'&sigmaf;' => 'ς', '&sigma;' => 'σ', '&tau;' => 'τ', '&upsilon;' => 'υ',
+		'&phi;' => 'φ', '&chi;' => 'χ', '&psi;' => 'ψ', '&omega;' => 'ω',
+		'&thetasym;' => 'ϑ', '&upsih;' => 'ϒ', '&piv;' => 'ϖ', '&ndash;' => '–',
+		'&mdash;' => '—', '&lsquo;' => '‘', '&rsquo;' => '’', '&sbquo;' => '‚',
+		'&ldquo;' => '“', '&rdquo;' => '”', '&bdquo;' => '„', '&dagger;' => '†',
+		'&Dagger;' => '‡', '&bull;' => '•', '&hellip;' => '…', '&permil;' => '‰',
+		'&prime;' => '′', '&Prime;' => '″', '&lsaquo;' => '‹', '&rsaquo;' => '›',
+		'&oline;' => '‾', '&frasl;' => '⁄', '&euro;' => '€', '&trade;' => '™',
+		'&larr;' => '←', '&uarr;' => '↑', '&rarr;' => '→', '&darr;' => '↓',
+		'&harr;' => '↔', '&crarr;' => '↵', '&lArr;' => '⇐', '&uArr;' => '⇑',
+		'&rArr;' => '⇒', '&dArr;' => '⇓', '&hArr;' => '⇔', '&forall;' => '∀',
+		'&part;' => '∂', '&exist;' => '∃', '&empty;' => '∅', '&nabla;' => '∇',
+		'&isin;' => '∈', '&notin;' => '∉', '&ni;' => '∋', '&prod;' => '∏',
+		'&sum;' => '∑', '&minus;' => '−', '&lowast;' => '∗', '&radic;' => '√',
+		'&prop;' => '∝', '&infin;' => '∞', '&ang;' => '∠', '&and;' => '∧',
+		'&or;' => '∨', '&cap;' => '∩', '&cup;' => '∪', '&int;' => '∫',
+		'&there4;' => '∴', '&sim;' => '∼', '&cong;' => '≅', '&asymp;' => '≈',
+		'&ne;' => '≠', '&equiv;' => '≡', '&le;' => '≤', '&ge;' => '≥',
+		'&sub;' => '⊂', '&sup;' => '⊃', '&nsub;' => '⊄', '&sube;' => '⊆',
+		'&supe;' => '⊇', '&oplus;' => '⊕', '&otimes;' => '⊗', '&perp;' => '⊥',
+		'&sdot;' => '⋅', '&lceil;' => '⌈', '&rceil;' => '⌉', '&lfloor;' => '⌊',
+		'&rfloor;' => '⌋', '&lang;' => '〈', '&rang;' => '〉', '&loz;' => '◊',
+		'&spades;' => '♠', '&clubs;' => '♣', '&hearts;' => '♥', '&diams;' => '♦'
+	);
+	// '--- END ---
+
+	function convertUnicodePoints($s) {
+		global $supportedUnicodePoints;
+
+		$retStr = $s;
+		if ((($numMatches = preg_match_all('/&\w+;/', $retStr, $matches, PREG_SET_ORDER)) === false) ||
+			($numMatches == 0))
+			return $retStr;
+
+		foreach ($matches as $match) {
+			$retStr = str_replace($match[0], $supportedUnicodePoints[$match[0]], $retStr);
+		}
+
+		return $retStr;
+	}
+
 	function str_between($string, $start, $end) {
-		$string = ' ' . $string;
-		$ini = strpos($string, $start);
-		if ($ini == 0)
+		if (($ini = strpos($string, $start)) === false)
 			return '';
 		$ini += strlen($start);
 		$len = strpos($string, $end, $ini) - $ini;
@@ -10,26 +72,23 @@
 	}
 
 	$evalLevel = 0;
-	$cutLine = (__LINE__+1); // Include the next line
-//HERE: md5sum of the following lines except for the last line without php tags
+
+// <md5sum>HERE: md5sum of the following lines except for the last line without php tags</md5sum>
+// ---------- youtube.vide.php: BEGIN ----------
 
 	// If there is no 'query',
 	// respond to the request of youtube.video.php
 	if (($evalLevel == 0) && empty($_GET['query'])) {
-		// Read myself and clear the php tag
-		$me = str_replace('<?php', '',
-			str_replace('?>', '',
-				file_get_contents(__FILE__)));
-		// Create an empty default return string
-		$meToSend = '';
-		// Break into lines
-		$meLines = explode("\n", $me);
-		if (count($meLines) > __LINE__) {
-			for ($i = 0 ; $i < $cutLine ; $i ++)
-				unset($meLines[$i]);
-			$meToSend = implode("\n", $meLines);
-			$meToSend = '//' . md5($meToSend) . "\n" . $meToSend;
-		}
+		// Read myself and get the body to send
+		$meToSendBody = str_between(file_get_contents(__FILE__),
+						"// ---------- youtube.vide.php: BEGIN ----------\r\n",
+						"// ---------- youtube.vide.php: END ----------\r\n");
+		$meToSend = '// <md5sum>' .
+						md5($meToSendBody) .
+						"</md5sum>\n" .
+						"// ---------- youtube.vide.php: BEGIN ----------\r\n" .
+						$meToSendBody .
+						"// ---------- youtube.vide.php: END ----------\r\n";
 		echo $meToSend;
 		return;
 	}
@@ -43,12 +102,12 @@
 			(strpos($rmtSrcURL, '://127.0.0.1') === false)) {
 			// Get the remote source
 			$rmtSrc = file_get_contents($rmtSrcURL);
-			// The length of //<md5sum> is already 34
-			if (strlen($rmtSrc) > 34) {
-				$rmtSrcLines = explode("\n", $rmtSrc);
-				$md5sum = trim(substr($rmtSrcLines[0], 2));
-				unset($rmtSrcLines[0]);
-				$receivedCode = implode("\n", $rmtSrcLines);
+			// The length of <md5sum /> is already 52
+			if (strlen($rmtSrc) > 52) {
+				$md5sum = str_between($rmtSrc, '<md5sum>', '</md5sum>');
+				$receivedCode = str_between($rmtSrc,
+								"// ---------- youtube.vide.php: BEGIN ----------\r\n",
+								"// ---------- youtube.vide.php: END ----------\r\n");
 				// Run the download source if the md5sum is correct
 				if (strcmp($md5sum, md5($receivedCode)) == 0) {
 					$evalLevel ++;
@@ -203,9 +262,9 @@
 					foreach ($data as $dataEntry) {
 						$start = floatval(trim(str_between($dataEntry, 'start="', '"')));
 						$dur   = floatval(trim(str_between($dataEntry, 'dur="', '"')));
-						$text  = str_replace('&#39;', "'",
-									html_entity_decode(str_replace('&amp;', '&',
-										trim(str_between($dataEntry, '">', '</text>')))));
+						$text  = trim(htmlspecialchars_decode(
+									convertUnicodePoints(
+										str_between($dataEntry, '">', '</text>')), ENT_QUOTES));
 						$end   = $start + $dur;
 
 						$textLines = explode("\n", $text);
@@ -249,4 +308,6 @@
 
 	// Return the video stream
 	header('Location: ' . $urlToGo);
+
+// ---------- youtube.vide.php: END ----------
 ?>
