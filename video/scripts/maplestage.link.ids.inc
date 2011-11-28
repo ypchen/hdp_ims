@@ -23,25 +23,33 @@
 		$htmlBody = explode('<div class="node_body">', $html);
 
 		$videos = explode('<param name="flashvars"', $htmlBody[1]);
-		unset($videos[0]);
-		$videos = array_values($videos);
+		if (count($videos) > 1) {
+			unset($videos[0]);
+			$videos = array_values($videos);
 
-		$links = array();
-		$extraInfo = array();
-		foreach($videos as $video) {
-			$fmt_stream_map = urldecode(trim(str_between($video, 'fmt_stream_map=', '&amp;')));
-			$fmt_streams = explode(',', $fmt_stream_map);
-			// For now, just use the first stream (usually the highest resolution)
-			$streamOne = explode('|', $fmt_streams[0]);
-			$links[] = str_replace('&', '&amp;', $streamOne[1]);
+			$links = array();
+			$extraInfo = array();
+			foreach($videos as $video) {
+				$fmt_stream_map = urldecode(trim(str_between($video, 'fmt_stream_map=', '&amp;')));
+				$fmt_streams = explode(',', $fmt_stream_map);
+				// For now, just use the first stream (usually the highest resolution)
+				$streamOne = explode('|', $fmt_streams[0]);
+				$links[] = str_replace('&', '&amp;', $streamOne[1]);
 
-			$fmt_list = urldecode(trim(str_between($video, 'fmt_list=', '&amp;')));
-			$fmts = explode(',', $fmt_list);
-			// For now, just use the first stream (usually the highest resolution)
-			$extraInfo[] = $fmts[0];
+				$fmt_list = urldecode(trim(str_between($video, 'fmt_list=', '&amp;')));
+				$fmts = explode(',', $fmt_list);
+				// For now, just use the first stream (usually the highest resolution)
+				$extraInfo[] = $fmts[0];
+			}
+
+			$itemTotal = count($links);
+			include('05_check.base.inc');
 		}
-
-		$itemTotal = count($links);
-		include('05_check.base.inc');
+		else {
+			// clear-text youtube url(s) not found
+			// No solution for the time being
+			$ids = array();
+			include('05_check.link.idcount.inc');
+		}
 	}
 ?>

@@ -6,7 +6,7 @@
 		$itemNo = 0;
 		$siteURLprefix = 'http://sugoideas.com';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, '>', '</a>'));
+			$title = trim(str_between($video, '">', '</a>'));
 			$title = str_replace('<br/>',   '', $title);
 			$title = str_replace('<span>',  '', $title);
 			$title = str_replace('</span>', '', $title);

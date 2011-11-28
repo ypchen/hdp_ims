@@ -2,7 +2,7 @@
 	$itemXML   = '';
 
 	$sites = array(
-		array('980F96CA7FC4B708', '測試影片: 720p, 1080p', $myBaseName,
+		array('980F96CA7FC4B708', '測試影片: 720p，1080p', $myBaseName,
 			'建立者：julianzart', 'playlist', 'continue=0'),
 		array('ED089C2E405CE1D6', '測試影片: 字幕', $myBaseName,
 			'建立者：ypchentube', 'playlist', 'continue=0'),
