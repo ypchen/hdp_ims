@@ -2,7 +2,7 @@
 	$siteURLprefix = '';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, "<a href='", "'"));
+		$link  = $siteURLprefix . trim(str_between($video, " href='", "'"));
 		$title = trim(str_between($video, "title='", "'"));
 		$title = convertUnicodePoints($title);
 		$extra = '';

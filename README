@@ -5,10 +5,16 @@
 	可用來自行建立 IMS 的 php 架構、亦可直接使用目前已實作的範例
 
 取得
-	由
-		https://github.com/ypchen/hdp_ims
-	下載，或使用 git clone 取得
-		git clone git://github.com/ypchen/hdp_ims.git
+	1. 正常開發版本 (使用 symbolic links 來避免檔案內容重覆)
+		由
+			https://github.com/ypchen/hdp_ims
+		下載，或使用 git clone 取得
+			git clone git://github.com/ypchen/hdp_ims.git
+	2. dereferenced 版本 (適合用於無法處理 symbolic links 之系統)
+		由
+			https://github.com/ypchen/hdp_ims_dereferenced
+		下載，或使用 git clone 取得
+			git clone git://github.com/ypchen/hdp_ims_dereferenced.git
 
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
@@ -62,7 +68,8 @@
 	7. 具有使用 MySQL database 記錄使用者動作的功能
 	8. IMS 線上搜索可讓使用者自訂由 hdp_input 模組所做成的線上輸入功能
 	9. [v1.4] youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
-	10. [v1.6] 可播放 YouTube 字幕 (請將 v1.6.1 版之 youtube.video.php 刷入本機)
+	10. [v1.6] 可播放 YouTube 字幕 (請將 v1.6.2 版之 youtube.video.php 刷入本機)
+	11. [v1.6.2] 提供存放於 github 之 dereferenced 版本，以利追蹤版本變更時檔案之異同
 
 使用
 	1. 直接放在本機使用
@@ -138,7 +145,7 @@
 
 		--- v1.6 增加了 youtube 影片的字幕功能: 設定載入喜好後即可顯示有提供 CC 的 youtube 影片
 
-		A. 請將 v1.6.1 版之 youtube.video.php 刷入本機
+		A. 請將 v1.6.2 版之 youtube.video.php 刷入本機
 			希望將來真的不必再更新本機內的這個檔案
 
 		B. 影片開始會比平常慢一些，因為要先下載字幕

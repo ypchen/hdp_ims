@@ -93,6 +93,7 @@
 	selectClipStatusWidthPC = 0;
 	displaySelectClipStatusWidthPC = 100;
 
+	ccDataCountFile = "<?php echo $fileLocalCCCount; ?>";
 	ccDataStartFile = "<?php echo $fileLocalCCStart; ?>";
 	ccDataEndFile   = "<?php echo $fileLocalCCEnd; ?>";
 	ccDataTextFile  = "<?php echo $fileLocalCCText; ?>";
@@ -100,8 +101,8 @@
 	pbLastInt = -1;
 	pbTimeCount = 0;
 	ccTextFontSize = 24;
-	ccTextOffsetYPC = 81.25;
-	ccTextHeightPC = 5.8;
+	ccTextOffsetYPC = 81.22;
+	ccTextHeightPC = 5.98;
 	ccBackgroundColor = "-1:-1:-1";
 	ccForegroundColor = "255:255:0";
 	ccForegroundShadowColor = "0:0:0";
@@ -165,8 +166,8 @@
 	}
 
 	if (ccDataCount &gt; 0) {
-		ccLower = 1;
-		ccUpper = ccDataCount;
+		ccLower = 0;
+		ccUpper = ccDataCount-1;
 		ccFound = 0;
 		while (ccFound == 0) {
 			ccIndex = Integer(Add(ccLower, ccUpper) / 2);
@@ -232,24 +233,24 @@
 	else {
 		vidProgress = getPlaybackStatus();
 		bufProgress = getCachedStreamDataSize(0, bufferSize);
-		playElapsed = getStringArrayAt(vidProgress, 0);
+		playElapsed = Integer(getStringArrayAt(vidProgress, 0));
 		lastPlayStatus = playStatus;
-		playStatus  = getStringArrayAt(vidProgress, 3);
+		playStatus  = Integer(getStringArrayAt(vidProgress, 3));
 
 		if ((playStatus == 2) &amp;&amp; (lastPlayStatus != 2)) {
 			runningHeadTwo = readStringFromFile(extraInfoFile);
 			if ((runningHeadTwo == null) || (runningHeadTwo == "")) {
 				runningHeadTwo = getStringArrayAt(extraInfoArray, n);
 			}
-			ccDataStart = readStringFromFile(ccDataStartFile);
-			ccDataEnd = readStringFromFile(ccDataEndFile);
-			ccDataText = readStringFromFile(ccDataTextFile);
-			ccDataCountString = getStringArrayAt(ccDataStart, 0);
+			ccDataCountString = readStringFromFile(ccDataCountFile);
 			if ((ccDataCountString == null) || (ccDataCountString == "")) {
 				ccDataCount = 0;
 			}
 			else {
 				ccDataCount = Integer(ccDataCountString);
+				ccDataStart = readStringFromFile(ccDataStartFile);
+				ccDataEnd = readStringFromFile(ccDataEndFile);
+				ccDataText = readStringFromFile(ccDataTextFile);
 			}
 		}
 
@@ -270,6 +271,8 @@
 				showCCStatusWidthPC = 0;
 				showCCStatusTimeMark = 0;
 
+				lastPlayStatus = -2;
+				playStatus = -1;
 				writeStringToFile(extraInfoFile, "");
 
 				playItemURL(currentUrl, 0, "mediaDisplay", "previewWindow");
@@ -639,6 +642,14 @@
 				ret = "true";
 			}
 			else if (userInput == "display") {
+				/* If there is no extra information present, try again */
+				if ((runningHeadTwo == null) || (runningHeadTwo == "")) {
+					runningHeadTwo = readStringFromFile(extraInfoFile);
+					if ((runningHeadTwo == null) || (runningHeadTwo == "")) {
+						runningHeadTwo = getStringArrayAt(extraInfoArray, n);
+					}
+				}
+
 				/* Pressing display always hides the select clip status */
 				selectClip = 0;
 				selectClipStatusWidthPC = 0;

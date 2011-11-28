@@ -30,8 +30,8 @@
 	$yvTotalResults = intval(
 		trim(str_between($html,
 			'<openSearch:totalResults>', '</openSearch:totalResults>')));
-	if ($yvTotalResults <= $yvItemPerPage)
-		$page = 0;
+	if ($yvTotalResults <= ($yvStartIndex + $yvItemPerPage - 1))
+		$pageMax = $page;
 
 	$videos = explode('<entry gd:etag=', $html);
 	unset($videos[0]);

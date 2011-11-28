@@ -2,9 +2,9 @@
 	$itemXML   = '';
 
 	$sites = array(
-		array('980F96CA7FC4B708', '1080p HD Trailers', $myBaseName,
+		array('980F96CA7FC4B708', '測試影片: 720p, 1080p', $myBaseName,
 			'建立者：julianzart', 'playlist', 'continue=0'),
-		array('ED089C2E405CE1D6', '字幕測試影片', $myBaseName,
+		array('ED089C2E405CE1D6', '測試影片: 字幕', $myBaseName,
 			'建立者：ypchentube', 'playlist', 'continue=0'),
 	);
 
@@ -32,13 +32,13 @@
 
 	$sites = array(
 		array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
-			'YouTube / 本機輸入', $myBaseName,
+			'本機輸入', $myBaseName,
 			'※ 需安裝 hdp_input', 'search', 'continue=0'),
 		array('input = getInput("Enter a keyword");',
-			'YouTube / 內建輸入', $myBaseName,
+			'內建輸入', $myBaseName,
 			'使用播放機內建輸入功能', 'search', 'continue=0'),
 		array('input = doModalRss("' . $inputMethod . '", "mediaDisplay", "search", 0);',
-			'YouTube / 線上輸入', $myBaseName,
+			'線上輸入', $myBaseName,
 			'Input method: ' . $inputMethod, 'search', 'continue=0'),
 	);
 
@@ -129,14 +129,14 @@
 
 	$sites = array(
 		array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
-			'本機輸入 / 自行輸入字幕嘗試載入順序', $myBaseName,
-			' -- 以逗號隔開，常用代碼: en(英文),zh-Hant(正體中文),zh-Hans(简体中文),zh-HK(香港中文),ja(日本語),ko(韓語)'),
+			'自行輸入字幕嘗試載入順序 / 本機輸入', $myBaseName,
+			' -- 以逗號隔開，常用代碼: en(英文), zh-Hant(正體中文), zh-Hans(简体中文), zh-HK(香港中文), ja(日本語), ko(韓語)'),
 		array('input = getInput("Enter a keyword");',
-			'內建輸入 / 自行輸入字幕嘗試載入順序', $myBaseName,
-			' -- 以逗號隔開，常用代碼: en(英文),zh-Hant(正體中文),zh-Hans(简体中文),zh-HK(香港中文),ja(日本語),ko(韓語)'),
+			'自行輸入字幕嘗試載入順序 / 內建輸入', $myBaseName,
+			' -- 以逗號隔開，常用代碼: en(英文), zh-Hant(正體中文), zh-Hans(简体中文), zh-HK(香港中文), ja(日本語), ko(韓語)'),
 		array('input = doModalRss("' . $inputMethod . '", "mediaDisplay", "search", 0);',
-			'線上輸入 / 自行輸入字幕嘗試載入順序', $myBaseName,
-			' -- 以逗號隔開，常用代碼: en(英文),zh-Hant(正體中文),zh-Hans(简体中文),zh-HK(香港中文),ja(日本語),ko(韓語)'),
+			'自行輸入字幕嘗試載入順序 / 線上輸入', $myBaseName,
+			' -- 以逗號隔開，常用代碼: en(英文), zh-Hant(正體中文), zh-Hans(简体中文), zh-HK(香港中文), ja(日本語), ko(韓語)'),
 	);
 
 	foreach($sites as $site) {

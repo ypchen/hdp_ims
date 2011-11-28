@@ -195,6 +195,7 @@
 	$extraInfo = $v[0][1];
 
 	// Clean the cc data file
+	unlink($filenameCount = '/usr/local/etc/dvdplayer/ims_cc_count.dat');
 	unlink($filenameStart = '/usr/local/etc/dvdplayer/ims_cc_start.dat');
 	unlink($filenameEnd   = '/usr/local/etc/dvdplayer/ims_cc_end.dat');
 	unlink($filenameText  = '/usr/local/etc/dvdplayer/ims_cc_text.dat');
@@ -241,20 +242,20 @@
 					$data = explode('<text', $xml);
 					unset($data[0]);
 					$data = array_values($data);
-					$dataCount = count($data);
 
-					fwrite($fileStart, strval($dataCount + 4) . "\n");
-					fwrite($fileEnd,   strval($dataCount + 4) . "\n");
-					fwrite($fileText,  strval($dataCount + 4) . "\n");
+					$dataCount = 0;
 
+					$dataCount ++;
 					fwrite($fileStart, "-60\n");
 					fwrite($fileEnd,   "-50\n");
 					fwrite($fileText,  "\n");
 
+					$dataCount ++;
 					fwrite($fileStart, "-40\n");
 					fwrite($fileEnd,   "-30\n");
 					fwrite($fileText,  "\n");
 
+					$dataCount ++;
 					fwrite($fileStart, "-20\n");
 					fwrite($fileEnd,   "-10\n");
 					fwrite($fileText,  "\n");
@@ -269,12 +270,14 @@
 
 						$textLines = explode("\n", $text);
 						foreach ($textLines as $textLine) {
+							$dataCount ++;
 							fwrite($fileStart, strval(floor($start * 10)) . "\n");
-							fwrite($fileEnd, strval(floor($end * 10)) . "\n");
-							fwrite($fileText, $textLine . "\n");
+							fwrite($fileEnd,   strval(floor($end * 10)) . "\n");
+							fwrite($fileText,  $textLine . "\n");
 						}
 					}
 
+					$dataCount ++;
 					fwrite($fileStart, "864000\n");
 					fwrite($fileEnd,   "864010\n");
 					fwrite($fileText,  "\n");
@@ -282,6 +285,11 @@
 					fclose($fileStart);
 					fclose($fileEnd);
 					fclose($fileText);
+
+					// Write the number of lines
+					$fileCount = fopen($filenameCount, 'w');
+					fwrite($fileCount,  strval($dataCount));
+					fclose($fileCount);
 
 					$extraInfo .= (' [' . $cc[0] . ']{' . implode(',', $allLangs) . '}');
 				}
