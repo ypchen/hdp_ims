@@ -93,10 +93,11 @@
 	selectClipStatusWidthPC = 0;
 	displaySelectClipStatusWidthPC = 100;
 
-	ccDataCountFile = "<?php echo $fileLocalCCCount; ?>";
-	ccDataStartFile = "<?php echo $fileLocalCCStart; ?>";
-	ccDataEndFile   = "<?php echo $fileLocalCCEnd; ?>";
-	ccDataTextFile  = "<?php echo $fileLocalCCText; ?>";
+	ccDataCountFile  = "<?php echo $fileLocalCCCount; ?>";
+	ccDataStartFile  = "<?php echo $fileLocalCCStart; ?>";
+	ccDataEndFile    = "<?php echo $fileLocalCCEnd; ?>";
+	ccDataTextFile   = "<?php echo $fileLocalCCText; ?>";
+	ccDataStatusFile = "<?php echo $fileLocalCCStatus; ?>";
 
 	pbLastInt = -1;
 	pbTimeCount = 0;
@@ -109,7 +110,9 @@
 	ccTextWidthPC = 100;
 	ccDataCount = 0;
 
-	showCCStatus = "":
+	showCCStatus = "";
+	showCCStatusData = "";
+	showCCStatusColor = "";
 	showCCStatusWidthPC = 0;
 	showCCStatusTimeMark = 0;
 
@@ -242,6 +245,7 @@
 			if ((runningHeadTwo == null) || (runningHeadTwo == "")) {
 				runningHeadTwo = getStringArrayAt(extraInfoArray, n);
 			}
+
 			ccDataCountString = readStringFromFile(ccDataCountFile);
 			if ((ccDataCountString == null) || (ccDataCountString == "")) {
 				ccDataCount = 0;
@@ -251,6 +255,18 @@
 				ccDataStart = readStringFromFile(ccDataStartFile);
 				ccDataEnd = readStringFromFile(ccDataEndFile);
 				ccDataText = readStringFromFile(ccDataTextFile);
+			}
+
+			showCCStatusData = readStringFromFile(ccDataStatusFile);
+			if ((showCCStatusData == null) || (showCCStatusData == "")) {
+				showCCStatus = "";
+				showCCStatusColor = "";
+			}
+			else {
+				showCCStatus = getStringArrayAt(showCCStatusData, 0);
+				showCCStatusColor = getStringArrayAt(showCCStatusData, 1);
+				showCCStatusWidthPC = 100;
+				showCCStatusTimeMark = 2;
 			}
 		}
 
@@ -268,6 +284,8 @@
 				pbTimeCount = 0;
 
 				showCCStatus = "":
+				showCCStatusData = "":
+				showCCStatusColor = "":
 				showCCStatusWidthPC = 0;
 				showCCStatusTimeMark = 0;
 
@@ -275,6 +293,7 @@
 				playStatus = -1;
 				writeStringToFile(extraInfoFile, "");
 				writeStringToFile(ccDataCountFile, "0");
+				writeStringToFile(ccDataStatusFile, "");
 
 				playItemURL(currentUrl, 0, "mediaDisplay", "previewWindow");
 			}
@@ -367,6 +386,14 @@
 		backgroundColor="0:0:0" foregroundColor="255:255:0">
 		<script>showCCStatus;</script>
 		<widthPC><script>showCCStatusWidthPC;</script></widthPC>
+		<foregroundColor>
+			<script>
+				if ((showCCStatusColor == null) || (showCCStatusColor == ""))
+					"255:255:0";
+				else
+					showCCStatusColor;
+			</script>
+		</foregroundColor>
 	</text>
 
 	<text redraw="yes" align="center" fontSize="20"
@@ -629,13 +656,16 @@
 				if (ccDataCount &gt; 0) {
 					if (ccTextWidthPC == 0) {
 						showCCStatus = "字幕：隱藏";
+						showCCStatusColor = "";
 					}
 					else {
 						showCCStatus = "字幕：顯示";
+						showCCStatusColor = "";
 					}
 				}
 				else {
 					showCCStatus = "無字幕資訊";
+					showCCStatusColor = "255:0:0";
 				}
 				showCCStatusWidthPC = 100;
 				showCCStatusTimeMark = pbCurInt;
@@ -650,6 +680,9 @@
 						runningHeadTwo = getStringArrayAt(extraInfoArray, n);
 					}
 				}
+
+				/* Pressing display always hides the CC status */
+				showCCStatusWidthPC = 0;
 
 				/* Pressing display always hides the select clip status */
 				selectClip = 0;
@@ -789,6 +822,9 @@
 				}
 
 				if (selectClip == 0) {
+					/* Selecting clips always hides the CC status */
+					showCCStatusWidthPC = 0;
+
 					/* Selecting clips always hides the playback status display */
 					runningHeadWidthPC = 0;
 

@@ -1,6 +1,6 @@
 <channel>
 
-<title>YouTube 搜索與設定</title>
+<title>YouTube 設定: 影片解析度之喜好順序</title>
 
 <?php
 	if ($pass_check) {

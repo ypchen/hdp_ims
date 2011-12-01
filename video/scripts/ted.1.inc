@@ -2,6 +2,8 @@
 	$itemXML   = '';
 
 	$sites = array(
+		array('408BCEA5FFABF0E3', 'TED Talks 中文字幕', $myBaseName,
+			'建立者：ypchentube', 'playlist', 'continue=0'),
 		array('2EEE480A9E7B4E18', 'TED Talks 中文字幕', $myBaseName,
 			'建立者：andyjayu04ro936', 'playlist', 'continue=0'),
 		array('6661FF1871FDD4CB', 'TED Talks 中文字幕', $myBaseName,

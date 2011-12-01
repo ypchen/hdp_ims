@@ -68,7 +68,7 @@
 	7. 具有使用 MySQL database 記錄使用者動作的功能
 	8. IMS 線上搜索可讓使用者自訂由 hdp_input 模組所做成的線上輸入功能
 	9. [v1.4] youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
-	10. [v1.6] 可播放 YouTube 字幕 (請將 v1.6.2 版之 youtube.video.php 刷入本機)
+	10. [v1.6] 可播放 YouTube 字幕 (請將至少 v1.6.2 版之 youtube.video.php 刷入本機)
 	11. [v1.6.2] 提供存放於 github 之 dereferenced 版本，以利追蹤版本變更時檔案之異同
 
 使用
@@ -145,7 +145,7 @@
 
 		--- v1.6 增加了 youtube 影片的字幕功能: 設定載入喜好後即可顯示有提供 CC 的 youtube 影片
 
-		A. 請將 v1.6.2 版之 youtube.video.php 刷入本機
+		A. 請將至少 v1.6.2 版之 youtube.video.php 刷入本機
 			希望將來真的不必再更新本機內的這個檔案
 
 		B. 影片開始會比平常慢一些，因為要先下載字幕
@@ -161,8 +161,6 @@
 				{-} 表示此影片不提供字幕
 				[#] 表示此影片提供的字幕中，並無使用者接受的
 				[X] 表示字幕下載失敗
-						例如: How to Use EndNote in 7 Minutes，我沒下載成功過
-						而 Bill Gates 的 TEDTalk，英文字幕可下載，正體中文字幕則不行
 				[zh-Hant]{zh-Hant,en} 表示正在使用正體中文(zh-Hant)字幕
 						而此影片提供正體中文與英文字幕
 

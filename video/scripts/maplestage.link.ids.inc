@@ -14,42 +14,55 @@
 		include('05_check.link.idcount.inc');
 	}
 	else if (strpos($html, 'http://www.youtube.com/embed/') !== false) {
-		$ids = array();
-		$ids[] = trim(str_between($html, 'http://www.youtube.com/embed/', '?'));
+		$ids = array(trim(str_between($html, 'http://www.youtube.com/embed/', '?')));
 		include('05_check.link.idcount.inc');
 	}
-	else {
+	else if (strpos($html, ' flashvars="hl=zh_CN&amp;video_id=') !== false) {
+		$ids = array(trim(str_between($html, ' flashvars="hl=zh_CN&amp;video_id=', '"')));
+		include('05_check.link.idcount.inc');
+	}
+	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
+		$video_id = trim(str_between($html, 'http://www.dailymotion.com/embed/video/', '">'));
+		$link = 'http://www.dailymotion.com/embed/video/' . $video_id;
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		if (
+			(strlen($link = trim(str_between($html, '"stream_h264_url":"', '"'))) > 0) ||
+			(strlen($link = trim(str_between($html, '"stream_h264_ld_url":"', '"'))) > 0)
+		) {
+			$link = str_replace('\/', '/', $link);
+			$links = array($link);
+			$extraInfo = array('H264-' . str_between($link, 'H264-', '/'));
+		}
+	}
+	else if (count($videos = explode('value="fs=1&amp;', $html)) > 1) {
 		// maplestage new format -- direct youtube video url without id
-		$htmlBody = explode('<div class="node_body">', $html);
+		unset($videos[0]);
+		$videos = array_values($videos);
 
-		$videos = explode('<param name="flashvars"', $htmlBody[1]);
-		if (count($videos) > 1) {
-			unset($videos[0]);
-			$videos = array_values($videos);
+		$links = array();
+		$extraInfo = array();
+		foreach($videos as $video) {
+			$fmt_stream_map = urldecode(trim(str_between($video, 'fmt_stream_map=', '&amp;')));
+			$fmt_streams = explode(',', $fmt_stream_map);
+			// For now, just use the first stream (usually the highest resolution)
+			$streamOne = explode('|', $fmt_streams[0]);
+			$links[] = str_replace('&', '&amp;', $streamOne[1]);
 
-			$links = array();
-			$extraInfo = array();
-			foreach($videos as $video) {
-				$fmt_stream_map = urldecode(trim(str_between($video, 'fmt_stream_map=', '&amp;')));
-				$fmt_streams = explode(',', $fmt_stream_map);
-				// For now, just use the first stream (usually the highest resolution)
-				$streamOne = explode('|', $fmt_streams[0]);
-				$links[] = str_replace('&', '&amp;', $streamOne[1]);
-
-				$fmt_list = urldecode(trim(str_between($video, 'fmt_list=', '&amp;')));
-				$fmts = explode(',', $fmt_list);
-				// For now, just use the first stream (usually the highest resolution)
-				$extraInfo[] = $fmts[0];
-			}
-
-			$itemTotal = count($links);
-			include('05_check.base.inc');
+			$fmt_list = urldecode(trim(str_between($video, 'fmt_list=', '&amp;')));
+			$fmts = explode(',', $fmt_list);
+			// For now, just use the first stream (usually the highest resolution)
+			$extraInfo[] = $fmts[0];
 		}
-		else {
-			// clear-text youtube url(s) not found
-			// No solution for the time being
-			$ids = array();
-			include('05_check.link.idcount.inc');
-		}
+
+		$itemTotal = count($links);
+		include('05_check.base.inc');
+	}
+	else {
+		// Clear-text youtube url(s) not found
+		// Unknown maplestage format
+		$ids = array();
+		include('05_check.link.idcount.inc');
 	}
 ?>

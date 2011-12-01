@@ -83,10 +83,11 @@
 	$fileLocalExtraInfo = $filePath . 'ims_extra_info.dat';
 
 	// Local files for handling closed captioning
-	$fileLocalCCCount = $filePath . 'ims_cc_count.dat';
-	$fileLocalCCStart = $filePath . 'ims_cc_start.dat';
-	$fileLocalCCEnd   = $filePath . 'ims_cc_end.dat';
-	$fileLocalCCText  = $filePath . 'ims_cc_text.dat';
+	$fileLocalCCCount  = $filePath . 'ims_cc_count.dat';
+	$fileLocalCCStart  = $filePath . 'ims_cc_start.dat';
+	$fileLocalCCEnd    = $filePath . 'ims_cc_end.dat';
+	$fileLocalCCText   = $filePath . 'ims_cc_text.dat';
+	$fileLocalCCStatus = $filePath . 'ims_cc_status.dat';
 
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {
