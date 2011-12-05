@@ -67,12 +67,12 @@
 
 			if (isset($titles)) {
 				for ($i = 0 ; $i < $itemTotal ; $i ++) {
-					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $titles[$i] . "\");\r\n";
+					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . str_replace('"', '\"', $titles[$i]) . "\");\r\n";
 				}
 			}
 			else {
 				for ($i = 0 ; $i < $itemTotal ; $i ++) {
-					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $title . "\");\r\n";
+					echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . str_replace('"', '\"', $title) . "\");\r\n";
 				}
 			}
 		}

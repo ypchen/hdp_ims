@@ -28,7 +28,7 @@
 
 		for ($i = 0 ; $i < $itemTotal ; $i ++) {
 			echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $links[$i] . "\");\r\n";
-			echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . $titles[$i] . "\");\r\n";
+			echo "\ttitleArray  = pushBackStringArray(titleArray, \"" . str_replace('"', '\"', $titles[$i]) . "\");\r\n";
 		}
 	}
 ?>

@@ -23,7 +23,7 @@
 			'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 			'&amp;query=' . $pageStart .
 				',' . urlencode($link) .
-				',' . urlencode($title) .
+				',' . urlencode(str_replace(',', '%2C', $title)) .
 				',' . urlencode($extra) .
 			$dataSupp;
 

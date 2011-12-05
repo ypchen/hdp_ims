@@ -13,7 +13,7 @@
 			'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
 			'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 			'&amp;query=' . urlencode($link) .
-				',' . urlencode($title) .
+				',' . urlencode(str_replace(',', '%2C', $title)) .
 				',' . urlencode($extra) .
 			$dataSupp;
 
