@@ -14,7 +14,7 @@
 		}
 	}
 
-	function yp_file_get_contents($url, $timeout = 30, $referer = '', $user_agent = ''){
+	function yp_file_get_contents($url, $timeout = 30, $referer = '', $user_agent = '') {
 		global $imsUseCurl;
 
 		if (!empty($imsUseCurl)) {
