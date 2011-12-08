@@ -84,6 +84,8 @@
 	if (!empty($_GET['USEcurl']))
 		$USEcurl = true;
 
+	// Check the existence because this part of code may be re-loaded and re-evaluated
+	if (function_exists('yp_file_get_contents') === false)
 	function yp_file_get_contents($url, $timeout = 30, $referer = '', $user_agent = '') {
 		global $USEcurl;
 
@@ -109,6 +111,8 @@
 		}
 	}
 
+	// Check the existence because this part of code may be re-loaded and re-evaluated
+	if (function_exists('local_file_get_contents') === false)
 	function local_file_get_contents($file) {
 		return file_get_contents($file);
 	}
