@@ -85,36 +85,38 @@
 		$USEcurl = true;
 
 	// Check the existence because this part of code may be re-loaded and re-evaluated
-	if (function_exists('yp_file_get_contents') === false)
-	function yp_file_get_contents($url, $timeout = 30, $referer = '', $user_agent = '') {
-		global $USEcurl;
+	if (function_exists('yp_file_get_contents') === false) {
+		function yp_file_get_contents($url, $timeout = 30, $referer = '', $user_agent = '') {
+			global $USEcurl;
 
-		if (!empty($USEcurl)) {
-			$curl = curl_init();
-			if(strstr($referer, '://')) {
-				curl_setopt ($curl, CURLOPT_REFERER, $referer);
+			if (!empty($USEcurl)) {
+				$curl = curl_init();
+				if(strstr($referer, '://')) {
+					curl_setopt ($curl, CURLOPT_REFERER, $referer);
+				}
+				curl_setopt ($curl, CURLOPT_URL, $url);
+				curl_setopt ($curl, CURLOPT_TIMEOUT, $timeout);
+				if (strlen($user_agent) == 0) {
+					$user_agent = ini_get('user_agent');
+				}
+				curl_setopt ($curl, CURLOPT_USERAGENT, $user_agent);
+				curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt ($curl, CURLOPT_SSL_VERIFYPEER, 0);
+				$html = curl_exec ($curl);
+				curl_close ($curl);
+				return $html;
 			}
-			curl_setopt ($curl, CURLOPT_URL, $url);
-			curl_setopt ($curl, CURLOPT_TIMEOUT, $timeout);
-			if (strlen($user_agent) == 0) {
-				$user_agent = ini_get('user_agent');
+			else {
+				return file_get_contents($url);
 			}
-			curl_setopt ($curl, CURLOPT_USERAGENT, $user_agent);
-			curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt ($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			$html = curl_exec ($curl);
-			curl_close ($curl);
-			return $html;
-		}
-		else {
-			return file_get_contents($url);
 		}
 	}
 
 	// Check the existence because this part of code may be re-loaded and re-evaluated
-	if (function_exists('local_file_get_contents') === false)
-	function local_file_get_contents($file) {
-		return file_get_contents($file);
+	if (function_exists('local_file_get_contents') === false) {
+		function local_file_get_contents($file) {
+			return file_get_contents($file);
+		}
 	}
 
 	// If there is no 'query',
