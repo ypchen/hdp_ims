@@ -95,11 +95,6 @@
 	}
 	else {
 ?>
-	writeStringToFile("<?php echo $fileLocalCCStart; ?>", "");
-	writeStringToFile("<?php echo $fileLocalCCEnd; ?>", "");
-	writeStringToFile("<?php echo $fileLocalCCText; ?>", "");
-	writeStringToFile("<?php echo $fileLocalCCCount; ?>", "0");
-
 	showCCStatusData = null;
 	showCCStatusData = pushBackStringArray(showCCStatusData, "無法載入字幕");
 	showCCStatusData = pushBackStringArray(showCCStatusData, "255:0:0");

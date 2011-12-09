@@ -292,7 +292,7 @@
 				lastPlayStatus = -2;
 				playStatus = -1;
 
-				if (ccProvidedInPlayItemURL == 1) {
+				if (ccCleanAtPlayItemURL == 1) {
 					writeStringToFile(extraInfoFile, "");
 					writeStringToFile(ccDataCountFile, "0");
 					writeStringToFile(ccDataStatusFile, "");

@@ -1,6 +1,14 @@
 <script>
 	/* Default to be 0 for sites except YouTube */
-	ccProvidedInPlayItemURL = 0;
+	ccCleanAtPlayItemURL = 0;
+
+	/* Clean first */
+	writeStringToFile("<?php echo $fileLocalExtraInfo; ?>", "");
+	writeStringToFile("<?php echo $fileLocalCCStatus; ?>", "");
+	writeStringToFile("<?php echo $fileLocalCCStatus; ?>", "");
+	writeStringToFile("<?php echo $fileLocalCCEnd; ?>", "");
+	writeStringToFile("<?php echo $fileLocalCCText; ?>", "");
+	writeStringToFile("<?php echo $fileLocalCCCount; ?>", "0");
 
 	bufferSize  = 262144;
 

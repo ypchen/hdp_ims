@@ -1,6 +1,6 @@
 <script>
 	/* Default to be 1 for YouTube (handling CC at local) */
-	ccProvidedInPlayItemURL = 1;
+	ccCleanAtPlayItemURL = 1;
 
 	bufferSize  = 262144;
 
