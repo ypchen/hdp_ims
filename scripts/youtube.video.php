@@ -256,7 +256,7 @@
 	$supportedVids = array();
 	foreach ($fmtList as $fmtEntry => $fmtData) {
 		// '/' or '\/': different codings
-		$fmtDetail = explode('/', str_replace('\/', '/', $fmtData));
+		$fmtDetail = explode('/', ($fmtData = str_replace('\/', '/', $fmtData)));
 		$key = array_search($fmtDetail[0], $formats);
 		if ($key !== false) {
 			// Ignore 'url='

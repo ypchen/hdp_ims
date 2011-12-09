@@ -1,4 +1,7 @@
 <script>
+	/* Default to be 0 for sites except YouTube */
+	ccProvidedInPlayItemURL = 0;
+
 	bufferSize  = 262144;
 
 	xmlUrl = getStoragePath("tmp") + "tmp.rss";

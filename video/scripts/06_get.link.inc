@@ -17,7 +17,7 @@
 		$link = $queryArr[0];
 		if (count($queryArr) > 1) {
 			//$title = urldecode($queryArr[1]);
-			$title = $queryArr[1];
+			$title = str_replace('%2C', ',', $queryArr[1]);
 		}
 		if (count($queryArr) > 2) {
 			//$extra = urldecode($queryArr[2]);

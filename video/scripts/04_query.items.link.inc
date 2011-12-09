@@ -2,11 +2,14 @@
 	if (!isset($clickPlay))
 		$clickPlay = 'no';
 
+	if (!isset($linkLevel) || (strlen($linkLevel) == 0))
+		$linkLevel = '.link';
+
 	if (!isset($dataSupp))
 		$dataSupp = '';
 
 	$linkAll = $scriptsURLprefix . '/' .
-		$myBaseName . '.link.php' .
+		$myBaseName . $linkLevel . '.php' .
 			'?uid=' . $user_id  .
 			'&amp;input_method='  . urlencode($inputMethod) .
 			'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .

@@ -291,9 +291,12 @@
 
 				lastPlayStatus = -2;
 				playStatus = -1;
-				writeStringToFile(extraInfoFile, "");
-				writeStringToFile(ccDataCountFile, "0");
-				writeStringToFile(ccDataStatusFile, "");
+
+				if (ccProvidedInPlayItemURL == 1) {
+					writeStringToFile(extraInfoFile, "");
+					writeStringToFile(ccDataCountFile, "0");
+					writeStringToFile(ccDataStatusFile, "");
+				}
 
 				playItemURL(currentUrl, 0, "mediaDisplay", "previewWindow");
 			}

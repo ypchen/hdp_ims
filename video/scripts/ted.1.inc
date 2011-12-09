@@ -2,17 +2,17 @@
 	$itemXML   = '';
 
 	$sites = array(
-		array('408BCEA5FFABF0E3', 'TED Talks 中文字幕', $myBaseName,
+		array('408BCEA5FFABF0E3', 'TED Talks 中文字幕 (YouTube)', $myBaseName,
 			'建立者：ypchentube', 'playlist', 'continue=0'),
-		array('2EEE480A9E7B4E18', 'TED Talks 中文字幕', $myBaseName,
+		array('2EEE480A9E7B4E18', 'TED Talks 中文字幕 (YouTube)', $myBaseName,
 			'建立者：andyjayu04ro936', 'playlist', 'continue=0'),
-		array('6661FF1871FDD4CB', 'TED Talks 中文字幕', $myBaseName,
+		array('6661FF1871FDD4CB', 'TED Talks 中文字幕 (YouTube)', $myBaseName,
 			'建立者：lamplighter543', 'playlist', 'continue=0'),
-		array('EA1976CE9B085F35', 'TED Talks 中文字幕', $myBaseName,
+		array('EA1976CE9B085F35', 'TED Talks 中文字幕 (YouTube)', $myBaseName,
 			'建立者：MAVERICKTPC', 'playlist', 'continue=0'),
-		array('4E435084C20A2111', 'TED Talks 中文字幕', $myBaseName,
+		array('4E435084C20A2111', 'TED Talks 中文字幕 (YouTube)', $myBaseName,
 			'建立者：RichardCFHuang', 'playlist', 'continue=0'),
-		array('D5E54CA0E2DB9B54', 'TED Talks 中文字幕', $myBaseName,
+		array('D5E54CA0E2DB9B54', 'TED Talks 中文字幕 (YouTube)', $myBaseName,
 			'建立者：windrider21', 'playlist', 'continue=0'),
 	);
 

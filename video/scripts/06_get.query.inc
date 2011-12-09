@@ -19,7 +19,7 @@
 		$search = $queryArr[1];
 		if (count($queryArr) > 2) {
 			//$cat = urldecode($queryArr[2]);
-			$cat = $queryArr[2];
+			$cat = str_replace('%2C', ',', $queryArr[2]);
 			if (strcmp($cat, '') == 0) {
 				unset($cat);
 			}

@@ -48,7 +48,7 @@
 	}
 
 	// Save titles to the local disk
-	$yvTitleFilePath = '/usr/local/etc/dvdplayer/youtubeTitles.dat';
+	$yvTitleFilePath = '/usr/local/etc/dvdplayer/ims_titles.dat';
 	echo "\ttitleArray  = null;\r\n";
 	// Extract all ids and titles here
 	$iCount     = 0;

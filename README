@@ -31,7 +31,7 @@
 				字幕測試影片
 			YouTube 解析度設定
 				高清測試影片
-		G. TED Talks on YouTube / podcast
+		G. TED Talks on TED / YouTube / podcast
 		H. CNN 影音 podcast
 		I. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
 		J. 近三十個成人影片網站
@@ -50,8 +50,8 @@
 		E. 媒體新聞 on YouTube
 		F. YouTube 搜索與設定
 				01 -> 02 -> 播放
-		G. TED Talks on YouTube / podcast
-			a. 中文字幕 on YouTube
+		G. TED Talks on TED / YouTube / podcast
+			a. TED Talks on TED / YouTube
 				01 -> 02 -> 播放
 			b. podcast
 				01 -> podcast
@@ -71,6 +71,7 @@
 	9. [v1.4] youtube.video.php 將會由 IMS 來源網站載入 scripts/youtube.video.php 來執行
 	10. [v1.6] 可播放 YouTube 字幕 (請將至少 v1.6.2 版之 youtube.video.php 刷入本機)
 	11. [v1.6.2] 提供存放於 github 之 dereferenced 版本，以利追蹤版本變更時檔案之異同
+	12. [v1.6.4] 可直接觀賞 TED.com 上的 TED Talks，並支援字幕顯示
 
 使用
 	1. 直接放在本機使用
@@ -164,6 +165,9 @@
 				[X] 表示字幕下載失敗
 				[zh-Hant]{zh-Hant,en} 表示正在使用正體中文(zh-Hant)字幕
 						而此影片提供正體中文與英文字幕
+
+		E. v1.6.4 可直接觀賞 TED.com 上的 TED Talks，並支援字幕顯示
+			部分 TED.com 上的影片實際存放於 YouTube 且不一定有字幕
 
 備註
 	1. 這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，在此表示感謝！

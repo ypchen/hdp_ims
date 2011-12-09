@@ -1,4 +1,7 @@
 <script>
+	/* Default to be 1 for YouTube (handling CC at local) */
+	ccProvidedInPlayItemURL = 1;
+
 	bufferSize  = 262144;
 
 	xmlUrl = getStoragePath("tmp") + "tmp.rss";
@@ -78,7 +81,7 @@
 		}
 		else {
 			// Read titles from the local disk if no title information is passed
-			$yvTitleFilePath = '/usr/local/etc/dvdplayer/youtubeTitles.dat';
+			$yvTitleFilePath = '/usr/local/etc/dvdplayer/ims_titles.dat';
 			echo "\ttitleArray  = readStringFromFile(\"" . $yvTitleFilePath . "\");\r\n";
 		}
 

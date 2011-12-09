@@ -27,7 +27,7 @@
 		array('ck101',           '卡提諾影音　 (ck101)', '※ 需安裝 youtube.video.php'),
 		array('news',            '媒體新聞 on YouTube', '※ 需安裝 youtube.video.php'),
 		array('youtube',         'YouTube 搜索與設定', '※ 需安裝 youtube.video.php'),
-		array('ted',             'TED Talks 中文字幕 on YouTube / podcast', '※ 需安裝 youtube.video.php'),
+		array('ted',             'TED Talks on TED / YouTube / podcast', '※ 需安裝 youtube.video.php'),
 		array('CNN',             'CNN 影音播放 podcast', ''),
 		array('ims_search',      'IMS 搜索 (HAOIMS / HDPfans)', ''),
 	);
