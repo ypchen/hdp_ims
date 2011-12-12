@@ -1,6 +1,7 @@
 <?php
 	// 153 = 15.3 seconds
 	$tedSubtitleDelay = 153;
+	$tedFinalDuration = 100;
 
 	// Get the talk page
 	$html = yp_file_get_contents($link);
@@ -58,7 +59,7 @@
 			if ($i < (count($subtitles)-1))
 				$end = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i+1], 'ef="', '"'))) / 100);
 			else
-				$end = 8640000;
+				$end = $start + $tedFinalDuration;
 
 			$text  = trim(htmlspecialchars_decode(
 						convertUnicodePoints(
@@ -88,7 +89,7 @@
 	writeStringToFile("<?php echo $fileLocalCCText; ?>", ccDataText);
 	writeStringToFile("<?php echo $fileLocalCCCount; ?>", "<?php echo strval($dataCount); ?>");
 
-	writeStringToFile("<?php echo $fileLocalCCStatus; ?>", "成功載入字幕");
+	writeStringToFile("<?php echo $fileLocalCCStatus; ?>", "成功處理字幕資訊");
 
 	writeStringToFile("<?php echo $fileLocalExtraInfo; ?>", "<?php echo strval($extraInfo); ?>");
 <?php
@@ -96,8 +97,9 @@
 	else {
 ?>
 	showCCStatusData = null;
-	showCCStatusData = pushBackStringArray(showCCStatusData, "無法載入字幕");
+	showCCStatusData = pushBackStringArray(showCCStatusData, "不含任何字幕資訊");
 	showCCStatusData = pushBackStringArray(showCCStatusData, "255:0:0");
+	writeStringToFile("<?php echo $fileLocalCCStatus; ?>", showCCStatusData);
 
 	writeStringToFile("<?php echo $fileLocalExtraInfo; ?>", "<?php echo strval($extraInfo); ?>");
 <?php
