@@ -5,9 +5,9 @@
 	$itemXML   = '';
 
 	$sites = array(
+		array('favorites', '本地收藏', 3),
 		array('browse', '最近瀏覽', 1),
 		array('watch', '最近觀看', 2),
-		array('favorites', '本地收藏', 3),
 	);
 
 	foreach($sites as $site) {

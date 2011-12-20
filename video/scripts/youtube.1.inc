@@ -48,8 +48,8 @@
 
 	$sites = array(
 		array('youtube.set_cc',
-			'設定: 字幕嘗試載入之喜好順序', 'youtube',
-			'取消或設定字幕嘗試載入順序'),
+			'設定: 字幕', 'youtube',
+			'取消或設定: 嘗試載入順序 (YouTube)、字型大小 (YouTube, TED)、字幕顏色 (YouTube, TED)'),
 		array('youtube.set_resolution',
 			'設定: 影片解析度之喜好順序', 'youtube',
 			'取消本機設定或設定影片解析度之喜好順序'),

@@ -101,14 +101,25 @@
 
 	pbLastInt = -1;
 	pbTimeCount = 0;
-	ccTextFontSize = 24;
 	ccTextOffsetYPC = 81.22;
 	ccTextHeightPC = 5.98;
 	ccBackgroundColor = "-1:-1:-1";
-	ccForegroundColor = "255:255:0";
 	ccForegroundShadowColor = "0:0:0";
 	ccTextWidthPC = 100;
 	ccDataCount = 0;
+
+	ccTextFontSizeData = readStringFromFile("<?php echo $fileLocalCCFSize; ?>");
+	if ((ccTextFontSizeData == null) || (ccTextFontSizeData == "")) {
+		ccTextFontSize = 24;
+	}
+	else {
+		ccTextFontSize = Integer(ccTextFontSizeData);
+	}
+
+	ccForegroundColor = readStringFromFile("<?php echo $fileLocalCCFColor; ?>");
+	if ((ccForegroundColor == null) || (ccForegroundColor == "")) {
+		ccForegroundColor = "255:255:150";
+	}
 
 	showCCStatus = "";
 	showCCStatusData = "";
@@ -404,7 +415,7 @@
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextThree;</script>
-		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - 0.12;</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -412,11 +423,11 @@
 		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
 	</text>
 	<text redraw="yes" align="center" fontSize="20"
-		offsetXPC="-3.2" offsetYPC="100"
+		offsetXPC="-3.22" offsetYPC="100"
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextThree;</script>
-		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - 0.12;</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -428,7 +439,7 @@
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextThree;</script>
-		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - (-0.10);</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -436,11 +447,11 @@
 		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
 	</text>
 	<text redraw="yes" align="center" fontSize="20"
-		offsetXPC="-3.2" offsetYPC="100"
+		offsetXPC="-3.22" offsetYPC="100"
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextThree;</script>
-		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<offsetYPC><script>((ccTextOffsetYPC - ccTextHeightPC) - ccTextHeightPC) - (-0.10);</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -465,7 +476,7 @@
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextTwo;</script>
-		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - 0.12;</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -473,11 +484,11 @@
 		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
 	</text>
 	<text redraw="yes" align="center" fontSize="20"
-		offsetXPC="-3.2" offsetYPC="100"
+		offsetXPC="-3.22" offsetYPC="100"
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextTwo;</script>
-		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - 0.1;</script></offsetYPC>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - 0.12;</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -489,7 +500,7 @@
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextTwo;</script>
-		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - (-0.10);</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -497,11 +508,11 @@
 		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
 	</text>
 	<text redraw="yes" align="center" fontSize="20"
-		offsetXPC="-3.2" offsetYPC="100"
+		offsetXPC="-3.22" offsetYPC="100"
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextTwo;</script>
-		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - (-0.2);</script></offsetYPC>
+		<offsetYPC><script>(ccTextOffsetYPC - ccTextHeightPC) - (-0.10);</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -526,7 +537,7 @@
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextOne;</script>
-		<offsetYPC><script>ccTextOffsetYPC - 0.1;</script></offsetYPC>
+		<offsetYPC><script>ccTextOffsetYPC - 0.12;</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -534,11 +545,11 @@
 		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
 	</text>
 	<text redraw="yes" align="center" fontSize="20"
-		offsetXPC="-3.2" offsetYPC="100"
+		offsetXPC="-3.22" offsetYPC="100"
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextOne;</script>
-		<offsetYPC><script>ccTextOffsetYPC - 0.1;</script></offsetYPC>
+		<offsetYPC><script>ccTextOffsetYPC - 0.12;</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -550,7 +561,7 @@
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextOne;</script>
-		<offsetYPC><script>ccTextOffsetYPC - (-0.2);</script></offsetYPC>
+		<offsetYPC><script>ccTextOffsetYPC - (-0.10);</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>
@@ -558,11 +569,11 @@
 		<foregroundColor><script>ccForegroundShadowColor;</script></foregroundColor>
 	</text>
 	<text redraw="yes" align="center" fontSize="20"
-		offsetXPC="-3.2" offsetYPC="100"
+		offsetXPC="-3.22" offsetYPC="100"
 		widthPC="0" heightPC="0"
 		backgroundColor="-1:-1:-1" foregroundColor="255:255:0">
 		<script>ccTextOne;</script>
-		<offsetYPC><script>ccTextOffsetYPC - (-0.2);</script></offsetYPC>
+		<offsetYPC><script>ccTextOffsetYPC - (-0.10);</script></offsetYPC>
 		<fontSize><script>ccTextFontSize;</script></fontSize>
 		<widthPC><script>ccTextWidthPC;</script></widthPC>
 		<heightPC><script>ccTextHeightPC;</script></heightPC>

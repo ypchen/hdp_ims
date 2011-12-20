@@ -79,8 +79,11 @@
 	// Default local youtube cc prefs file
 	$fileLocalYoutubeVideoCCPrefs = $filePath . 'ims_yv_cc_prefs.dat';
 
-	// Local file for extra information
-	$fileLocalExtraInfo = $filePath . 'ims_extra_info.dat';
+	// Local cc fsize file
+	$fileLocalCCFSize = $filePath . 'ims_cc_fsize.dat';
+
+	// Local cc fcolor file
+	$fileLocalCCFColor = $filePath . 'ims_cc_fcolor.dat';
 
 	// Local files for handling closed captioning
 	$fileLocalCCCount  = $filePath . 'ims_cc_count.dat';
@@ -88,6 +91,9 @@
 	$fileLocalCCEnd    = $filePath . 'ims_cc_end.dat';
 	$fileLocalCCText   = $filePath . 'ims_cc_text.dat';
 	$fileLocalCCStatus = $filePath . 'ims_cc_status.dat';
+
+	// Local file for extra information
+	$fileLocalExtraInfo = $filePath . 'ims_extra_info.dat';
 
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {
