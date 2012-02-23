@@ -14,12 +14,13 @@
 
 	$siteURLprefix = '';
 	foreach($videos as $video) {
-		$link  = $siteURLprefix . trim(str_between($video, ' src="', '"'));
-		$links[] = $link;
-
 		$title = trim(str_between($video, ' title="', '"'));
 		$title = convertUnicodePoints($title);
 		$titles[] = $title;
+
+		$v = explode('<div class="detailed-video4"', $video);
+		$link  = $siteURLprefix . trim(str_between($v[1], ' src="', '"'));
+		$links[] = $link;
 	}
 
 	$iStart = intval($extra);

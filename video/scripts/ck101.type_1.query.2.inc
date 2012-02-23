@@ -26,7 +26,7 @@
 		);
 	}
 
-	if ($itemNo == 1) {
+	if ($itemNo == 0) {
 		// Drama
 		usort($sortedVideos, "yp_cmp_videos_maplestage_drama");
 	}

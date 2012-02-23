@@ -20,8 +20,8 @@
 	$itemTotal ++;
 
 	$sites = array(
-		array('appledaily_cont', '台灣蘋果動新聞 (連續播放)', ''),
 		array('appledaily',      '台灣蘋果動新聞', ''),
+		array('appledaily_cont', '台灣蘋果動新聞 [連續播放]', ''),
 		array('maplestage',      '台灣綜藝戲劇 (楓林網)', '※ 需安裝 youtube.video.php'),
 		array('sugoideas',       '台灣綜藝戲劇 (sugoideas)', '※ 需安裝 youtube.video.php'),
 		array('ck101',           '卡提諾影音　 (ck101)', '※ 需安裝 youtube.video.php'),

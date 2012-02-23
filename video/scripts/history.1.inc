@@ -22,7 +22,7 @@
 						'&amp;query=0,,,' .
 				"</link>\r\n" .
 				"\t\t" . myLogo($myBaseName . '.' . $site[0]) . "\r\n" .
-				"\t\t<mediaDisplay name=\"threePartsView\" />\r\n" .
+				"\t\t<mediaDisplay name=\"photoView\" />\r\n" .
 			"\t</item>\r\n";
 	}
 ?>

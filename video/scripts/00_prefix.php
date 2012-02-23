@@ -48,9 +48,9 @@
 	$fileBrowse       = $filePath . 'ims_' . $imsDirectory . '_browse.dat';
 	$fileWatch        = $filePath . 'ims_' . $imsDirectory . '_watch.dat';
 	$fileFavorite     = $filePath . 'ims_' . $imsDirectory . '_favorites.dat';
-	$maxBrowse        = 100;
-	$maxWatch         = 50;
-	$maxFavorite      = 50;
+	$maxBrowse        = 110;
+	$maxWatch         = 55;
+	$maxFavorite      = 55;
 	$historyCheckMax  = 5;
 
 	// Default url for input methods

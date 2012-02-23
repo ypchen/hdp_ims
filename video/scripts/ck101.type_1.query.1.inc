@@ -1,15 +1,18 @@
 <?php
+	include('15_3_columns.inc');
+
 	$itemNo = intval($extra);
 
-	$rowCount    = 11;
-	$columnCount = 4;
-	$itemWidthPC = 23.75;
-
-	$link = $search;
+	$link = $search . '/' . $page;
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('<div class="pack pack_album"', $html);
+	if (strpos($html, '<div class="pagination">') === false)
+		$pageMax = 1;
+	else if (strpos($html, '<span class="current">' . strval($page) . '</span><span class="disabled"> &#187;</span>') !== false)
+		$pageMax = $page;
+
+	$videos = explode('<div class="album-img">', $html);
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

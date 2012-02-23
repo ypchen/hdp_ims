@@ -1,7 +1,5 @@
 <?php
-	$rowCount    = 11;
-	$columnCount = 2;
-	$itemWidthPC = 47.5;
+	include('15_2_columns.inc');
 
 	$link = $search;
 	$html = yp_file_get_contents($link);

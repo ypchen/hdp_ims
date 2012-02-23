@@ -1,7 +1,5 @@
 <?php
-	$rowCount    = 11;
-	$columnCount = 4;
-	$itemWidthPC = 23.75;
+	include('15_4_columns.inc');
 
 	$link = 'http://www.maplestage.net/show/';
 	$html = yp_file_get_contents($link);

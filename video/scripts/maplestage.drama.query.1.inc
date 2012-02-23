@@ -1,7 +1,5 @@
 <?php
-	$rowCount    = 11;
-	$columnCount = 3;
-	$itemWidthPC = 31.67;
+	include('15_3_columns.inc');
 
 	$link = 'http://www.maplestage.net/drama/';
 	$html = yp_file_get_contents($link);

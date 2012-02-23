@@ -1,1 +1,1 @@
-01_base.php
+01_base.photoview.php

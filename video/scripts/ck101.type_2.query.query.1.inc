@@ -1,4 +1,6 @@
 <?php
+	include('15_3_columns.inc');
+
 	$link = $search . '/0/new/' . $page;
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');

@@ -17,7 +17,7 @@
 		}
 	}
 
-	$html = str_between($html, '<header>', '</section>');
+	$html = str_between($html, '<header>', '</article>');
 
 	$videos = explode('<figure>', $html);
 	unset($videos[0]);

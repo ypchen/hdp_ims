@@ -1,4 +1,6 @@
 <?php
+	include('15_2_columns.inc');
+
 	$link = $search = 'http://video.ck101.com';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
@@ -7,7 +9,6 @@
 
 	$videos = explode('</a></li>', $htmlVideos);
 	unset($videos[count($videos)-1]);	// Suffix
-	unset($videos[count($videos)-1]);	// 其他
 	unset($videos[count($videos)-1]);	// 成人短片
 	unset($videos[count($videos)-1]);	// 成人影片
 	unset($videos[count($videos)-1]);	// 成人動漫

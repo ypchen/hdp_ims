@@ -3,15 +3,11 @@
 
 	if ($itemNo == 0) {
 		// Show
-		$rowCount    = 11;
-		$columnCount = 4;
-		$itemWidthPC = 23.75;
+		include('15_4_columns.inc');
 	}
 	else {
 		// Drama
-		$rowCount    = 11;
-		$columnCount = 2;
-		$itemWidthPC = 47.5;
+		include('15_2_columns.inc');
 	}
 
 	$link = $search;

@@ -2,7 +2,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$html = str_between($html, '<header>', '</section>');
+	$html = str_between($html, '<header>', '</article>');
 
 	$videos = explode('<figure>', $html);
 	unset($videos[0]);
