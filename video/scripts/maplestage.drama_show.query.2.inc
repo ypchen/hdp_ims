@@ -23,11 +23,12 @@
 		);
 	}
 
-	if (strcmp($myBaseName, 'maplestage.drama') == 0) {
-		usort($sortedVideos, "yp_cmp_videos_maplestage_drama");
-	}
-	else if (strcmp($myBaseName, 'maplestage.show') == 0) {
+	if (strcmp($myBaseName, 'maplestage.show') == 0) {
 		usort($sortedVideos, "yp_cmp_videos_maplestage_show");
+	}
+	else {
+//	else if (strcmp($myBaseName, 'maplestage.drama') == 0) {
+		usort($sortedVideos, "yp_cmp_videos_maplestage_drama");
 	}
 
 	foreach($sortedVideos as $video) {

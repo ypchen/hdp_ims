@@ -1,13 +1,11 @@
 <?php
-	include('15_3_columns.inc');
-
 	$link = 'http://www.maplestage.net/drama/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlBody = explode(' id="show_table"', $html);
+	$htmlBody = explode('<ul class="yearS', $html);
 
-	$videos = explode('<tr>', trim(str_between($htmlBody[1], '<tbody>', '</tbody>')));
+	$videos = explode('<li>', trim(str_between($htmlBody[1], 'orting">', '</ul>')));
 	unset($videos[0]);
 	$videos = array_values($videos);
 
