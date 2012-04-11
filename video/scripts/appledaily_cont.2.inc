@@ -8,7 +8,7 @@
 			$title = trim(str_between($video, ');" >', '</a>'));
 			$title = convertUnicodePoints(strip_tags($title));
 			$data  = '';
-			$link  = str_replace(',', '|', trim(str_between($video, ' href="', '"')));
+			$link  = str_replace("'", '', str_replace(',', '|', trim(str_between($video, ' href="', '"'))));
 			$image = '';
 			$note  = '';
 			$extra = '';
