@@ -24,7 +24,7 @@
 			'建立者：FTVCP', 'channel', 'continue=1'),
 		array('pts', '公視 (連續播放)', $myBaseName,
 			'建立者：pts', 'channel', 'continue=1'),
-		array('ETTVnews', '東森 (連續播放)', $myBaseName,
+		array('newsebc', '東森 (連續播放)', $myBaseName,
 			'建立者：ETTVnews', 'channel', 'continue=1'),
 		array('ChinaTimes', '中天 (連續播放)', $myBaseName,
 			'建立者：ChinaTimes', 'channel', 'continue=1'),

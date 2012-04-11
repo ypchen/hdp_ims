@@ -28,6 +28,7 @@
 				$user_agent = ini_get('user_agent');
 			}
 			curl_setopt ($curl, CURLOPT_USERAGENT, $user_agent);
+			curl_setopt ($curl, CURLOPT_FOLLOWLOCATION, 1);
 			curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt ($curl, CURLOPT_SSL_VERIFYPEER, 0);
 			$html = curl_exec ($curl);

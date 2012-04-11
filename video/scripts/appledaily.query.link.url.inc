@@ -2,9 +2,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$html = str_between($html, '<header>', '</article>');
-
-	$videos = explode('<figure>', $html);
+	$videos = explode('<div class="ecs">', $html);
 	unset($videos[0]);
 	$videos = array_values($videos);
 
@@ -13,12 +11,12 @@
 
 	$video = $videos[intval($extra)];
 
-	$siteURLprefix = 'http://tw.nextmedia.com';
+	$siteURLprefix = 'http://www.appledaily.com.tw';
 	$link = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
 	$link = $scriptsURLprefix . '/appledaily.video.php' .
 		'?uid=' . $user_id  . '&amp;query=' . urlencode($link);
 
-	$title = trim(str_between($video, '<h2>', '</h2>'));
+	$title = trim(str_between($video, '<p>', '</p>'));
 	$title = convertUnicodePoints($title);
 
 	$links = array($link);

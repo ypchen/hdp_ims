@@ -1,12 +1,12 @@
 <?php
 	$iCount = 0;
 
-	$siteURLprefix = 'http://tw.nextmedia.com';
+	$siteURLprefix = 'http://www.appledaily.com.tw';
 	foreach($videos as $video) {
 
 		// Pass the same $link
 		//$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
-		$title = trim(str_between($video, '<h2>', '</h2>'));
+		$title = trim(str_between($video, '<p>', '</p>'));
 		$title = convertUnicodePoints($title);
 		// Pass the current item number
 		$extra = strval($iCount);
@@ -15,7 +15,7 @@
 		$image  = trim(str_between($video, '<img src="', '"'));
 		$note   = array();
 		$note[] = $caption_view . ': ' .
-					str_between(trim(str_between($video, '</h2>', '/a>')), ':', '<');
+					trim(str_between($video, '<span>瀏覽人次:', '</span>'));
 		$note[] = '';
 		$note[] = '';
 		$note[] = '';

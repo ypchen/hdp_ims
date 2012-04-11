@@ -13,8 +13,10 @@
 		$html = yp_file_get_contents($link);
 		include('05_check.file_contents.inc');
 
-		$link = trim(str_between($html, "'file','", "'"));
-		$link = str_replace('&', '&amp;', $link);
+		$htmlRemoteSrc = str_between($html, 'var remote_src =', 'encodeURIComponent');
+		$IssueID = trim(str_between($htmlRemoteSrc, '/IssueID/', '/Photo/'));
+		$fileMP4 = trim(str_between($htmlRemoteSrc, '/Video/', '/NextURL/'));
+		$link = 'http://video.appledaily.com.tw/video/' . $IssueID . '/' . $fileMP4;
 		include('05_check.link.inc');
 	}
 	catch (Exception $e) {

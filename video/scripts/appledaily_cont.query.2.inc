@@ -1,10 +1,10 @@
 <?php
-	$siteURLprefix = 'http://tw.nextmedia.com';
+	$siteURLprefix = '';
 	foreach($videos as $video) {
-		$title = trim(str_between($video, '>', '</a>'));
-		$title = convertUnicodePoints($title);
+		$title = trim(str_between($video, ')">', '</a>'));
+		$title = convertUnicodePoints(strip_tags($title));
 		$data  = '';
-		$link  = $siteURLprefix . trim(str_between($video, 'ef="', '"'));
+		$link  = str_replace(',', '|', trim(str_between($video, 'ef="', '"')));
 		$image = '';
 		$note  = '';
 		$extra = '';
