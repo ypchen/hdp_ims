@@ -2,17 +2,18 @@
 	$siteURLprefix = '';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
-		$title = trim(str_between($video, ' alt="', '"'));
+		$sections = explode('<div class="video_name">', $video);
+
+		$link  = $siteURLprefix . trim(str_between($sections[1], '<a href="', '"'));
+		$title = trim(str_between($sections[1], '">', '</a>'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, ' src="', '"'));
+		$image  = trim(str_between($sections[0], '<img src="', '"'));
 		$note   = array();
-		$note[] = $caption_length . ': ' .
-					trim(str_between($video, '<div class="duration">', '</div>'));
-		$note[] = $caption_view . ': ' .
-					trim(str_between($video, '<div class="views">', '<img style'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($video, '<div class="video_timestamp">', '</div>'));
+		$note[] = '';
 		$note[] = '';
 		$note[] = '';
 

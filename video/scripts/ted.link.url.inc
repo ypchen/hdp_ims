@@ -9,7 +9,7 @@
 
 	// Get the content of the download dialog
 	$link = 'http://www.ted.com' .
-			rtrim(trim(str_between($html, "#download_dialog').load('", "'")), '/');
+			rtrim(trim(str_between($html, "download_dialog.load('", "'")), '/');
 	$htmlDownload = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
@@ -52,12 +52,12 @@
 		for ($i = 0 ; $i < count($subtitles) ; $i ++) {
 
 			if ($i == 0)
-				$start = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i], 'ef="', '"'))) / 100);
+				$start = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i], 'ef="#', '"'))) / 100);
 			else
 				$start = $end;
 
 			if ($i < (count($subtitles)-1))
-				$end = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i+1], 'ef="', '"'))) / 100);
+				$end = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i+1], 'ef="#', '"'))) / 100);
 			else
 				$end = $start + $tedFinalDuration;
 

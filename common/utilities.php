@@ -68,35 +68,64 @@
 		}
 	}
 
-	function yp_file_get_contents($url, $timeout = 30, $referer = '', $user_agent = '') {
+	function yp_file_get_contents($url, $data_to_post = null,
+		$http_header = null, $user_agent = null, $timeout = 30) {
+
 		global $imsUseCurl;
 
-		if (!empty($imsUseCurl)) {
-			$redirects = 0;
+		if (empty($user_agent))
+			$user_agent = ini_get('user_agent');
 
+		if (!empty($imsUseCurl)) {
 			$curl = curl_init();
-			if(strstr($referer, '://')) {
-				curl_setopt ($curl, CURLOPT_REFERER, $referer);
-			}
-			if (strlen($user_agent) == 0) {
-				$user_agent = ini_get('user_agent');
+			if (!empty($http_header)) {
+				curl_setopt($tuCurl, CURLOPT_HTTPHEADER, $http_header);
 			}
 			curl_setopt ($curl, CURLOPT_USERAGENT, $user_agent);
 			curl_setopt ($curl, CURLOPT_TIMEOUT, $timeout);
 			curl_setopt ($curl, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt ($curl, CURLOPT_FOLLOWLOCATION, false);
-
+			if (!empty($data_to_post)) {
+				curl_setopt ($curl, CURLOPT_POST, true);
+				curl_setopt ($curl, CURLOPT_POSTFIELDS, $data_to_post);
+			}
 			curl_setopt ($curl, CURLOPT_URL, $url);
 			// The first one must be a complete url
+			$redirects = 0;
 			$html = curl_redirect_exec($curl, parse_url($url), $redirects);
 			curl_close ($curl);
 			return $html;
 		}
 		else {
-			return file_get_contents($url);
+			if (!empty($http_header))
+				$header = $http_header;
+			else
+				$header = array();
+
+			$header[] = 'User-Agent: ' . $user_agent;
+			if (!empty($data_to_post)) {
+				$header[] = 'Content-type: application/x-www-form-urlencoded';
+				$options = array(
+					'http' => array(
+						'method' => 'POST',
+						'header'  => $header,
+						'content' => http_build_query($data_to_post)
+					)
+				);
+			}
+			else {
+				$options = array(
+					'http' => array(
+						'header'  => $header
+					)
+				);
+			}
+			return file_get_contents($url, false, stream_context_create($options));
 		}
 	}
 
+	// Use to get the content of a local file
+	// No need to consider doing POST
 	function local_file_get_contents($file) {
 		return file_get_contents($file);
 	}
@@ -184,6 +213,19 @@
 		return $retStr;
 	}
 
+	function cleanFragments($pregFrag, $s) {
+		$retStr = $s;
+		if ((($numMatches = preg_match_all($pregFrag, $retStr, $matches, PREG_SET_ORDER)) === false) ||
+			($numMatches == 0))
+			return $retStr;
+
+		foreach ($matches as $match) {
+			$retStr = str_replace($match[0], '', $retStr);
+		}
+
+		return $retStr;
+	}
+
 	// http://www.weberdev.com/get_example-4291.html
 	// --- BEGIN ---
 	function selfURL() {
@@ -264,5 +306,44 @@
 			$args[$i] = trim($args[$i]);
 		}
 		return ($args);
+	}
+
+	// http://stackoverflow.com/questions/3422759/php-aes-encrypt-decrypt
+	function fnEncrypt($sValue, $sSecretKey) {
+		return trim(
+			base64_encode(
+				mcrypt_encrypt(
+					MCRYPT_RIJNDAEL_256,
+					$sSecretKey, $sValue,
+					MCRYPT_MODE_ECB,
+					mcrypt_create_iv(
+						mcrypt_get_iv_size(
+							MCRYPT_RIJNDAEL_256,
+							MCRYPT_MODE_ECB
+						),
+						MCRYPT_RAND
+					)
+				)
+			)
+		);
+	}
+
+	// http://stackoverflow.com/questions/3422759/php-aes-encrypt-decrypt
+	function fnDecrypt($sValue, $sSecretKey) {
+		return trim(
+			mcrypt_decrypt(
+				MCRYPT_RIJNDAEL_256,
+				$sSecretKey,
+				base64_decode($sValue),
+				MCRYPT_MODE_ECB,
+				mcrypt_create_iv(
+					mcrypt_get_iv_size(
+						MCRYPT_RIJNDAEL_256,
+						MCRYPT_MODE_ECB
+					),
+					MCRYPT_RAND
+				)
+			)
+		);
 	}
 ?>

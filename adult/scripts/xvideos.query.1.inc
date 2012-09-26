@@ -10,7 +10,7 @@
 
 	$main_col_ary = explode('<!-- END PAGINATION -->', $html);
 	$main_col = $main_col_ary[1];
-	$videos = explode('<td ', $main_col);
+	$videos = explode('<div class="thumbBlo', $main_col);
 	unset($videos[0]);
 	$videos = array_values($videos);
 

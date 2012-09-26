@@ -17,7 +17,7 @@
 		'?uid=' . $user_id  . '&amp;query=' . urlencode($link);
 
 	$title = trim(str_between($video, '<p>', '</p>'));
-	$title = convertUnicodePoints($title);
+	$title = cleanFragments('/&#\d+/', convertUnicodePoints($title));
 
 	$links = array($link);
 	$titles = array($title);

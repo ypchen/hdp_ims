@@ -72,6 +72,9 @@
 	10. [v1.6] 可播放 YouTube 字幕 (請將至少 v1.6.2 版之 youtube.video.php 刷入本機)
 	11. [v1.6.2] 提供存放於 github 之 dereferenced 版本，以利追蹤版本變更時檔案之異同
 	12. [v1.6.4] 可直接觀賞 TED.com 上的 TED Talks，並支援字幕顯示
+	13. [v1.7] 因應多個網站之變更，包括蘋果動新聞及 TED.com
+			* 敬請改用 v1.7 版之 youtube.video.php
+			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
 
 使用
 	1. 直接放在本機使用
@@ -125,6 +128,8 @@
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
 		--- v1.4 增加了 youtube.video.php 兩個重要的新功能:
+			* 敬請改用 v1.7 版之 youtube.video.php
+			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
 
 		A. 由 IMS 來源網站載入 scripts/youtube.video.php 來執行
 			如此一來，只要將 v1.4 這份 youtube.video.php 刷入機中，以後應該就不必再更新這個檔案
@@ -168,6 +173,12 @@
 
 		E. v1.6.4 可直接觀賞 TED.com 上的 TED Talks，並支援字幕顯示
 			部分 TED.com 上的影片實際存放於 YouTube 且不一定有字幕
+
+		--- v1.7 更動部分程式碼，以期未來能支援更多影音網站
+			* 敬請改用 v1.7 版之 youtube.video.php
+			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
+
+		A. 請將 v1.7 版之 youtube.video.php 刷入本機
 
 備註
 	1. 這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，在此表示感謝！

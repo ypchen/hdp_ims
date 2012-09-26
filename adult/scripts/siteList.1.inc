@@ -22,15 +22,14 @@
 		array('hardsextube', ''),
 		array('keezmovies', ''),
 		array('moviesand', ''),
-		array('myjizztube', ' (無法選時)'),
+//		array('myjizztube', ' (無法選時)'),
 		array('penthousevideos', ''),
 		array('pornhub', ''),
 		array('pornomovies', ''),
 		array('pornrabbit', ''),
 		array('sexbot', ''),
-		array('snizzshare', ''),
 		array('tjoob', ' (無法選時)'),
-		array('tnaflix', ''),
+//		array('tnaflix', ''),
 		array('tube8', ''),
 		array('xvideos', ''),
 		array('xxxstash', ' (無法選時)'),
@@ -69,6 +68,24 @@
 	$itemTotal ++;
 	$itemXML   .=
 		"\t<item>\r\n" .
+			"\t\t<title>XXX 4 Pods</title>\r\n" .
+			"\t\t<link>http://xxx4pods.com/podcasts/podcast.xml</link>\r\n" .
+			"\t\t" . siteLogo('xxx4pods') . "\r\n" .
+			$podcast_include .
+		"\t</item>\r\n";
+
+	$itemTotal ++;
+	$itemXML   .=
+		"\t<item>\r\n" .
+			"\t\t<title>Suicide Girls</title>\r\n" .
+			"\t\t<link>http://suicidegirls.com/rss/video/</link>\r\n" .
+			"\t\t" . siteLogo('suicidegirls') . "\r\n" .
+			$podcast_include .
+		"\t</item>\r\n";
+
+	$itemTotal ++;
+	$itemXML   .=
+		"\t<item>\r\n" .
 			"\t\t<title>French Maid TV</title>\r\n" .
 			"\t\t<link>http://feeds.feedburner.com/FrenchMaidTV</link>\r\n" .
 			"\t\t" . siteLogo('french_maid_tv') . "\r\n" .
@@ -84,15 +101,7 @@
 			$podcast_include .
 		"\t</item>\r\n";
 
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>XXX 4 Pods</title>\r\n" .
-			"\t\t<link>http://xxx4pods.com/podcasts/podcast.xml</link>\r\n" .
-			"\t\t" . siteLogo('xxx4pods') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
+/*
 	$itemTotal ++;
 	$itemXML   .=
 		"\t<item>\r\n" .
@@ -101,6 +110,7 @@
 			"\t\t" . siteLogo('50grillz') . "\r\n" .
 			$podcast_include .
 		"\t</item>\r\n";
+*/
 
 	$itemTotal ++;
 	$itemXML   .=
@@ -120,15 +130,7 @@
 			$podcast_include .
 		"\t</item>\r\n";
 
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>Suicide Girls</title>\r\n" .
-			"\t\t<link>http://suicidegirls.com/rss/video/</link>\r\n" .
-			"\t\t" . siteLogo('suicidegirls') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
+/*
 	$itemTotal ++;
 	$itemXML   .=
 		"\t<item>\r\n" .
@@ -137,4 +139,5 @@
 			"\t\t" . siteLogo('behindkink') . "\r\n" .
 			$podcast_include .
 		"\t</item>\r\n";
+*/
 ?>

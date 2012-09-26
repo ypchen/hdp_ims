@@ -20,7 +20,7 @@
 		$links[] = $link;
 
 		$title = trim(str_between($video, '<p>', '</p>'));
-		$title = convertUnicodePoints($title);
+		$title = cleanFragments('/&#\d+/', convertUnicodePoints($title));
 		$titles[] = $title;
 	}
 

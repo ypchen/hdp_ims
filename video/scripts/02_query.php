@@ -21,6 +21,9 @@
 		unset($extra_02_query);
 	}
 
+	// To receive $extra propagated from included scripts
+	unset($extra_02_query_from_inc);
+
 	$itemTotal  = 0;
 	$pass_check = true;
 	try {
@@ -28,6 +31,11 @@
 	}
 	catch (Exception $e) {
 		$pass_check = false;
+	}
+
+	// Replace the original $extra by the explicitly propagated one
+	if (isset($extra_02_query_from_inc)) {
+		$extra_02_query = $extra_02_query_from_inc;
 	}
 
 	// Default display parameters

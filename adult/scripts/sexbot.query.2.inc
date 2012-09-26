@@ -1,5 +1,5 @@
 <?php
-	$siteURLprefix = '';
+	$siteURLprefix = 'http://www.sexbot.com';
 	foreach($videos as $video) {
 
 		$link  = $siteURLprefix . trim(str_between($video, '" href="', '"'));
@@ -7,7 +7,7 @@
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, 'class="video-thumb" src="', '"'));
+		$image  = trim(str_between($video, "\t" . 'src="', '"'));
 		$dataA  = explode('<div ', $video);
 		$index  = 3;
 		$note   = array();

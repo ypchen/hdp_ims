@@ -7,7 +7,9 @@
 		foreach($videos as $video) {
 			$title = trim(str_between($video, '"><strong>', '</strong>'));
 			$title = convertUnicodePoints($title);
-			$data  = ' ('. trim(str_between($video, '<p>(<strong>', '</strong>')) . ' 片段)';
+			$vids  = trim(str_between($video, '<p>(<strong>', '</strong>'));
+			if (strcmp($vids, '0') == 0) continue;
+			$data  = ' ('. $vids . ' 片段)';
 			$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
 			$image = '';
 			$note  = '';

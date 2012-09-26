@@ -8,8 +8,8 @@
 			$title = trim(str_between($video, ' title="', '"'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
-			$link  = $siteURLprefix . trim(str_between($video, '<div class="category-item-title"><a href="', '"'));
-			$image = $siteURLprefix . trim(str_between($video, '<img src="', '"'));
+			$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
+			$image = $siteURLprefix . trim(str_between($video, ' src="', '"'));
 			$note  = '';
 			$extra = '';
 

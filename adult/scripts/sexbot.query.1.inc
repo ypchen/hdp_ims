@@ -1,8 +1,5 @@
 <?php
-	if ($page == 1)
-		$link = $search;
-	else
-		$link = $search . '/latest/' . $page;
+	$link = $search . '/' . $page . '/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

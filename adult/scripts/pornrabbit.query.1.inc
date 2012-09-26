@@ -1,5 +1,5 @@
 <?php
-	$link = $search . 'page' . $page . '.html';
+	$link = $search . $page . '/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

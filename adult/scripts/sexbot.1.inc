@@ -1,5 +1,5 @@
 <?php
-	$link = $search = 'http://www.sexbot.com/categories/videos';
+	$link = $search = 'http://www.sexbot.com/page/categories/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

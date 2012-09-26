@@ -7,7 +7,7 @@
 		// Pass the same $link
 		//$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
 		$title = trim(str_between($video, '<p>', '</p>'));
-		$title = convertUnicodePoints($title);
+		$title = cleanFragments('/&#\d+/', convertUnicodePoints($title));
 		// Pass the current item number
 		$extra = strval($iCount);
 		$iCount ++;

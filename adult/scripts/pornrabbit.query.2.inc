@@ -3,18 +3,20 @@
 	foreach($videos as $video) {
 
 		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
-		$title = trim(str_between($video, '<h3>', '</h3>'));
+		$title = trim(str_between($video, '<h2>', '</h2>'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
 		$image  = trim(str_between($video, 'src="', '"'));
+		if (strpos($image, '/processing.png') !== false) continue;
+
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim(str_between($video, '<b>runtime:</b>', '</span>'));
+					trim(str_between($video, 'runtime: <b>', '</b>'));
 		$note[] = $caption_view . ': ' .
-					trim(str_between($video, '<b>views:</b>', '</span>'));
+					trim(str_between($video, 'views: <b>', '</b>'));
 		$note[] = $caption_publish . ': ' .
-					trim(str_between($video, '<span class="uploadtimehome">', '</span>'));
+					trim(str_between($video, '<span class="r"><b>', '</b>'));
 		$note[] = '';
 
 		$clickPlay = 'no';

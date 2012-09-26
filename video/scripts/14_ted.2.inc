@@ -8,30 +8,22 @@
 		$extra = '';
 
 		$images = explode('<img', $video);
-		$playType = (strpos($images[1], 'botw') !== false)  ?
-					'.onYTV' : '.onTED';
-		$image  = trim(str_between($images[2], ' src="', '"'));
-		$dataA  = explode(' ', str_between($video, 'class="date">', '<'));
+		$image  = trim(str_between($images[1], ' src="', '"'));
+		$dataA  = explode('class="notranslate"', $video);
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim($dataA[0]);
-/*
-		if (strpos($video, 'Views: <strong>') !== false) {
-			$note[] = $caption_view . ': ' .
-						trim(str_between($video, 'Views: <strong>', '</strong>'));
-		}
-*/
-		$note[] = $caption_eval . ': ' .
-					trim(str_between($video, 'first">', '</span>')) .
-					' ' .
-					trim(str_between($video, 'last">', '</span>'));
+					trim(str_between($dataA[1], '>', '</'));
 		$note[] = $caption_publish . ': ' .
-					trim($dataA[2]) . ' ' . trim($dataA[3]);
-		$note[] = (strcmp($playType, '.onYTV') == 0) ?
-					'※ 置於 YouTube (通常無字幕)' : '';
+					trim(str_between($dataA[1], 'Posted:', '<span')) . ' ' .
+					trim(str_between($dataA[2], '>', '</'));
+		if (count($dataA) > 3) {
+			$note[] = $caption_view . ': ' .
+						trim(str_between($dataA[3], '>', '</'));
+		}
 
 		$clickPlay = 'no';
-		$linkLevel = $playType . '.link';
+		// Assume that there is no .onYTV any more
+		$linkLevel = '.onTED.link';
 		include('04_query.items.link.inc');
 	}
 ?>
