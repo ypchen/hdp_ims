@@ -97,7 +97,7 @@
 			if (!empty($USEcurl)) {
 				$curl = curl_init();
 				if (!empty($http_header)) {
-					curl_setopt($tuCurl, CURLOPT_HTTPHEADER, $http_header);
+					curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
 				}
 				curl_setopt ($curl, CURLOPT_USERAGENT, $user_agent);
 				curl_setopt ($curl, CURLOPT_TIMEOUT, $timeout);
@@ -192,332 +192,294 @@
 		}
 	}
 
-	// YouTube or Request redirect?
-	if (empty($_GET['reqRedirURL'])) {
-		// No need to process CC and make the redirection
-		$URLonly = false;
-		if (!empty($_GET['URLonly']))
-			$URLonly = true;
+	$URLonly = false;
+	if (!empty($_GET['URLonly']))
+		$URLonly = true;
 
-		// No matter it's the local source or remote source,
-		// 'query' is given.
-		$id = $_GET['query'];
+	// No matter it's the local source or remote source,
+	// 'query' is given.
+	$id = $_GET['query'];
 
-		// User preferred formats
-		// http://en.wikipedia.org/wiki/YouTube
+	// User preferred formats
+	// http://en.wikipedia.org/wiki/YouTube
 
-		// Default: 22,35,34,18,6,5
-		$fmtPrefs = '22,35,34,18,6,5';
+	// Default: 22,35,34,18,6,5
+	$fmtPrefs = '22,35,34,18,6,5';
 
-		// If yv_fmt_prefs is given in the url, use it
-		if (!empty($_GET['yv_fmt_prefs'])) {
-			$fmtPrefs = $_GET['yv_fmt_prefs'];
-		}
+	// If yv_fmt_prefs is given in the url, use it
+	if (!empty($_GET['yv_fmt_prefs'])) {
+		$fmtPrefs = $_GET['yv_fmt_prefs'];
+	}
 
-		// If the local file exists and contains a string whose length > 0, use it
-		$fileLocalYoutubeVideoFmtPrefs = '/usr/local/etc/dvdplayer/ims_yv_fmt_prefs.dat';
-		if (file_exists($fileLocalYoutubeVideoFmtPrefs) &&
-			(strlen($localFmtPrefs = local_file_get_contents($fileLocalYoutubeVideoFmtPrefs)) > 0)) {
-			$fmtPrefs = $localFmtPrefs;
-		}
+	// If the local file exists and contains a string whose length > 0, use it
+	$fileLocalYoutubeVideoFmtPrefs = '/usr/local/etc/dvdplayer/ims_yv_fmt_prefs.dat';
+	if (file_exists($fileLocalYoutubeVideoFmtPrefs) &&
+		(strlen($localFmtPrefs = local_file_get_contents($fileLocalYoutubeVideoFmtPrefs)) > 0)) {
+		$fmtPrefs = $localFmtPrefs;
+	}
 
-		// Explode the string to get the format preference
-		$formats = explode(',', $fmtPrefs);
+	// Explode the string to get the format preference
+	$formats = explode(',', $fmtPrefs);
 
-		// If the local file exists and contains a string whose length > 0, use it
-		$fileLocalYoutubeVideoCCPrefs = '/usr/local/etc/dvdplayer/ims_yv_cc_prefs.dat';
-		if (file_exists($fileLocalYoutubeVideoCCPrefs) &&
-			(strlen($localCCPrefs = local_file_get_contents($fileLocalYoutubeVideoCCPrefs)) > 0)) {
-			// Explode the string to get the cc preference
-			$ccPreferredLangs = explode(',', $localCCPrefs);
-		}
-		else {
-			$ccPreferredLangs = null;
-		}
-
-		// Chrome 14.0.825.0
-		// http://www.useragentstring.com/pages/Chrome/
-		$userAgent        = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
-		ini_set('user_agent', $userAgent);
-
-		// Two ways to get youtube videos
-		// 1. May encounter "age verification"
-		//		$link = 'http://www.youtube.com/watch?v=' . $id;
-		// 2. May be forbidden by the video owner settings
-		//		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
-
-		// Try the first way
-		$link = 'http://www.youtube.com/watch?v=' . $id;
-		$html = yp_file_get_contents_1_7($link);
-
-		if (strpos($html, 'verify_age') !== false) {
-			$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
-			$html = yp_file_get_contents_1_7($link);
-		}
-
-		// Get the format list
-		$separators = array(
-			array('"fmt_list": "', '"', false),
-			array('fmt_list=', '&', true)
-		);
-		foreach ($separators as $separator) {
-			if (strpos($html, $separator[0]) !== false) {
-				if ($separator[2])
-					$fmtList = explode(',', urldecode(trim(str_between($html, $separator[0], $separator[1]))));
-				else
-					$fmtList = explode(',', trim(str_between($html, $separator[0], $separator[1])));
-				break;
-			}
-		}
-
-		// Get the format <-> url map
-		$separators = array(
-			array('"url_encoded_fmt_stream_map": "', '"', false),
-			array('url_encoded_fmt_stream_map=', '&', true)
-		);
-		foreach ($separators as $separator) {
-			if (strpos($html, $separator[0]) !== false) {
-				if ($separator[2])
-					$urlList = explode(',', urldecode(trim(str_between($html, $separator[0], $separator[1]))));
-				else
-					$urlList = explode(',', trim(str_between($html, $separator[0], $separator[1])));
-				break;
-			}
-		}
-
-		// Select the video url according to the user preference
-		$supportedVids = array();
-		foreach ($fmtList as $fmtEntry => $fmtData) {
-			// '/' or '\/': different codings
-			$fmtDetail = explode('/', ($fmtData = str_replace('\/', '/', $fmtData)));
-			$key = array_search($fmtDetail[0], $formats);
-			if ($key !== false) {
-				// Ignore 'url='
-				$supportedVids[$key] = array(urldecode(substr($urlList[$fmtEntry], 4)), $fmtData);
-			}
-		}
-
-		ksort($supportedVids);
-		$v = array_values($supportedVids);
-
-		// User preferred format
-		$urlToGo = $v[0][0];
-		// Decode '&' (\u0026) if necessary
-		$urlToGo = str_replace('\u0026', '&', $urlToGo);
-		// Cut the problematic tail
-		$cutPos = strpos($urlToGo, '&quality=');
-		if ($cutPos !== false) {
-			$urlToGo = substr($urlToGo, 0, $cutPos);
-		}
-
-		if ($URLonly === false) {
-			// Set the extra information for display
-			$extraInfo = $v[0][1];
-
-			// Clean the cc data file
-			unlink($filenameCount  = '/usr/local/etc/dvdplayer/ims_cc_count.dat');
-			unlink($filenameStart  = '/usr/local/etc/dvdplayer/ims_cc_start.dat');
-			unlink($filenameEnd    = '/usr/local/etc/dvdplayer/ims_cc_end.dat');
-			unlink($filenameText   = '/usr/local/etc/dvdplayer/ims_cc_text.dat');
-			$ccStatus = '';
-			unlink($filenameStatus = '/usr/local/etc/dvdplayer/ims_cc_status.dat');
-
-			if (isset($ccPreferredLangs)) {
-
-				// Get the available cc list
-				$link = 'http://www.youtube.com/api/timedtext?type=list&v=' . $id;
-				$xml = yp_file_get_contents_1_7($link);
-
-				if ((strlen($xml) > 0) && (strpos($xml, '<track ') !== false)) {
-
-					// Get the available cc list
-					$ccList = explode('<track ', $xml);
-					unset($ccList[0]);
-					$ccList = array_values($ccList);
-
-					// Select the cc according to the user preference
-					$allLangs = array();
-					$supportedLangs = array();
-					foreach ($ccList as $ccEntry => $ccData) {
-						$ccCode = trim(str_between($ccData, 'lang_code="', '"'));
-						$ccName = trim(str_between($ccData, 'name="', '"'));
-						$ccOriginal = trim(str_between($ccData, 'lang_original="', '"'));
-						$allLangs[] = $ccCode;
-						$key = array_search($ccCode, $ccPreferredLangs);
-						if (($key !== false) && (empty($supportedLangs[$key]))) {
-							$supportedLangs[$key] = array($ccCode, $ccName, $ccOriginal);
-						}
-					}
-
-					$allL = implode(',', $allLangs);
-
-					if (count($supportedLangs) > 0) {
-
-						// Get the preferred cc data
-						ksort($supportedLangs);
-						$cc = array_values($supportedLangs);
-
-						$ccNameDisplay = $cc[0][1];
-						if (strlen($ccNameDisplay) == 0)
-							$ccNameDisplay = $cc[0][2];
-						if (strlen($ccNameDisplay) > 0) {
-							$ccNameDisplay = ': ' . $ccNameDisplay;
-						}
-
-						$link = 'http://www.youtube.com/api/timedtext?type=track&v=' . $id . '&lang=' . $cc[0][0] . '&name=' . urlencode($cc[0][1]);
-						$xml = yp_file_get_contents_1_7($link);
-
-						if ((strlen($xml) > 0) && (strpos($xml, '<transcript>') !== false)) {
-							$fileStart = fopen($filenameStart, 'w');
-							$fileEnd = fopen($filenameEnd, 'w');
-							$fileText = fopen($filenameText, 'w');
-
-							$data = explode('<text', $xml);
-							unset($data[0]);
-							$data = array_values($data);
-
-							$dataCount = 0;
-
-							$dataCount ++;
-							fwrite($fileStart, "-60\n");
-							fwrite($fileEnd,   "-50\n");
-							fwrite($fileText,  "\n");
-
-							$dataCount ++;
-							fwrite($fileStart, "-40\n");
-							fwrite($fileEnd,   "-30\n");
-							fwrite($fileText,  "\n");
-
-							$dataCount ++;
-							fwrite($fileStart, "-20\n");
-							fwrite($fileEnd,   "-10\n");
-							fwrite($fileText,  "\n");
-
-							foreach ($data as $dataEntry) {
-								$start = floatval(trim(str_between($dataEntry, 'start="', '"')));
-								$dur   = floatval(trim(str_between($dataEntry, 'dur="', '"')));
-								$text  = trim(htmlspecialchars_decode(
-											convertUnicodePoints(
-												str_between($dataEntry, '">', '</text>')), ENT_QUOTES));
-								$end   = $start + $dur;
-
-								$textLines = explode("\n", $text);
-								foreach ($textLines as $textLine) {
-									$dataCount ++;
-									fwrite($fileStart, strval(floor($start * 10)) . "\n");
-									fwrite($fileEnd,   strval(floor($end * 10)) . "\n");
-									fwrite($fileText,  $textLine . "\n");
-								}
-							}
-
-							$dataCount ++;
-							fwrite($fileStart, "864000\n");
-							fwrite($fileEnd,   "864010\n");
-							fwrite($fileText,  "\n");
-
-							fclose($fileStart);
-							fclose($fileEnd);
-							fclose($fileText);
-
-							// Write the number of lines
-							$fileCount = fopen($filenameCount, 'w');
-							fwrite($fileCount,  strval($dataCount));
-							fclose($fileCount);
-
-							$ccStatus = '成功載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL;
-							$extraInfo .= (' [' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
-						}
-						else if ((strlen($xml) > 0) && (strpos($xml, '<title>Error') !== false)) {
-							$errorCode = trim(str_between($xml, '<b>', '.</b>'));
-							$ccStatus = '無法載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL . ' (Error ' . $errorCode . ')';
-							$ccStatus .= "\n255:0:0";
-							$extraInfo .= (' [' . $errorCode . ' @ ' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
-						}
-						else {
-							$ccStatus = '無法載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL;
-							$ccStatus .= "\n255:0:0";
-							$extraInfo .= (' [X @ ' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
-						}
-					}
-					else {
-						$ccStatus = '無可用之外掛字幕, 接受: ' . $localCCPrefs . ' -- 全部: ' . $allL;
-						$ccStatus .= "\n255:0:0";
-						$extraInfo .= (' [# @ ' . $localCCPrefs . ']{' . $allL . '}');
-					}
-				}
-				else if ((strlen($xml) > 0) && (strpos($xml, '<title>Error') !== false)) {
-					$errorCode = trim(str_between($xml, '<b>', '.</b>'));
-					$ccStatus = '無法取得外掛字幕列表 (Error ' . $errorCode . ')';
-					$ccStatus .= "\n255:0:0";
-					$extraInfo .= ' {' . $errorCode . '}';
-				}
-				else {
-					$ccStatus = '影片未提供外掛字幕或無法取得外掛字幕列表';
-					$ccStatus .= "\n255:0:0";
-					$extraInfo .= ' {-}';
-				}
-			}
-			else {
-				$extraInfo .= ' [-]';
-			}
-
-			// Write the ccStatus file
-			$fileCCStatus = fopen('/usr/local/etc/dvdplayer/ims_cc_status.dat', 'w');
-			fwrite($fileCCStatus, $ccStatus);
-			fclose($fileCCStatus);
-
-			// Write the extraInfo file
-			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-			fwrite($fileExtraInfo, $extraInfo);
-			fclose($fileExtraInfo);
-
-			// Return the video stream
-			header('Location: ' . $urlToGo);
-		}
-		else if (!empty($_GET['URLtext'])) {
-			echo $urlToGo;
-		}
-		else {
-			echo '<a id="' . $id .
-					'" url_orig="' . $link .
-					'" href="' . $urlToGo . '">' . $urlToGo . "</a>\n";
-		}
+	// If the local file exists and contains a string whose length > 0, use it
+	$fileLocalYoutubeVideoCCPrefs = '/usr/local/etc/dvdplayer/ims_yv_cc_prefs.dat';
+	if (file_exists($fileLocalYoutubeVideoCCPrefs) &&
+		(strlen($localCCPrefs = local_file_get_contents($fileLocalYoutubeVideoCCPrefs)) > 0)) {
+		// Explode the string to get the cc preference
+		$ccPreferredLangs = explode(',', $localCCPrefs);
 	}
 	else {
-		// Work in progress
+		$ccPreferredLangs = null;
+	}
 
-		$reqRedirURL = $_GET['reqRedirURL'];
+	// Chrome 14.0.825.0
+	// http://www.useragentstring.com/pages/Chrome/
+	$userAgent        = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
+	ini_set('user_agent', $userAgent);
 
-		readfile($reqRedirURL);
+	// Two ways to get youtube videos
+	// 1. May encounter "age verification"
+	//		$link = 'http://www.youtube.com/watch?v=' . $id;
+	// 2. May be forbidden by the video owner settings
+	//		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
 
-/*
-		if (!empty($http_header))
-			$header = $http_header;
-		else
-			$header = array();
+	// Try the first way
+	$link = 'http://www.youtube.com/watch?v=' . $id;
+	$html = yp_file_get_contents_1_7($link);
 
-		$header[] = 'User-Agent: ' . $user_agent;
-		if (!empty($data_to_post)) {
-			$header[] = 'Content-type: application/x-www-form-urlencoded';
-			$options = array(
-				'http' => array(
-					'method' => 'POST',
-					'header'  => $header,
-					'content' => http_build_query($data_to_post)
-				)
-			);
+	if (strpos($html, 'verify_age') !== false) {
+		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
+		$html = yp_file_get_contents_1_7($link);
+	}
+
+	// Get the format list
+	$separators = array(
+		array('"fmt_list": "', '"', false),
+		array('fmt_list=', '\u0026', true)
+	);
+	foreach ($separators as $separator) {
+		if (strpos($html, $separator[0]) !== false) {
+			if ($separator[2])
+				$fmtList = explode(',', urldecode(trim(str_between($html, $separator[0], $separator[1]))));
+			else
+				$fmtList = explode(',', str_replace('\/', '/', trim(str_between($html, $separator[0], $separator[1]))));
+			break;
+		}
+	}
+
+	// Get the format <-> url map
+	$separators = array(
+		array('"url_encoded_fmt_stream_map": "', '"', false),
+		array('url_encoded_fmt_stream_map=', '\u0026', true)
+	);
+	foreach ($separators as $separator) {
+		if (strpos($html, $separator[0]) !== false) {
+			if ($separator[2])
+				$urlList = explode(',', urldecode(trim(str_between($html, $separator[0], $separator[1]))));
+			else
+				$urlList = explode(',', trim(str_between($html, $separator[0], $separator[1])));
+			break;
+		}
+	}
+
+	// Select the video url according to the user preference
+	$supportedVids = array();
+	foreach ($urlList as $urlEntry) {
+		// Decode '&' (\u0026) if necessary
+		$urlEntry = str_replace('\u0026', '&', $urlEntry);
+		$itagInURL = trim(str_between($urlEntry, 'itag=', '&'));
+		$key = array_search($itagInURL, $formats);
+		if ($key !== false) {
+			$fmtInfo = '';
+			foreach ($fmtList as $fmtEntry) {
+				$lenItagInURL = strlen($itagInURL);
+				if (strncmp($fmtEntry, $itagInURL, $lenItagInURL) == 0) {
+					$fmtInfo = $fmtEntry;
+					break;
+				}
+			}
+			// Ignore 'itag=XX&url='
+			$supportedVids[$key] = array(urldecode(substr($urlEntry, strpos($urlEntry, 'url=') + 4)), $fmtInfo);
+		}
+	}
+
+	ksort($supportedVids);
+	$v = array_values($supportedVids);
+
+	// User preferred format
+	$urlToGo = str_replace('&sig=', '&signature=', $v[0][0]);
+
+	if ($URLonly === false) {
+		// Set the extra information for display
+		$extraInfo = $v[0][1];
+
+		// Clean the cc data file
+		unlink($filenameCount  = '/usr/local/etc/dvdplayer/ims_cc_count.dat');
+		unlink($filenameStart  = '/usr/local/etc/dvdplayer/ims_cc_start.dat');
+		unlink($filenameEnd    = '/usr/local/etc/dvdplayer/ims_cc_end.dat');
+		unlink($filenameText   = '/usr/local/etc/dvdplayer/ims_cc_text.dat');
+		$ccStatus = '';
+		unlink($filenameStatus = '/usr/local/etc/dvdplayer/ims_cc_status.dat');
+
+		if (isset($ccPreferredLangs)) {
+
+			// Get the available cc list
+			$link = 'http://www.youtube.com/api/timedtext?type=list&v=' . $id;
+			$xml = yp_file_get_contents_1_7($link);
+
+			if ((strlen($xml) > 0) && (strpos($xml, '<track ') !== false)) {
+
+				// Get the available cc list
+				$ccList = explode('<track ', $xml);
+				unset($ccList[0]);
+				$ccList = array_values($ccList);
+
+				// Select the cc according to the user preference
+				$allLangs = array();
+				$supportedLangs = array();
+				foreach ($ccList as $ccEntry => $ccData) {
+					$ccCode = trim(str_between($ccData, 'lang_code="', '"'));
+					$ccName = trim(str_between($ccData, 'name="', '"'));
+					$ccOriginal = trim(str_between($ccData, 'lang_original="', '"'));
+					$allLangs[] = $ccCode;
+					$key = array_search($ccCode, $ccPreferredLangs);
+					if (($key !== false) && (empty($supportedLangs[$key]))) {
+						$supportedLangs[$key] = array($ccCode, $ccName, $ccOriginal);
+					}
+				}
+
+				$allL = implode(',', $allLangs);
+
+				if (count($supportedLangs) > 0) {
+
+					// Get the preferred cc data
+					ksort($supportedLangs);
+					$cc = array_values($supportedLangs);
+
+					$ccNameDisplay = $cc[0][1];
+					if (strlen($ccNameDisplay) == 0)
+						$ccNameDisplay = $cc[0][2];
+					if (strlen($ccNameDisplay) > 0) {
+						$ccNameDisplay = ': ' . $ccNameDisplay;
+					}
+
+					$link = 'http://www.youtube.com/api/timedtext?type=track&v=' . $id . '&lang=' . $cc[0][0] . '&name=' . urlencode($cc[0][1]);
+					$xml = yp_file_get_contents_1_7($link);
+
+					if ((strlen($xml) > 0) && (strpos($xml, '<transcript>') !== false)) {
+						$fileStart = fopen($filenameStart, 'w');
+						$fileEnd = fopen($filenameEnd, 'w');
+						$fileText = fopen($filenameText, 'w');
+
+						$data = explode('<text', $xml);
+						unset($data[0]);
+						$data = array_values($data);
+
+						$dataCount = 0;
+
+						$dataCount ++;
+						fwrite($fileStart, "-60\n");
+						fwrite($fileEnd,   "-50\n");
+						fwrite($fileText,  "\n");
+
+						$dataCount ++;
+						fwrite($fileStart, "-40\n");
+						fwrite($fileEnd,   "-30\n");
+						fwrite($fileText,  "\n");
+
+						$dataCount ++;
+						fwrite($fileStart, "-20\n");
+						fwrite($fileEnd,   "-10\n");
+						fwrite($fileText,  "\n");
+
+						foreach ($data as $dataEntry) {
+							$start = floatval(trim(str_between($dataEntry, 'start="', '"')));
+							$dur   = floatval(trim(str_between($dataEntry, 'dur="', '"')));
+							$text  = trim(htmlspecialchars_decode(
+										convertUnicodePoints(
+											str_between($dataEntry, '">', '</text>')), ENT_QUOTES));
+							$end   = $start + $dur;
+
+							$textLines = explode("\n", $text);
+							foreach ($textLines as $textLine) {
+								$dataCount ++;
+								fwrite($fileStart, strval(floor($start * 10)) . "\n");
+								fwrite($fileEnd,   strval(floor($end * 10)) . "\n");
+								fwrite($fileText,  $textLine . "\n");
+							}
+						}
+
+						$dataCount ++;
+						fwrite($fileStart, "864000\n");
+						fwrite($fileEnd,   "864010\n");
+						fwrite($fileText,  "\n");
+
+						fclose($fileStart);
+						fclose($fileEnd);
+						fclose($fileText);
+
+						// Write the number of lines
+						$fileCount = fopen($filenameCount, 'w');
+						fwrite($fileCount,  strval($dataCount));
+						fclose($fileCount);
+
+						$ccStatus = '成功載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL;
+						$extraInfo .= (' [' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
+					}
+					else if ((strlen($xml) > 0) && (strpos($xml, '<title>Error') !== false)) {
+						$errorCode = trim(str_between($xml, '<b>', '.</b>'));
+						$ccStatus = '無法載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL . ' (Error ' . $errorCode . ')';
+						$ccStatus .= "\n255:0:0";
+						$extraInfo .= (' [' . $errorCode . ' @ ' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
+					}
+					else {
+						$ccStatus = '無法載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL;
+						$ccStatus .= "\n255:0:0";
+						$extraInfo .= (' [X @ ' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
+					}
+				}
+				else {
+					$ccStatus = '無可用之外掛字幕, 接受: ' . $localCCPrefs . ' -- 全部: ' . $allL;
+					$ccStatus .= "\n255:0:0";
+					$extraInfo .= (' [# @ ' . $localCCPrefs . ']{' . $allL . '}');
+				}
+			}
+			else if ((strlen($xml) > 0) && (strpos($xml, '<title>Error') !== false)) {
+				$errorCode = trim(str_between($xml, '<b>', '.</b>'));
+				$ccStatus = '無法取得外掛字幕列表 (Error ' . $errorCode . ')';
+				$ccStatus .= "\n255:0:0";
+				$extraInfo .= ' {' . $errorCode . '}';
+			}
+			else {
+				$ccStatus = '影片未提供外掛字幕或無法取得外掛字幕列表';
+				$ccStatus .= "\n255:0:0";
+				$extraInfo .= ' {-}';
+			}
 		}
 		else {
-			$options = array(
-				'http' => array(
-					'header'  => $header
-				)
-			);
+			$extraInfo .= ' [-]';
 		}
-		return file_get_contents($url, false, stream_context_create($options));
 
-		yp_file_get_content
-*/
+		// Write the ccStatus file
+		$fileCCStatus = fopen('/usr/local/etc/dvdplayer/ims_cc_status.dat', 'w');
+		fwrite($fileCCStatus, $ccStatus);
+		fclose($fileCCStatus);
+
+		// Write the extraInfo file
+		$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
+		fwrite($fileExtraInfo, $extraInfo);
+		fclose($fileExtraInfo);
+
+		// Return the video stream
+		header('Location: ' . $urlToGo);
+	}
+	else if (!empty($_GET['URLtext'])) {
+		echo $urlToGo;
+	}
+	else {
+		echo '<a id="' . $id .
+				'" url_orig="' . $link .
+				'" href="' . $urlToGo . '">' . $urlToGo . "</a>\n";
 	}
 
 // ---------- youtube.video.php: END ----------
