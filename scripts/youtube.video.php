@@ -307,6 +307,9 @@
 	$v = array_values($supportedVids);
 
 	// User preferred format
+	// http://userscripts.org/scripts/review/25105
+	//		url=url+"&signature="+signature;
+	// saved my day
 	$urlToGo = str_replace('&sig=', '&signature=', $v[0][0]);
 
 	if ($URLonly === false) {
