@@ -306,11 +306,18 @@
 	ksort($supportedVids);
 	$v = array_values($supportedVids);
 
-	// User preferred format
+	// User preferred format (use the first one)
+	$urlToGo = $v[0][0];
+
 	// http://userscripts.org/scripts/review/25105
 	//		url=url+"&signature="+signature;
 	// saved my day
-	$urlToGo = str_replace('&sig=', '&signature=', $v[0][0]);
+	$urlToGo = str_replace('&sig=', '&signature=', $urlToGo);
+
+	// It happens to itag=37 and itag=22.
+	// There should be no space and " in the URL.
+	$urlToGo = str_replace(' ', '%20', $urlToGo);
+	$urlToGo = str_replace('"', '%22', $urlToGo);
 
 	if ($URLonly === false) {
 		// Set the extra information for display
