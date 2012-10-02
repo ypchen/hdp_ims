@@ -16,6 +16,9 @@
 		下載，或使用 git clone 取得
 			git clone git://github.com/ypchen/hdp_ims_dereferenced.git
 
+注意
+	若使用 FTP 來傳輸 IMS code，請一定要強制以二進位 (binary) 方式傳輸 [感謝 zorron@HDPfans]
+
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
@@ -149,6 +152,7 @@
 				最高 1920x1080、最高 1280x720、最高 854x480、以及取消本機解析度設定
 
 			觀賞 1080p Trailers 和動感小站等頻道，應該可以看出差別
+			此外，可以使用遙控器上的 [信息] 鍵顯示目前播放的 YouTube video clip 的解析度資訊
 
 		--- v1.6 增加了 youtube 影片的字幕功能: 設定載入喜好後即可顯示有提供 CC 的 youtube 影片
 
@@ -181,6 +185,6 @@
 		A. 請將 v1.7 版之 youtube.video.php 刷入本機
 
 備註
-	1. 這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，在此表示感謝！
+	1. 這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，非常感謝 maxjojo@HDPfans！
 	2. 因為我使用的 image 都是去抓那些網站的 logo 還有用 images.google.com 從網上抓下來的，
 		所以無法一併 release 在 code 中，請見諒。
