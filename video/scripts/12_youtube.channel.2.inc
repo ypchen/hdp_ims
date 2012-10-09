@@ -24,8 +24,12 @@
 					str_replace('.000Z', '',
 						str_replace('T', ' ',
 							trim(str_between($video, '<yt:uploaded>', '</yt:uploaded>'))));
+		$dataRating  = trim(str_between($video, '<yt:rating ', '/>'));
+		$numDislikes = trim(str_between($dataRating, "numDislikes='", "'"));
+		$numLikes    = trim(str_between($dataRating, "numLikes='", "'"));
 		$note[] = $caption_view . ': ' .
-					trim(str_between($video, " viewCount='", "'"));
+					trim(str_between($video, " viewCount='", "'")) .
+					' -- L ' . $numLikes . '/' . $numDislikes . ' D';
 		$uploader = trim(str_between(
 							str_between($video, "<media:credit role='uploader'", '/media:credit>'),
 							'>', '<'));

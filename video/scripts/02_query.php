@@ -54,7 +54,9 @@
 	if (!isset($themeTipsFontSize)) $themeTipsFontSize = '16';
 
 	$titleComponents = explode('.', $myBaseName);
-	$pageTitleBase = $titleComponents[0];
+	$pageTitleBaseElements = explode('__', $titleComponents[0]);
+	$pageTitleBase = $pageTitleBaseElements[0];
+
 	$pageTitle = $pageTitleBase;
 	if (isset($cat)) {
 		$pageTitle = $pageTitle . ': ' . $cat;

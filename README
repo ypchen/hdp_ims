@@ -14,8 +14,11 @@
 			git clone git://github.com/ypchen/hdp_ims_dereferenced.git
 
 注意
-	1. 若欲將 IMS 裝設於本機，或者透過 IMS 網站欲觀賞 YouTube 內容 (含以 YouTube 為 back-end 之影音網站)，則本機必須具備運行中之 web server 以及可執行 php 程式之能力。
-	2. 若使用 FTP 來傳輸 IMS code，請一定要強制以二進位 (binary) 方式傳輸 [感謝 zorron@HDPfans]
+	1. 若欲將 IMS 裝設於本機，或者透過 IMS 網站欲觀賞 YouTube 內容
+		(含以 YouTube 為 back-end 之影音網站)，則本機必須具備運行中之
+		web server 以及可執行 php 程式之能力。
+	2. 若使用 FTP 來傳輸 IMS code，請一定要強制以二進位 (binary) 方式傳輸
+		[感謝 zorron@HDPfans]
 
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
@@ -76,7 +79,7 @@
 	13. [v1.7] 因應多個網站之變更，包括蘋果動新聞及 TED.com
 			* 敬請改用 v1.7 版之 youtube.video.php
 			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
-	14. [v2.0] 版開始支援 heroku deployment
+	14. [v2.0] 開始支援 heroku deployment
 
 使用
 	1. 直接放在本機使用
@@ -141,7 +144,8 @@
 				### 再把新版本上傳至 heroku
 				$ git push heroku
 
-			所有的 settings.php 內的設定，都可以用 heroku config 來進行設定，所以可以在不必編輯任何程式碼的情形下，完成 heroko 建置
+			所有的 settings.php 內的設定，都可以用 heroku config 來設定，
+			所以可以在不必編輯任何程式碼的情形下，完成 heroko 建置
 
 		B. 自建 web server
 			將 adult/ common/ video/ 這些目錄放在適當的地方 (參考安裝在本機的做法)
@@ -149,9 +153,10 @@
 
 	3. 範例網站
 
-		我直接把這組 code 建立成範例網站，有興趣的人可以直接用用看，但原則上不提供任何技術支援或服務
+		我直接把這組 code 建立成範例網站，有興趣的人可以直接用用看，
+		但原則上不提供任何技術支援或服務
 
-		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 是 YouTube 的則須參考下點說明
+		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 為 YouTube 則須參考下點說明
 
 		A. 在 heroku 上運行的範例網站 (heroku deployment)
 			<item>
@@ -192,8 +197,9 @@
 		B. 影片開始會比平常慢一些，因為要先下載字幕
 
 		C. 因為播放機的時間解析度只能到約 0.1 秒，所以字幕的出現和消失可能會有點不順
-			在影片一開始的兩、三分鐘內，因為 onRefresh 被叫用的間隔並不穩定，所以可能會不太順
-			有些播放機可能無法順利顯示字幕 (我自己好幾部 HD300B plus 就有不行的)
+			在影片一開始的兩、三分鐘內，因為 onRefresh 被叫用的間隔並不穩定，
+			所以可能會不太順有些播放機可能無法順利顯示字幕
+			(我自己好幾部 HD300B plus 就有不行的)
 
 		D. 按 [藍] 可切換字幕的顯示; 按 [信息] 則有影片相關資訊:
 			(1) 34/640x360/9/0/115 為 youtube 解析度資訊
@@ -234,5 +240,7 @@
 
 備註
 	1. 奠基於 iMax.Live 韌體 20110401
-		這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，非常感謝 maxjojo@HDPfans！
-	2. 因為我使用的 image 都是去抓那些網站的 logo 還有用 images.google.com 從網上抓下來的，所以無法一併 release 在 code 中，請見諒。
+		這個 php IMS 架構發展之初，參考了 iMax 韌體中的許多部分，
+		非常感謝 maxjojo@HDPfans！
+	2. 因為我使用的 image 都是去抓那些網站的 logo 還有用 images.google.com
+		從網上抓下來的，所以無法一併 release 在 code 中，請見諒。

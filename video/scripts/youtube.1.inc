@@ -3,18 +3,47 @@
 
 	$sites = array(
 		array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
-			'本機輸入', $myBaseName,
-			'※ 需安裝 hdp_input', 'search', 'continue=0'),
+			'本機輸入', $myBaseName, '※ 需安裝 hdp_input',
+			'search', 'continue=0|&amp;orderby=relevance',
+			'搜索', '[關聯]'),
 		array('input = getInput("Enter a keyword");',
-			'內建輸入', $myBaseName,
-			'使用播放機內建輸入功能', 'search', 'continue=0'),
+			'內建輸入', $myBaseName, '使用播放機內建輸入功能',
+			'search', 'continue=0|&amp;orderby=relevance',
+			'搜索', '[關聯]'),
+		array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
+			'本機輸入', $myBaseName, '※ 需安裝 hdp_input',
+			'search', 'continue=0|&amp;orderby=published',
+			'搜索', '[上傳]'),
+		array('input = getInput("Enter a keyword");',
+			'內建輸入', $myBaseName, '使用播放機內建輸入功能',
+			'search', 'continue=0|&amp;orderby=published',
+			'搜索', '[上傳]'),
+		array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
+			'本機輸入', $myBaseName, '※ 需安裝 hdp_input',
+			'search', 'continue=0|&amp;orderby=viewCount',
+			'搜索', '[觀看]'),
+		array('input = getInput("Enter a keyword");',
+			'內建輸入', $myBaseName, '使用播放機內建輸入功能',
+			'search', 'continue=0|&amp;orderby=viewCount',
+			'搜索', '[觀看]'),
+		array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
+			'本機輸入', $myBaseName, '※ 需安裝 hdp_input',
+			'search', 'continue=0|&amp;orderby=rating',
+			'搜索', '[評分]'),
+		array('input = getInput("Enter a keyword");',
+			'內建輸入', $myBaseName, '使用播放機內建輸入功能',
+			'search', 'continue=0|&amp;orderby=rating',
+			'搜索', '[評分]'),
+/*
 		array('input = doModalRss("' . $inputMethod . '", "mediaDisplay", "search", 0);',
-			'線上輸入', $myBaseName,
-			'Input method: ' . $inputMethod, 'search', 'continue=0'),
+			'線上輸入', $myBaseName, 'Input method: ' . $inputMethod,
+			'search', 'continue=0',
+			'搜索', ''),
+*/
 	);
 
 	foreach($sites as $site) {
-		$searchTitle   = ucfirst($site[4]) . ": " . $site[1];
+		$searchTitle   = $site[6] . ': ' . $site[1] . ' ' . $site[7];
 		$searchUrlBase = $scriptsURLprefix . '/' . $myBaseName . '.query.php?uid=' . $user_id .
 				'&amp;input_method='  . urlencode($inputMethod) .
 				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
@@ -31,7 +60,7 @@
 					"\t\t\tif (input != null) {\r\n" .
 					"\t\t\t\tsearchUrl = \"" . $searchUrlBase  . "\"" .
 						" + \",%26q%3D\" + urlEncode(urlEncode(input))" .
-						" + \",\" + urlEncode(\"" . $searchTitle . "\")" .
+						" + \",\" + urlEncode(\"" . $site[6] . " '\" + input + \"' " . $site[7] . "\")" .
 						" + \",\" + urlEncode(\"" . $site[4] . '|' . $site[5] . "\");" .
 					"\r\n" .
 					"\t\t\t\tsearchUrl;\r\n" .

@@ -7,18 +7,21 @@
 			$link = 'http://gdata.youtube.com/feeds/api/users/' . $search . '/uploads' .
 					'?start-index=' . strval($yvStartIndex) .
 					'&max-results=' . strval($yvItemPerPage) .
+					((count($extraSettings) > 2) ? ($extraSettings[2]) : ('')) .
 					'&v=2';
 			break;
 		case 'playlist':
 			$link = 'http://gdata.youtube.com/feeds/api/playlists/' . $search .
 					'?start-index=' . strval($yvStartIndex) .
 					'&max-results=' . strval($yvItemPerPage) .
+					((count($extraSettings) > 2) ? ($extraSettings[2]) : ('')) .
 					'&v=2';
 			break;
 		case 'search':
 			$link = 'http://gdata.youtube.com/feeds/api/videos' .
 					'?start-index=' . strval($yvStartIndex) .
 					'&max-results=' . strval($yvItemPerPage) .
+					((count($extraSettings) > 2) ? ($extraSettings[2]) : ('')) .
 					'&v=2' .
 					$search;
 			break;
