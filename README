@@ -156,7 +156,7 @@
 		A. 在 heroku 上運行的範例網站 (heroku deployment)
 			<item>
 				<title>IMS: video</title>
-				<link>http://hdp_ims.herokuapp.com/video/scripts/siteList.php</link>
+				<link>http://hdp-ims.herokuapp.com/video/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
 
