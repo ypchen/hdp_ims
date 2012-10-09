@@ -2,12 +2,36 @@
 	// Functions
 
 	function notification_email_text($subject, $body) {
-		global $imsUseEmail, $imsBotEmail, $imsAdminEmail;
+		global $imsOnMailGun, $imsUseEmail, $imsBotEmail, $imsAdminEmail;
 
 		if (!empty($imsUseEmail)) {
 			$to = $imsAdminEmail;
-			$headers = "From: $imsBotEmail";
-			return mail($to, $subject, $body, $headers);
+			if (!empty($imsOnMailGun)) {
+				$ch = curl_init();
+
+				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+				curl_setopt($ch, CURLOPT_USERPWD, 'api:' . @getenv('MAILGUN_API_KEY'));
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+				$mailgun_domain  = explode('@', @getenv('MAILGUN_SMTP_LOGIN'));
+				curl_setopt($ch, CURLOPT_URL, 'https://api.mailgun.net/v2/' . $mailgun_domain[1] . '/messages');
+				curl_setopt($ch, CURLOPT_POSTFIELDS,
+					array(
+						'from'    => $imsBotEmail,
+						'to'      => $to,
+						'subject' => $subject,
+						'text'    => $body
+					));
+				$result = curl_exec($ch);
+				curl_close($ch);
+
+				return $result;
+			}
+			else {
+				$headers = "From: $imsBotEmail";
+				return mail($to, $subject, $body, $headers);				
+			}
 		}
 		else {
 			return false;
@@ -79,7 +103,7 @@
 		if (!empty($imsUseCurl)) {
 			$curl = curl_init();
 			if (!empty($http_header)) {
-				curl_setopt($tuCurl, CURLOPT_HTTPHEADER, $http_header);
+				curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
 			}
 			curl_setopt ($curl, CURLOPT_USERAGENT, $user_agent);
 			curl_setopt ($curl, CURLOPT_TIMEOUT, $timeout);
@@ -345,5 +369,31 @@
 				)
 			)
 		);
+	}
+
+	// http://www.dzone.com/snippets/get-remote-ip-address-php
+	function getRemoteIPAddress() {
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+		return $ip;
+	}
+	/* If your visitor comes from proxy server you have use another function to get a real IP address: */
+	function getRealIPAddress() {   
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			// Check ip from share internet
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}
+		else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			// Check ip passed from proxy
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
+
+	function booleanValuefromString($s) {
+		// true if not '0' or 'false'
+		return ((strcmp($s, '0') != 0) && (strcasecmp($s, 'false') != 0));
 	}
 ?>

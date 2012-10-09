@@ -1,11 +1,10 @@
 <?php
 	error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 
-	$myScriptName     = $_SERVER['SCRIPT_NAME'];
-
-	$serverName       = $_SERVER['SERVER_NAME'];
-	$serverPort       = $_SERVER['SERVER_PORT'];
-	$remoteIP         = $_SERVER['REMOTE_ADDR'];
+	// Load helpers first
+	require('../../common/constants.php');
+	require('../../common/utilities.php');
+	require('../../common/database.php');
 
 	// I do this because I would like to combine my own running site with the released code
 	if (file_exists('../../common/ypSettings.php')) {
@@ -14,10 +13,18 @@
 	else {
 		require('../../common/settings.php');
 	}
+	// Environment variables, if exist, will override the settings written in PHP files.
+	// Heroku deployment can be done via setting the corresponding variables.
+	require('../../common/environment.php');
 
-	require('../../common/constants.php');
-	require('../../common/utilities.php');
-	require('../../common/database.php');
+	$myScriptName     = $_SERVER['SCRIPT_NAME'];
+
+	$serverName       = $_SERVER['SERVER_NAME'];
+	$serverPort       = $_SERVER['SERVER_PORT'];
+	if (!empty($imsOnHeroku))
+		$remoteIP         = getRealIPAddress();
+	else
+		$remoteIP         = getRemoteIPAddress();
 
 	$userAgent        = $userAgentFF3;
 
@@ -77,20 +84,20 @@
 	$fileLocalYoutubeVideoFmtPrefs = $filePath . 'ims_yv_fmt_prefs.dat';
 
 	// Default local youtube cc prefs file
-	$fileLocalYoutubeVideoCCPrefs = $filePath . 'ims_yv_cc_prefs.dat';
+	$fileLocalYoutubeVideoCCPrefs  = $filePath . 'ims_yv_cc_prefs.dat';
 
 	// Local cc fsize file
-	$fileLocalCCFSize = $filePath . 'ims_cc_fsize.dat';
+	$fileLocalCCFSize   = $filePath . 'ims_cc_fsize.dat';
 
 	// Local cc fcolor file
-	$fileLocalCCFColor = $filePath . 'ims_cc_fcolor.dat';
+	$fileLocalCCFColor  = $filePath . 'ims_cc_fcolor.dat';
 
 	// Local files for handling closed captioning
-	$fileLocalCCCount  = $filePath . 'ims_cc_count.dat';
-	$fileLocalCCStart  = $filePath . 'ims_cc_start.dat';
-	$fileLocalCCEnd    = $filePath . 'ims_cc_end.dat';
-	$fileLocalCCText   = $filePath . 'ims_cc_text.dat';
-	$fileLocalCCStatus = $filePath . 'ims_cc_status.dat';
+	$fileLocalCCCount   = $filePath . 'ims_cc_count.dat';
+	$fileLocalCCStart   = $filePath . 'ims_cc_start.dat';
+	$fileLocalCCEnd     = $filePath . 'ims_cc_end.dat';
+	$fileLocalCCText    = $filePath . 'ims_cc_text.dat';
+	$fileLocalCCStatus  = $filePath . 'ims_cc_status.dat';
 
 	// Local file for extra information
 	$fileLocalExtraInfo = $filePath . 'ims_extra_info.dat';

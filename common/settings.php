@@ -1,6 +1,11 @@
 <?php
 	// Global variables
 
+	// Running on heroku
+	$imsOnHeroku   = false;
+	// Send mails via MailGun
+	$imsOnMailGun  = false;
+
 	// Notification emails will be sent
 	$imsUseEmail   = false;
 	// From imsBotEmail to imsAdminEmail
