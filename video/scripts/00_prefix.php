@@ -17,6 +17,15 @@
 	// Heroku deployment can be done via setting the corresponding variables.
 	require('../../common/environment.php');
 
+	// If redir is used, redir to the destination
+	if (!empty($imsUseRedir)) {
+		$protocol = (((!isset($_SERVER['HTTPS'])) || ($_SERVER['HTTPS'] != 'on')) ? 'http://' : 'https://');
+		header('Location: ' . $protocol . $imsRedirTo . $_SERVER['REQUEST_URI']);
+		exit();
+	}
+
+	date_default_timezone_set($imsTimeZone);
+
 	$myScriptName     = $_SERVER['SCRIPT_NAME'];
 
 	$serverName       = $_SERVER['SERVER_NAME'];
@@ -118,13 +127,15 @@
 			exit();
 		}
 		mysql_select_db($imsDBName, $imsDBConn);
+		mysql_query("SET time_zone = '" . $imsDBTimeZone . "';", $imsDBConn);		
 	}
 
-	//log_page($imsDBConn, $remoteIP, $myScriptName, '00-prefix');
+	if (empty($noNeedToLogRequest))
+		log_request($imsDBConn, $remoteIP);
 
 	$user_id = 0;
 
-	if (strcmp($imsDirectory, 'hotfix') != 0) {
+	if ((strcmp($imsDirectory, 'hotfix') != 0) && (strcmp($imsDirectory, 'common') != 0)) {
 		if (!empty($imsUseAuthentication)) {
 			// uid from the HTTP GET request
 			if ((!isset($_GET['uid'])) ||

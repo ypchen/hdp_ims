@@ -1,6 +1,19 @@
 <?php
 	// Environment variables
 
+	// Redirect to another host
+	if (($envVar = @getenv('IMS_USE_REDIR')) !== false) {
+		$imsUseRedir   = booleanValuefromString($envVar);
+	}
+	if (($envVar = @getenv('IMS_REDIR_TO')) !== false) {
+		$imsRedirTo    = $envVar; 
+	}
+
+	// Time zone
+	if (($envVar = @getenv('IMS_TIME_ZONE')) !== false) {
+		$imsTimeZone   = $envVar;
+	}
+
 	// Running on heroku
 	if (($envVar = @getenv('IMS_ON_HEROKU')) !== false) {
 		$imsOnHeroku   = booleanValuefromString($envVar);
@@ -26,6 +39,9 @@
 	if (($envVar = @getenv('IMS_USE_DB')) !== false) {
 		$imsUseDB      = booleanValuefromString($envVar);
 	}
+	if (($envVar = @getenv('IMS_DB_TIME_ZONE')) !== false) {
+		$imsDBTimeZone = $envVar;
+	}
 	// Database configuration
 	if (($envVar = @getenv('IMS_DB_HOST')) !== false) {
 		$imsDBHost     = $envVar;
@@ -38,6 +54,28 @@
 	}
 	if (($envVar = @getenv('IMS_DB_PASS')) !== false) {
 		$imsDBPass     = $envVar;
+	}
+	// Remove old records
+	if (($envVar = @getenv('IMS_DB_TO_REMOVE')) !== false) {
+		$imsDBToRemove = $envVar;
+	}
+	if (($envVar = @getenv('IMS_DB_TO_REMOVE_API_KEY')) !== false) {
+		$imsDBToRemoveAPIKey = $envVar;
+	}
+	// Track requests (need to use DB and also Tempo DB on Heroku)
+	if (($envVar = @getenv('IMS_TRACK_REQ')) !== false) {
+		$imsTrackReq   = booleanValuefromString($envVar);
+	}
+	if (($envVar = @getenv('IMS_TRACK_REQ_API_KEY')) !== false) {
+		$imsTrackReqAPIKey = $envVar;
+	}
+	// Tempo DB key for recording all requests
+	if (($envVar = @getenv('IMS_TRACK_REQ_TEMPO_KEY_ALL')) !== false) {
+		$imsTrackReqTempoKeyAll = $envVar;
+	}
+	// Tempo DB key for recording all requests from distinct ips
+	if (($envVar = @getenv('IMS_TRACK_REQ_TEMPO_KEY_DISTINCT_IP')) !== false) {
+		$imsTrackReqTempoKeyDistinctIP = $envVar;
 	}
 
 	// Use curl (or not) to get remote contents

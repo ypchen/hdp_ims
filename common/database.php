@@ -6,6 +6,43 @@
 <?php
 	// Functions
 
+	function remove_old_records($conn, $ip, $interval) {
+		if (!empty($conn)) {
+			$tables = array('log_remove', 'log_request', 'log_page', 'log_ims', 'history_ims');
+
+			foreach($tables as $table) {
+				$db_query =
+					'DELETE FROM ' . $table . ' ' .
+					'WHERE datetime < DATE_SUB(NOW(), INTERVAL ' . $interval . ');';
+				mysql_query($db_query, $conn);
+				log_remove($conn, $ip, $db_query);
+			}			
+		}
+	}
+
+	function log_remove($conn, $ip, $action) {
+		if (!empty($conn)) {
+			mysql_query(
+				'INSERT INTO log_remove ' .
+				'(ip, action, datetime) VALUES ' .
+					"(INET_ATON('$ip'), " .
+					"'$action', " .
+					'NOW());',
+				$conn);
+		}
+	}
+
+	function log_request($conn, $ip) {
+		if (!empty($conn)) {
+			mysql_query(
+				'INSERT INTO log_request ' .
+				'(ip, datetime) VALUES ' .
+					"(INET_ATON('$ip'), " .
+					'NOW());',
+				$conn);
+		}
+	}
+
 	function log_page($conn, $ip, $page, $action) {
 		if (!empty($conn)) {
 			mysql_query(
@@ -27,6 +64,20 @@
 					"(INET_ATON('$ip'), " .
 					"$user_id, " .
 					"'$action', " .
+					'NOW());',
+				$conn);
+		}
+	}
+
+	function history_ims($conn, $ip, $user_id, $link, $query) {
+		if (!empty($conn)) {
+			mysql_query(
+				'INSERT INTO history_ims ' .
+				'(ip, user_id, link, query, datetime) VALUES ' .
+					"(INET_ATON('$ip'), " .
+					"$user_id, " .
+					"'$link', " .
+					"'$query', " .
 					'NOW());',
 				$conn);
 		}
@@ -93,20 +144,6 @@
 		else {
 			// If database is not enabled, all permissions are considered forbidden
 			return false;
-		}
-	}
-
-	function history_ims($conn, $ip, $user_id, $link, $query) {
-		if (!empty($conn)) {
-			mysql_query(
-				'INSERT INTO history_ims ' .
-				'(ip, user_id, link, query, datetime) VALUES ' .
-					"(INET_ATON('$ip'), " .
-					"$user_id, " .
-					"'$link', " .
-					"'$query', " .
-					'NOW());',
-				$conn);
 		}
 	}
 ?>
