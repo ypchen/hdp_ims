@@ -130,11 +130,11 @@
 		mysql_query("SET time_zone = '" . $imsDBTimeZone . "';", $imsDBConn);		
 	}
 
-	if (empty($noNeedToLogRequest))
-		log_request($imsDBConn, $remoteIP);
-
-	if (!empty($imsLogVisitedPage))
-		log_page($imsDBConn, $remoteIP, $myScriptName, $remoteIP);
+	if (empty($noNeedToLogRequest)) {
+		log_request($imsDBConn, $remoteIP);		
+		if (!empty($imsLogVisitedPage))
+			log_page($imsDBConn, $remoteIP, $myScriptName, $remoteIP);
+	}
 
 	$user_id = 0;
 
