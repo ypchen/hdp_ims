@@ -133,6 +133,9 @@
 	if (empty($noNeedToLogRequest))
 		log_request($imsDBConn, $remoteIP);
 
+	if (!empty($imsLogVisitedPage))
+		log_page($imsDBConn, $remoteIP, $myScriptName, $remoteIP);
+
 	$user_id = 0;
 
 	if ((strcmp($imsDirectory, 'hotfix') != 0) && (strcmp($imsDirectory, 'common') != 0)) {

@@ -43,6 +43,10 @@
 
 	// Need to authenticate users?
 	$imsUseAuthentication = false;
+	// Need to record visited pages?
+	// 1. Database is needed
+	// 2. If authentication is enabled, visited pages are automatically logged
+	$imsLogVisitedPage    = true;
 
 	// Default url on the localhost to handle youtube videos
 	// it can be changed by using youtube_video

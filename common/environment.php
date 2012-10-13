@@ -87,6 +87,12 @@
 	if (($envVar = @getenv('IMS_USE_AUTHENTICATION')) !== false) {
 		$imsUseAuthentication = booleanValuefromString($envVar);
 	}
+	// Need to record visited pages?
+	// 1. Database is needed
+	// 2. If authentication is enabled, visited pages are automatically logged
+	if (($envVar = @getenv('IMS_LOG_VISITED_PAGE')) !== false) {
+		$imsLogVisitedPage    = booleanValuefromString($envVar);
+	}
 
 	// Default url on the localhost to handle youtube videos
 	// it can be changed by using youtube_video
