@@ -21,27 +21,18 @@
 		$ids = array(trim(str_between($html, ' flashvars="hl=zh_CN&amp;video_id=', '"')));
 		include('05_check.link.idcount.inc');
 	}
-	else if (($currPos = strpos($html, 'http://www.dailymotion.com/embed/video/')) !== false) {
+	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
 		$links = array();
-		$extraInfo = array();
 		$video_group = str_between($html, '"videoGroup"', '</div>');
 		$videos = explode('<iframe', $video_group);
 		unset($videos[0]);
 		$videos = array_values($videos);
 		foreach($videos as $video) {
 			$video_data = explode('?', trim(str_between($video, 'src="', '"')));
-			$link = $video_data[0];
-			$html = yp_file_get_contents($link);
-			include('05_check.file_contents.inc');
-
-			if (
-				(strlen($link = trim(str_between($html, '"stream_h264_url":"', '"'))) > 0) ||
-				(strlen($link = trim(str_between($html, '"stream_h264_ld_url":"', '"'))) > 0)
-			) {
-				$link = str_replace('\/', '/', $link);
-				$links[] = $link;
-				$extraInfo[] = 'H264-' . trim(str_between($link, 'H264-', '/'));
-			}
+			$links[] = 
+				$localhostYoutubeVideo . '?query=site_dailymotion' .
+					'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+					'&amp;link='       . urlencode($video_data[0]);
 		}
 	}
 	else if (count($videos = explode('value="fs=1&amp;', $html)) > 1) {

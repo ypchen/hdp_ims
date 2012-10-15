@@ -25,59 +25,34 @@
 	$H = date("H", $now);
 	$i = date("i", $now);
 
-	$currMin = date("Y-m-d H:i:s", mktime($H, $i-1, 0, $m, $d, $Y));
-	$nextMin = date("Y-m-d H:i:s", mktime($H, $i,   0, $m, $d, $Y));
+	// The minute just passed by, 18 hours later, 5 days later
+	foreach(array(0, 60*18, 60*24*5) as $minute_count) {
+		$currMin = date("Y-m-d H:i:s", mktime($H, ($i-$minute_count)-1, 0, $m, $d, $Y));
+		$nextMin = date("Y-m-d H:i:s", mktime($H, ($i-$minute_count),   0, $m, $d, $Y));
 
-	$dbResult =
-		mysql_query(
-			"SELECT COUNT(ip) as value FROM log_request " .
-				" WHERE datetime >= '$currMin'" .
-				" AND datetime < '$nextMin';",
-			$imsDBConn);
-	if ($row = mysql_fetch_array($dbResult)) {
-		$value = $row['value'];
-		$data = array(new DataPoint(new DateTime($currMin), intval($value)));
-		$tdb->write_key($imsTrackReqTempoKeyAll, $data);
-	}
+		$dbResult =
+			mysql_query(
+				"SELECT COUNT(ip) as value FROM log_request " .
+					" WHERE datetime >= '$currMin'" .
+					" AND datetime < '$nextMin';",
+				$imsDBConn);
+		if ($row = mysql_fetch_array($dbResult)) {
+			$value = $row['value'];
+			$data = array(new DataPoint(new DateTime($currMin), intval($value)));
+			$tdb->write_key($imsTrackReqTempoKeyAll, $data);
+		}
 
-	$dbResult =
-		mysql_query(
-			"SELECT COUNT(distinct ip) as value FROM log_request " .
-				" WHERE datetime >= '$currMin'" .
-				" AND datetime < '$nextMin';",
-			$imsDBConn);
-	if ($row = mysql_fetch_array($dbResult)) {
-		$value = $row['value'];
-		$data = array(new DataPoint(new DateTime($currMin), intval($value)));
-		$tdb->write_key($imsTrackReqTempoKeyDistinctIP, $data);
-	}
-
-	// Do it again for the data for two weeks ago (fail-safe)
-	$currMinLast = date("Y-m-d H:i:s", mktime($H, $i-1, 0, $m, $d-14, $Y));
-	$nextMinLast = date("Y-m-d H:i:s", mktime($H, $i,   0, $m, $d-14, $Y));
-
-	$dbResult =
-		mysql_query(
-			"SELECT COUNT(ip) as value FROM log_request " .
-				" WHERE datetime >= '$currMinLast'" .
-				" AND datetime < '$nextMinLast';",
-			$imsDBConn);
-	if ($row = mysql_fetch_array($dbResult)) {
-		$value = $row['value'];
-		$data = array(new DataPoint(new DateTime($currMinLast), intval($value)));
-		$tdb->write_key($imsTrackReqTempoKeyAll, $data);
-	}
-
-	$dbResult =
-		mysql_query(
-			"SELECT COUNT(distinct ip) as value FROM log_request " .
-				" WHERE datetime >= '$currMinLast'" .
-				" AND datetime < '$nextMinLast';",
-			$imsDBConn);
-	if ($row = mysql_fetch_array($dbResult)) {
-		$value = $row['value'];
-		$data = array(new DataPoint(new DateTime($currMinLast), intval($value)));
-		$tdb->write_key($imsTrackReqTempoKeyDistinctIP, $data);
+		$dbResult =
+			mysql_query(
+				"SELECT COUNT(distinct ip) as value FROM log_request " .
+					" WHERE datetime >= '$currMin'" .
+					" AND datetime < '$nextMin';",
+				$imsDBConn);
+		if ($row = mysql_fetch_array($dbResult)) {
+			$value = $row['value'];
+			$data = array(new DataPoint(new DateTime($currMin), intval($value)));
+			$tdb->write_key($imsTrackReqTempoKeyDistinctIP, $data);
+		}			
 	}
 ?>
 <?php

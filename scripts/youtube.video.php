@@ -192,13 +192,45 @@
 		}
 	}
 
-	$URLonly = false;
-	if (!empty($_GET['URLonly']))
-		$URLonly = true;
+	// Main functionality begins here
+
+	// Chrome 14.0.825.0
+	// http://www.useragentstring.com/pages/Chrome/
+	$userAgent        = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
+	ini_set('user_agent', $userAgent);
 
 	// No matter it's the local source or remote source,
 	// 'query' is given.
 	$id = $_GET['query'];
+
+	// It's a dailymotion request
+	if (strcmp($id, 'site_dailymotion') == 0) {
+		// 'link' must be given
+		$link = $_GET['link'];
+		$html = yp_file_get_contents_1_7($link);
+
+		if (
+			(strlen($link = trim(str_between($html, '"stream_h264_url":"', '"'))) > 0) ||
+			(strlen($link = trim(str_between($html, '"stream_h264_ld_url":"', '"'))) > 0)
+		) {
+			$link = str_replace('\/', '/', $link);
+			$extraInfo = 'H264-' . trim(str_between($link, 'H264-', '/'));
+
+			// Write the extraInfo file
+			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
+			fwrite($fileExtraInfo, $extraInfo);
+			fclose($fileExtraInfo);
+
+			// Return the video stream
+			header('Location: ' . $link);
+		}
+		return;
+	}
+
+	// Check if only URL is wanted
+	$URLonly = false;
+	if (!empty($_GET['URLonly']))
+		$URLonly = true;
 
 	// User preferred formats
 	// http://en.wikipedia.org/wiki/YouTube
@@ -231,11 +263,6 @@
 	else {
 		$ccPreferredLangs = null;
 	}
-
-	// Chrome 14.0.825.0
-	// http://www.useragentstring.com/pages/Chrome/
-	$userAgent        = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
-	ini_set('user_agent', $userAgent);
 
 	// Two ways to get youtube videos
 	// 1. May encounter "age verification"
