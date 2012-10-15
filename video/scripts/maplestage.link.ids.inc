@@ -21,20 +21,26 @@
 		$ids = array(trim(str_between($html, ' flashvars="hl=zh_CN&amp;video_id=', '"')));
 		include('05_check.link.idcount.inc');
 	}
-	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
-		$video_id = trim(str_between($html, 'http://www.dailymotion.com/embed/video/', '">'));
-		$link = 'http://www.dailymotion.com/embed/video/' . $video_id;
-		$html = yp_file_get_contents($link);
-		include('05_check.file_contents.inc');
+	else if (($currPos = strpos($html, 'http://www.dailymotion.com/embed/video/')) !== false) {
+		$html_orig = $html;
+		$links = array();
+		$extraInfo = array();
+		do {
+			$video_data = explode('?', trim(str_between(substr($html_orig, $currPos), 'http://www.dailymotion.com/embed/video/', '">')));
+			$video_id   = $video_data[0];
+			$link = 'http://www.dailymotion.com/embed/video/' . $video_id;
+			$html = yp_file_get_contents($link);
+			include('05_check.file_contents.inc');
 
-		if (
-			(strlen($link = trim(str_between($html, '"stream_h264_url":"', '"'))) > 0) ||
-			(strlen($link = trim(str_between($html, '"stream_h264_ld_url":"', '"'))) > 0)
-		) {
-			$link = str_replace('\/', '/', $link);
-			$links = array($link);
-			$extraInfo = array('H264-' . str_between($link, 'H264-', '/'));
-		}
+			if (
+				(strlen($link = trim(str_between($html, '"stream_h264_url":"', '"'))) > 0) ||
+				(strlen($link = trim(str_between($html, '"stream_h264_ld_url":"', '"'))) > 0)
+			) {
+				$link = str_replace('\/', '/', $link);
+				$links[] = $link;
+				$extraInfo[] = 'H264-' . trim(str_between($link, 'H264-', '/'));
+			}
+		} while(($currPos = strpos($html_orig, 'http://www.dailymotion.com/embed/video/', ($currPos+1))) !== false);
 	}
 	else if (count($videos = explode('value="fs=1&amp;', $html)) > 1) {
 		// maplestage new format -- direct youtube video url without id

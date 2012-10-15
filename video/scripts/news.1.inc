@@ -2,14 +2,8 @@
 	$itemXML   = '';
 
 	$sites = array(
-//		array('qwq33', '動感小站 Show Time', $myBaseName,
-//			'建立者：qwq33', 'channel', 'continue=0'),
-//		array('qwq33', '動感小站 Show Time (連續播放)', $myBaseName,
-//			'建立者：qwq33', 'channel', 'continue=1'),
-		array('appleactionews', '香港蘋果動新聞 (連續播放)', 'hk_appleactionews',
-			'建立者：appleactionews', 'channel', 'continue=1'),
-		array('appleactionews', '香港蘋果動新聞', 'hk_appleactionews',
-			'建立者：appleactionews', 'channel', 'continue=0'),
+		array('CantoneseNews360', '粵語新聞 (連續播放)', 'CantoneseNews360',
+			'CantoneseNews360', 'channel', 'continue=1'),
 		array('NMANews', '台灣蘋果動新聞 (連續播放)', 'appledaily',
 			'建立者：NMANews', 'channel', 'continue=1'),
 		array('AlJazeeraEnglish', '半島電視新聞 (連續播放)', $myBaseName,

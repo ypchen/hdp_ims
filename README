@@ -23,10 +23,10 @@
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
-		A. 蘋果動新聞 (連播、單播)
+		A. 台灣蘋果動新聞 (連播、單播)
 		B. 楓林網
 		C. sugoideas
-		D. 卡提諾影音
+		D. 卡提諾影音 (ck101)
 		E. TED Talks on TED / YouTube / podcast
 		F. YouTube 搜索與設定、頻道
 			YouTube 搜索 (本機 hdp_input、播放機內建)
@@ -35,12 +35,12 @@
 			YouTube 解析度設定
 				高清測試影片
 		G. 媒體新聞 on YouTube
-			香港蘋果動新聞、台灣蘋果動新聞、半島電視新聞、台視、中視、華視、民視、公視、東森、中天、聯合新聞網
+			粵語新聞、台灣蘋果動新聞、半島電視新聞、台視、中視、華視、民視、公視、東森、中天、聯合新聞網
 		H. CNN 影音 podcast
 		I. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
 		J. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
-		A. 蘋果動新聞 (連播、單播)
+		A. 台灣蘋果動新聞 (連播、單播)
 				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 連續、單段)
 		B. 楓林網
 			a. 每日熱門、最新節目
@@ -49,7 +49,7 @@
 				01 -> 02 -> 02 -> 播放
 		C. sugoideas
 				01 -> 02 -> 02 -> 播放
-		D. 卡提諾影音
+		D. 卡提諾影音 (ck101)
 				01 -> 02 -> 02 -> 播放
 		E. TED Talks on TED / YouTube / podcast
 			a. TED Talks on TED / YouTube
@@ -59,6 +59,7 @@
 		F. YouTube 搜索與設定、頻道
 				01 -> 02 -> 播放
 		G. 媒體新聞 on YouTube
+				01 -> 02 -> 播放
 		H. CNN 影音 podcast
 				01 -> podcast
 		I. IMS 搜索
@@ -158,17 +159,10 @@
 
 		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 為 YouTube 則須參考下點說明
 
-		A. 在 heroku 上運行的範例網站 (heroku deployment)
+		在 heroku 上運行的範例網站 (heroku deployment)
 			<item>
 				<title>IMS: video</title>
 				<link>http://hdp-ims.herokuapp.com/video/scripts/siteList.php</link>
-				<mediaDisplay />
-			</item>
-
-		B. 在 hostoi.com 上運行的範例網站 (FTP 上傳建置)
-			<item>
-				<title>IMS: video</title>
-				<link>http://ims.hostoi.com/video/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
 
