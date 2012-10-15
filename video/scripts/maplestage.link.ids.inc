@@ -22,13 +22,15 @@
 		include('05_check.link.idcount.inc');
 	}
 	else if (($currPos = strpos($html, 'http://www.dailymotion.com/embed/video/')) !== false) {
-		$html_orig = $html;
 		$links = array();
 		$extraInfo = array();
-		do {
-			$video_data = explode('?', trim(str_between(substr($html_orig, $currPos), 'http://www.dailymotion.com/embed/video/', '">')));
-			$video_id   = $video_data[0];
-			$link = 'http://www.dailymotion.com/embed/video/' . $video_id;
+		$video_group = str_between($html, '"videoGroup"', '</div>');
+		$videos = explode('<iframe', $video_group);
+		unset($videos[0]);
+		$videos = array_values($videos);
+		foreach($videos as $video) {
+			$video_data = explode('?', trim(str_between($video, 'src="', '"')));
+			$link = $video_data[0];
 			$html = yp_file_get_contents($link);
 			include('05_check.file_contents.inc');
 
@@ -40,7 +42,7 @@
 				$links[] = $link;
 				$extraInfo[] = 'H264-' . trim(str_between($link, 'H264-', '/'));
 			}
-		} while(($currPos = strpos($html_orig, 'http://www.dailymotion.com/embed/video/', ($currPos+1))) !== false);
+		}
 	}
 	else if (count($videos = explode('value="fs=1&amp;', $html)) > 1) {
 		// maplestage new format -- direct youtube video url without id
