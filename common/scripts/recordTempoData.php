@@ -3,7 +3,7 @@
 	require('00_prefix.php');
 	$myName = basename($myScriptName, '.php');
 
-	require('../tempodb.php');
+	require('../tempodb-php/tempodb.php');
 ?>
 <?php
 	// Check the api key first
