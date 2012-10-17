@@ -153,16 +153,36 @@
 	// If there is no 'query',
 	// respond to the request of youtube.video.php
 	if (($evalLevel == 0) && empty($_GET['query'])) {
-		// Read myself and get the body to send
-		$meToSendBody = str_between(local_file_get_contents(__FILE__),
-						"// ---------- youtube.video.php: BEGIN ----------\r\n",
-						"// ---------- youtube.video.php: END ----------\r\n");
-		$meToSend = '// <md5sum>' .
-						md5($meToSendBody) .
-						"</md5sum>\n" .
-						"// ---------- youtube.video.php: BEGIN ----------\r\n" .
-						$meToSendBody .
-						"// ---------- youtube.video.php: END ----------\r\n";
+		// Check if memcache is used
+		$useMemcache = false;
+		if (($envVar = @getenv('IMS_USE_MEMCACHE')) !== false) {
+			$useMemcache = ((strcmp($envVar, '0') != 0) && (strcasecmp($envVar, 'false') != 0));
+		}
+
+		if ($useMemcache) {
+			include('../common/PHPMemcacheSASL/MemcacheSASL.php');
+			$mc = new MemcacheSASL;
+			$mc->addServer(@getenv('IMS_MEMCACHE_HOST'), @getenv('IMS_MEMCACHE_PORT'));
+			$mc->setSaslAuthData(@getenv('IMS_MEMCACHE_USER'), @getenv('IMS_MEMCACHE_PASS'));
+		}
+
+		$mcKey = __FILE__;
+		if (($useMemcache ===  false) || (($meToSend = $mc->get($mcKey)) === false)) {
+			// Read myself and get the body to send
+			$meToSendBody = str_between(local_file_get_contents(__FILE__),
+							"// ---------- youtube.video.php: BEGIN ----------\r\n",
+							"// ---------- youtube.video.php: END ----------\r\n");
+			$meToSend = '// <md5sum>' .
+							md5($meToSendBody) .
+							"</md5sum>\n" .
+							"// ---------- youtube.video.php: BEGIN ----------\r\n" .
+							$meToSendBody .
+							"// ---------- youtube.video.php: END ----------\r\n";
+			if ($useMemcache) {
+				// Write to memcache
+				$mc->add($mcKey, $meToSend);
+			}
+		}
 		echo $meToSend;
 		return;
 	}
