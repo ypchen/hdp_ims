@@ -216,7 +216,7 @@
 
 	// Chrome 14.0.825.0
 	// http://www.useragentstring.com/pages/Chrome/
-	$userAgent        = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
+	$userAgent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
 	ini_set('user_agent', $userAgent);
 
 	// No matter it's the local source or remote source,
@@ -244,6 +244,22 @@
 			// Return the video stream
 			header('Location: ' . $link);
 		}
+		return;
+	}
+
+	// It's a myjizztube request
+	if (strcmp($id, 'site_myjizztube') == 0) {
+		// 'link' must be given
+		$link = $_GET['link'];
+
+		// Make a request to the $link with referer http://www.myjizztube.com/player.swf
+		// Since this part of code is supposed to run locally on a HDP, curl is not considered
+		ob_end_flush();
+		$options = array(
+			'http' => array('header'  => 'Referer: http://www.myjizztube.com/player.swf')
+		);
+		readfile($link, false, stream_context_create($options));
+
 		return;
 	}
 

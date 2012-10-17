@@ -22,7 +22,7 @@
 		array('hardsextube', ''),
 		array('keezmovies', ''),
 		array('moviesand', ''),
-//		array('myjizztube', ' (無法選時)'),
+		array('myjizztube', ' (無法選時，有些影片格式播放機無法播放)'),
 		array('penthousevideos', ''),
 		array('pornhub', ''),
 		array('pornomovies', ''),

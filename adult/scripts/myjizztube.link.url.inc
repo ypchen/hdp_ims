@@ -7,8 +7,13 @@
 	include('05_check.file_contents.inc');
 
 	$link = trim(urldecode(str_between($html, 'defaultVideo:', ';')));
-	$link = str_replace('&', '&amp;', $link);
 	include('05_check.link.inc');
+
+	// Let youtube.video.php to handle it
+	$link =
+		$localhostYoutubeVideo . '?query=site_myjizztube' .
+			'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+			'&amp;link='       . urlencode($link);
 
 	$links = array($link);
 	$titles = array($title);
