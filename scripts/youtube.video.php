@@ -180,7 +180,8 @@
 							"// ---------- youtube.video.php: END ----------\r\n";
 			if ($useMemcache) {
 				// Write to memcache
-				$mc->add($mcKey, $meToSend);
+				// Expiration time is set to 6 hours  
+				$mc->add($mcKey, $meToSend, 6*60*60);
 			}
 		}
 		echo $meToSend;

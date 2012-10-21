@@ -290,24 +290,30 @@
 	function myImage($imgName, $imgDir = ''){
 		global $imagePrefix;
 
-		// image file
-		$testExtensions = array('.jpg', '.gif', '.png');
-		foreach ($testExtensions as $ext) {
-			if (file_exists('../image/' . $imgDir . $imgName . $ext)) {
-				return ($imagePrefix . $imgDir . $imgName . $ext);
+		// Try the given ($imgName, $imgDir) first, then try ('default', '')
+		foreach (array(array($imgName, $imgDir), array('default', '')) as $imgNameDir) {
+			$imgName = $imgNameDir[0];
+			$imgDir  = $imgNameDir[1];
+			// image file
+			$testExtensions = array('.jpg', '.gif', '.png');
+			foreach ($testExtensions as $ext) {
+				if (file_exists('../image/' . $imgDir . $imgName . $ext)) {
+					return ($imagePrefix . $imgDir . $imgName . $ext);
+				}
+			}
+
+			// image url
+			$testExtensions = array('.url', '.txt');
+			foreach ($testExtensions as $ext) {
+				$txtFile = '../image/' . $imgDir . $imgName . $ext;
+				if (file_exists($txtFile)) {
+					return (trim(local_file_get_contents($txtFile)));
+				}
 			}
 		}
 
-		// image url
-		$testExtensions = array('.url', '.txt');
-		foreach ($testExtensions as $ext) {
-			$txtFile = '../image/' . $imgDir . $imgName . $ext;
-			if (file_exists($txtFile)) {
-				return (trim(local_file_get_contents($txtFile)));
-			}
-		}
-
-		return ($imagePrefix . 'default.jpg');
+		// Last resort
+		return ($imagePrefix . 'not_found.png');
 	}
 
 	function myLogo($name){
