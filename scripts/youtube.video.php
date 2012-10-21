@@ -248,22 +248,6 @@
 		return;
 	}
 
-	// It's a myjizztube request
-	if (strcmp($id, 'site_myjizztube') == 0) {
-		// 'link' must be given
-		$link = $_GET['link'];
-
-		// Make a request to the $link with referer http://www.myjizztube.com/player.swf
-		// Since this part of code is supposed to run locally on a HDP, curl is not considered
-		ob_end_flush();
-		$options = array(
-			'http' => array('header'  => 'Referer: http://www.myjizztube.com/player.swf')
-		);
-		readfile($link, false, stream_context_create($options));
-
-		return;
-	}
-
 	// Check if only URL is wanted
 	$URLonly = false;
 	if (!empty($_GET['URLonly']))
