@@ -121,17 +121,18 @@
 				notification_email_text(
 					'IMS problem: ' . $imsDirectory . ' / database connection',
 					'$myScriptName = ' . $myScriptName . "\r\n" .
-						'$condition = ' . $condition
+						'$condition = ' . $condition . "\r\n" .
+						'mysql_error() = ' . mysql_error()
 				);
 
 			exit();
 		}
 		mysql_select_db($imsDBName, $imsDBConn);
-		mysql_query("SET time_zone = '" . $imsDBTimeZone . "';", $imsDBConn);		
+		mysql_query("SET time_zone = '" . $imsDBTimeZone . "';", $imsDBConn);
 	}
 
 	if (empty($noNeedToLogRequest)) {
-		log_request($imsDBConn, $remoteIP);		
+		log_request($imsDBConn, $remoteIP);
 		if (!empty($imsLogVisitedPage))
 			log_page($imsDBConn, $remoteIP, $myScriptName, $remoteIP);
 	}

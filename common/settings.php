@@ -3,7 +3,7 @@
 
 	// Redirect to another host
 	$imsUseRedir   = false;
-	$imsRedirTo    = ''; 
+	$imsRedirTo    = '';
 
 	// Time zone
 	$imsTimeZone   = "Asia/Taipei";
@@ -28,7 +28,7 @@
 	$imsDBUser     = 'yourDB_username';
 	$imsDBPass     = 'yourDB_password';
 	// Remove old records
-	$imsDBToRemove         = '3 MONTH';
+	$imsDBToRemove         = '6 MONTH';
 	$imsDBToRemoveAPIKey   = 'Key you specified';
 	// Track requests (need to use DB and also Tempo DB on Heroku)
 	$imsTrackReq           = false;
@@ -55,5 +55,5 @@
 
 	// Default format preference
 	// http://en.wikipedia.org/wiki/YouTube
-	$defaultYoutubeVideoFmtPrefs = '22,35,34,18,6,5';
+	$defaultYoutubeVideoFmtPrefs = '22,35,18,34,6,5';
 ?>
