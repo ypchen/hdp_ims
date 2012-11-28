@@ -180,7 +180,7 @@
 							"// ---------- youtube.video.php: END ----------\r\n";
 			if ($useMemcache) {
 				// Write to memcache
-				// Expiration time is set to 6 hours  
+				// Expiration time is set to 6 hours
 				$mc->add($mcKey, $meToSend, 6*60*60);
 			}
 		}
@@ -256,8 +256,8 @@
 	// User preferred formats
 	// http://en.wikipedia.org/wiki/YouTube
 
-	// Default: 22,35,34,18,6,5
-	$fmtPrefs = '22,35,34,18,6,5';
+	// Default: 22,35,18,34,6,5
+	$fmtPrefs = '22,35,18,34,6,5';
 
 	// If yv_fmt_prefs is given in the url, use it
 	if (!empty($_GET['yv_fmt_prefs'])) {
