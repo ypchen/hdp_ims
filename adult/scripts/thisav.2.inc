@@ -1,6 +1,6 @@
 <channel>
 <?php
-	echo "\t<title>" . $myBaseName . ": 分類選單</title>\r\n";
+	echo "\t<title>" . $myBaseName . ": 分類選單 --" . $itemTotal . "-- </title>\r\n";
 
 	if ($pass_check) {
 		$siteURLprefix = '';
