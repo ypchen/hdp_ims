@@ -18,7 +18,6 @@
 	$sites = array(
 		array('thisav', ''),
 		array('flytube', ''),
-//		array('friktube', ''),
 		array('hardsextube', ''),
 		array('keezmovies', ''),
 		array('moviesand', ''),
@@ -32,6 +31,13 @@
 		array('xvideos', ''),
 		array('xxxstash', ' (無法選時)'),
 	);
+
+	if ($imsOnHeroku) {
+		// thisav.com has banned heroku IPs
+		unset($sites[0]);
+		$sites = array_values($sites);
+	}
+
 	foreach($sites as $site) {
 		$itemTotal ++;
 		$itemXML   .=
@@ -45,7 +51,6 @@
 
 	// 02 -> play
 	$sites = array(
-//		array('home-video-tube', 'http://www.home-video-tube.com/'),
 		array('timtube', 'http://www.timtube.com/'),
 	);
 	foreach($sites as $site) {
@@ -99,17 +104,6 @@
 			$podcast_include .
 		"\t</item>\r\n";
 
-/*
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>50 Grillz</title>\r\n" .
-			"\t\t<link>http://www.50grillz.com/podcast.xml</link>\r\n" .
-			"\t\t" . siteLogo('50grillz') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-*/
-
 	$itemTotal ++;
 	$itemXML   .=
 		"\t<item>\r\n" .
@@ -127,15 +121,4 @@
 			"\t\t" . siteLogo('nudes4pods') . "\r\n" .
 			$podcast_include .
 		"\t</item>\r\n";
-
-/*
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>Behind Kink</title>\r\n" .
-			"\t\t<link>http://feeds.feedburner.com/kinkcast</link>\r\n" .
-			"\t\t" . siteLogo('behindkink') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-*/
 ?>
