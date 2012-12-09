@@ -6,7 +6,7 @@
 	$htmlMain = explode('id="content">', $html);
 	$htmlMainTail = explode('<noscript>', $htmlMain[1]);
 
-	$videos = explode('class="btopl">', $htmlMainTail[0]);
+	$videos = explode('class="btopl">', ($html = $htmlMainTail[0]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

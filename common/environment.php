@@ -93,6 +93,10 @@
 	if (($envVar = @getenv('IMS_LOG_VISITED_PAGE')) !== false) {
 		$imsLogVisitedPage    = booleanValuefromString($envVar);
 	}
+	// Send $html when check.base
+	if (($envVar = @getenv('IMS_CHECK_BASE_SEND_HTML')) !== false) {
+		$imsCheckBaseSendHTML = booleanValuefromString($envVar);
+	}
 
 	// Default url on the localhost to handle youtube videos
 	// it can be changed by using youtube_video
