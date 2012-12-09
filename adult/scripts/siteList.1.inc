@@ -18,7 +18,7 @@
 	$sites = array(
 		array('thisav', ''),
 		array('flytube', ''),
-		array('friktube', ''),
+//		array('friktube', ''),
 		array('hardsextube', ''),
 		array('keezmovies', ''),
 		array('moviesand', ''),

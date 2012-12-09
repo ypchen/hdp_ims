@@ -9,14 +9,24 @@
 				'$myScriptName = ' . $myScriptName .
 					"\r\n" . '$condition = ' . $condition .
 					"\r\n" . '$link = ' . $link .
-					($imsCheckBaseSendHtml ? "\r\n" . '$html = ' . $html : '')
+					($imsCheckBaseSendHTML
+						?
+							"\r\n" . '$html = ' . $html .
+							"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+						:
+							'')
 			);
 
 		log_page($imsDBConn, $remoteIP, $myScriptName,
 			'$emailSent = ' . $emailSent .
 				'; $condition = ' . $condition .
 				'; $link = ' . $link .
-				($imsCheckBaseSendHtml ? "\r\n" . '; $html = ' . $html : '')
+					($imsCheckBaseSendHTML
+						?
+							"\r\n" . '$html = ' . $html .
+							"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+						:
+							'')
 		);
 
 		throw new Exception($condition);
