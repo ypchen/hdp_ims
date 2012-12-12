@@ -2,6 +2,9 @@
 	// Display parameters
 	$themeMainBackgroundColor = '10:150:105';
 
+	// Sites that are turned off
+	$sitesTurnedOff = explode(',', $imsTurnOffVideoSites);
+
 	$itemXML   = '';
 
 	$itemTotal ++;
@@ -32,22 +35,23 @@
 		array('CNN',				'CNN 影音播放 podcast',						''),
 		array('ims_search',			'IMS 搜索 (HAOIMS / HDPfans)',				''),
 	);
-
 	foreach($sites as $site) {
-		$itemTotal ++;
-		$itemXML   .=
-			"\t<item>\r\n"  .
-				"\t\t<title>" . $site[1] . "</title>\r\n" .
-				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id .
-					'&amp;input_method='  . urlencode($inputMethod) .
-					'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-					'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-					'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
-					"</link>\r\n" .
-				"\t\t" . siteLogo($site[0]) . "\r\n" .
-				"\t\t<note>" . $site[2] . "</note>\r\n" .
-				"\t\t<mediaDisplay />\r\n" .
-			"\t</item>\r\n\r\n";
+		if (in_array($site[0], $sitesTurnedOff) === false) {
+			$itemTotal ++;
+			$itemXML   .=
+				"\t<item>\r\n"  .
+					"\t\t<title>" . $site[1] . "</title>\r\n" .
+					"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id .
+						'&amp;input_method='  . urlencode($inputMethod) .
+						'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
+						'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+						'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+						"</link>\r\n" .
+					"\t\t" . siteLogo($site[0]) . "\r\n" .
+					"\t\t<note>" . $site[2] . "</note>\r\n" .
+					"\t\t<mediaDisplay />\r\n" .
+				"\t</item>\r\n\r\n";
+		}
 	}
 
 	// I do this because I would like to combine my own running site with the released code

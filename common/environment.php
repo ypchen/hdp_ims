@@ -87,15 +87,26 @@
 	if (($envVar = @getenv('IMS_USE_AUTHENTICATION')) !== false) {
 		$imsUseAuthentication = booleanValuefromString($envVar);
 	}
+
 	// Need to record visited pages?
 	// 1. Database is needed
 	// 2. If authentication is enabled, visited pages are automatically logged
 	if (($envVar = @getenv('IMS_LOG_VISITED_PAGE')) !== false) {
 		$imsLogVisitedPage    = booleanValuefromString($envVar);
 	}
+
 	// Send $html when check.base
 	if (($envVar = @getenv('IMS_CHECK_BASE_SEND_HTML')) !== false) {
 		$imsCheckBaseSendHTML = booleanValuefromString($envVar);
+	}
+
+	// Turn off the following adult sites (Eg., 'thisav,tjoob')
+	if (($envVar = @getenv('IMS_TURN_OFF_ADULT_SITES')) !== false) {
+		$imsTurnOffAdultSites = $envVar;
+	}
+	// Turn off the following video sites (Eg., 'appledaily,maplestage')
+	if (($envVar = @getenv('IMS_TURN_OFF_VIDEO_SITES')) !== false) {
+		$imsTurnOffVideoSites = $envVar;
 	}
 
 	// Default url on the localhost to handle youtube videos

@@ -43,12 +43,19 @@
 
 	// Need to authenticate users?
 	$imsUseAuthentication = false;
+
 	// Need to record visited pages?
 	// 1. Database is needed
 	// 2. If authentication is enabled, visited pages are automatically logged
 	$imsLogVisitedPage    = true;
+
 	// Send $html when check.base
 	$imsCheckBaseSendHTML = false;
+
+	// Turn off the following adult sites (Eg., 'thisav,tjoob')
+	$imsTurnOffAdultSites = '';
+	// Turn off the following video sites (Eg., 'appledaily,maplestage')
+	$imsTurnOffVideoSites = '';
 
 	// Default url on the localhost to handle youtube videos
 	// it can be changed by using youtube_video

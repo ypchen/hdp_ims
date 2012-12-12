@@ -2,6 +2,9 @@
 	// Display parameters
 	$themeMainBackgroundColor = '10:150:105';
 
+	// Sites that are turned off
+	$sitesTurnedOff = explode(',', $imsTurnOffAdultSites);
+
 	$itemXML   = '';
 
 	// History
@@ -31,22 +34,17 @@
 		array('xvideos', ''),
 		array('xxxstash', ' (無法選時)'),
 	);
-
-	if ($imsOnHeroku) {
-		// thisav.com has banned heroku IPs
-		unset($sites[0]);
-		$sites = array_values($sites);
-	}
-
 	foreach($sites as $site) {
-		$itemTotal ++;
-		$itemXML   .=
-			"\t<item>\r\n"  .
-				"\t\t<title>" . $site[0] . $site[1] . "</title>\r\n" .
-				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id . "</link>\r\n" .
-				"\t\t" . siteLogo($site[0]) . "\r\n" .
-				"\t\t<mediaDisplay />\r\n" .
-			"\t</item>\r\n\r\n";
+		if (in_array($site[0], $sitesTurnedOff) === false) {
+			$itemTotal ++;
+			$itemXML   .=
+				"\t<item>\r\n"  .
+					"\t\t<title>" . $site[0] . $site[1] . "</title>\r\n" .
+					"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id . "</link>\r\n" .
+					"\t\t" . siteLogo($site[0]) . "\r\n" .
+					"\t\t<mediaDisplay />\r\n" .
+				"\t</item>\r\n\r\n";
+		}
 	}
 
 	// 02 -> play
@@ -54,71 +52,39 @@
 		array('timtube', 'http://www.timtube.com/'),
 	);
 	foreach($sites as $site) {
-		$itemTotal ++;
-		$itemXML   .=
-			"\t<item>\r\n"  .
-				"\t\t<title>" . $site[0] . "</title>\r\n" .
-				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".query.php?uid=" . $user_id .
-					"&amp;query=1," . urlencode($site[1]) . ",,</link>\r\n" .
-				"\t\t" . siteLogo($site[0]) . "\r\n" .
-				"\t\t<mediaDisplay />\r\n" .
-			"\t</item>\r\n\r\n";
+		if (in_array($site[0], $sitesTurnedOff) === false) {
+			$itemTotal ++;
+			$itemXML   .=
+				"\t<item>\r\n"  .
+					"\t\t<title>" . $site[0] . "</title>\r\n" .
+					"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".query.php?uid=" . $user_id .
+						"&amp;query=1," . urlencode($site[1]) . ",,</link>\r\n" .
+					"\t\t" . siteLogo($site[0]) . "\r\n" .
+					"\t\t<mediaDisplay />\r\n" .
+				"\t</item>\r\n\r\n";
+		}
 	}
 
 	// podcast
 	$podcast_include = local_file_get_contents('10_podcast.inc');
-
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>XXX 4 Pods</title>\r\n" .
-			"\t\t<link>http://xxx4pods.com/podcasts/podcast.xml</link>\r\n" .
-			"\t\t" . siteLogo('xxx4pods') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>Suicide Girls</title>\r\n" .
-			"\t\t<link>http://suicidegirls.com/rss/video/</link>\r\n" .
-			"\t\t" . siteLogo('suicidegirls') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>French Maid TV</title>\r\n" .
-			"\t\t<link>http://feeds.feedburner.com/FrenchMaidTV</link>\r\n" .
-			"\t\t" . siteLogo('french_maid_tv') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>Playboy Video-Podcast (德國)</title>\r\n" .
-			"\t\t<link>http://www.playboy.de/cybercastVID.xml</link>\r\n" .
-			"\t\t" . siteLogo('playboy') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>My Dirty Ipods</title>\r\n" .
-			"\t\t<link>http://www.mydirtyipods.com/Ipod/IpodClips.xml</link>\r\n" .
-			"\t\t" . siteLogo('mydirtyipods') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
-
-	$itemTotal ++;
-	$itemXML   .=
-		"\t<item>\r\n" .
-			"\t\t<title>Nudes 4 Pods</title>\r\n" .
-			"\t\t<link>http://nudes4pods.com/podcasts/podcast.xml</link>\r\n" .
-			"\t\t" . siteLogo('nudes4pods') . "\r\n" .
-			$podcast_include .
-		"\t</item>\r\n";
+	$sites = array(
+		array('xxx4pods', 'XXX 4 Pods', 'http://xxx4pods.com/podcasts/podcast.xml'),
+		array('suicidegirls', 'Suicide Girls', 'http://suicidegirls.com/rss/video/'),
+		array('french_maid_tv', 'French Maid TV', 'http://feeds.feedburner.com/FrenchMaidTV'),
+		array('playboy', 'Playboy Video-Podcast (德國)', 'http://www.playboy.de/cybercastVID.xml'),
+		array('mydirtyipods', 'My Dirty Ipods', 'http://www.mydirtyipods.com/Ipod/IpodClips.xml'),
+		array('nudes4pods', 'Nudes 4 Pods', 'http://nudes4pods.com/podcasts/podcast.xml'),
+	);
+	foreach($sites as $site) {
+		if (in_array($site[0], $sitesTurnedOff) === false) {
+			$itemTotal ++;
+			$itemXML   .=
+				"\t<item>\r\n" .
+					"\t\t<title>$site[1]</title>\r\n" .
+					"\t\t<link>$site[2]</link>\r\n" .
+					"\t\t" . siteLogo($site[0]) . "\r\n" .
+					$podcast_include .
+				"\t</item>\r\n";
+		}
+	}
 ?>
