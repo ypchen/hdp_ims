@@ -81,6 +81,7 @@
 			* 敬請改用 v1.7 版之 youtube.video.php
 			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
 	14. [v2.0] 開始支援 heroku deployment
+	15. []
 
 使用
 	1. 直接放在本機使用
@@ -162,9 +163,10 @@
 		在 heroku 上運行的範例網站 (heroku deployment)
 			<item>
 				<title>IMS: video</title>
-				<link>http://hdp-ims.herokuapp.com/video/scripts/siteList.php</link>
+				<link>http://[HOSTNAME].herokuapp.com/video/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
+		目前的 [HOSTNAME] 為 ims-hdp
 
 	4. 有關 youtube.video.php
 
