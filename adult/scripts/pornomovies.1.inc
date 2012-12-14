@@ -8,7 +8,7 @@
 	$htmlMain = explode('channel_02.gif', $html);
 	$htmlMainTail = explode('<br /><center>', $htmlMain[1]);
 
-	$videos = explode('<td style=', $htmlMainTail[0]);
+	$videos = explode('<td style=', ($htmlToExplode = $htmlMainTail[0]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

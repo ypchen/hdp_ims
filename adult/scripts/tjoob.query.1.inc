@@ -6,7 +6,7 @@
 	if (strpos($html, "<img src='/images/next.gif' alt='Next'") === false)
 		$pageMax = $page;
 
-	$videos = explode('<div class="vids">', $html);
+	$videos = explode('<div class="vids">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

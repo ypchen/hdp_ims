@@ -7,12 +7,24 @@
 			notification_email_text(
 				'IMS problem: ' . $imsDirectory . ' / ' . $myName,
 				'$myScriptName = ' . $myScriptName .
-					"\r\n" . '$condition = ' . $condition
+					"\r\n" . '$condition = ' . $condition .
+					($imsCheckSendHTML
+						?
+							"\r\n" . '$html = ' . $html .
+							"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+						:
+							'')
 			);
 
 		log_page($imsDBConn, $remoteIP, $myScriptName,
 			'$emailSent = ' . $emailSent .
-			'; $condition = ' . $condition
+				'; $condition = ' . $condition .
+				($imsCheckLogHTML
+					?
+						"\r\n" . '$html = ' . $html .
+						"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+					:
+						'')
 		);
 
 		throw new Exception($condition);

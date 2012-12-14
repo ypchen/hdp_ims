@@ -3,7 +3,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('<li class="capitalize relative"><span class="absolute layout-sprite" style="width:6px; height:6px; background-position:-52px 0; top:5px;"></span>', $html);
+	$videos = explode('<li class="capitalize relative"><span class="absolute layout-sprite" style="width:6px; height:6px; background-position:-52px 0; top:5px;"></span>', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

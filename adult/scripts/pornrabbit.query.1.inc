@@ -6,7 +6,7 @@
 	if (strpos($html, ' class="next">Next &#187;</a>') === false)
 		$pageMax = $page;
 
-	$videos = explode('<div class="video">', $html);
+	$videos = explode('<div class="video">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

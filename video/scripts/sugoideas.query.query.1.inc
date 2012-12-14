@@ -8,9 +8,8 @@
 					' src="',
 					'"'
 				);
-	$html = trim(str_between($html, '<h3>Episodes:</h3>', '</div>'));
 
-	$videos = explode('<li>', $html);
+	$videos = explode('<li>', ($htmlToExplode = trim(str_between($html, '<h3>Episodes:</h3>', '</div>'))));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

@@ -14,7 +14,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('<div class="upcomingad"', $html);
+	$videos = explode('<div class="upcomingad"', ($htmlToExplode = $html));
 	unset($videos[count($videos)-1]);	// Ads
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);

@@ -6,7 +6,7 @@
 	$htmlMain = explode('">Categories<', $html);
 	$htmlBody = explode('</ul>', $htmlMain[1]);
 
-	$videos = explode('<li>', $htmlBody[0]);
+	$videos = explode('<li>', ($htmlToExplode = $htmlBody[0]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

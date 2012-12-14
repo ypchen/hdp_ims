@@ -35,7 +35,7 @@
 					'&amp;link='       . urlencode($video_data[0]);
 		}
 	}
-	else if (count($videos = explode('value="fs=1&amp;', $html)) > 1) {
+	else if (count($videos = explode('value="fs=1&amp;', ($htmlToExplode = $html))) > 1) {
 		// maplestage new format -- direct youtube video url without id
 		unset($videos[0]);
 		$videos = array_values($videos);

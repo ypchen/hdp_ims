@@ -23,7 +23,7 @@
 	else
 		$pageMax = $page+1;
 
-	$videos = explode('<div class="ecs">', $html);
+	$videos = explode('<div class="ecs">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

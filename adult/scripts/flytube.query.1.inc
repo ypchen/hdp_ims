@@ -5,7 +5,7 @@
 
 	$pageMax = $page;
 
-	$videos = explode('<div class="vidbox">', $html);
+	$videos = explode('<div class="vidbox">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

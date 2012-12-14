@@ -8,13 +8,25 @@
 				'IMS problem: ' . $imsDirectory . ' / ' . $myName,
 				'$myScriptName = ' . $myScriptName .
 					"\r\n" . '$condition = ' . $condition .
-					"\r\n" . '$link = ' . $link
+					"\r\n" . '$link = ' . $link .
+					($imsCheckSendHTML
+						?
+							"\r\n" . '$html = ' . $html .
+							"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+						:
+							'')
 			);
 
 		log_page($imsDBConn, $remoteIP, $myScriptName,
 			'$emailSent = ' . $emailSent .
 				'; $condition = ' . $condition .
-				'; $link = ' . $link
+				'; $link = ' . $link .
+				($imsCheckLogHTML
+					?
+						"\r\n" . '$html = ' . $html .
+						"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+					:
+						'')
 		);
 
 		throw new Exception($condition);

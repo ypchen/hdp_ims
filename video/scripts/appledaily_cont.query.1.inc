@@ -13,13 +13,14 @@
 	include('05_check.file_contents.inc');
 
 	$prefix = '';
-	if (strpos($html, '<h1>今日動新聞</h1>') !== false) {
+	$htmlToExplode = $html;
+	if (strpos($htmlToExplode, '<h1>今日動新聞</h1>') !== false) {
 		// manually add the overview item for convenience
 		$prefix = "<a href=\"javascript:changeMenu(1,'today','sec','1','','','')\">總覽</a>'";
 	}
-	$html = $prefix . str_between($html, '<nav class="sbmm"', '</nav>');
+	$htmlToExplode = $prefix . str_between($htmlToExplode, '<nav class="sbmm"', '</nav>');
 
-	$videos = explode('<a hr', $html);
+	$videos = explode('<a hr', $htmlToExplode);
 	unset($videos[0]);
 	$videos = array_values($videos);
 

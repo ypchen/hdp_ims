@@ -3,33 +3,33 @@
 
 	// Redirect to another host
 	if (($envVar = @getenv('IMS_USE_REDIR')) !== false) {
-		$imsUseRedir   = booleanValuefromString($envVar);
+		$imsUseRedir = booleanValuefromString($envVar);
 	}
 	if (($envVar = @getenv('IMS_REDIR_TO')) !== false) {
-		$imsRedirTo    = $envVar; 
+		$imsRedirTo = $envVar; 
 	}
 
 	// Time zone
 	if (($envVar = @getenv('IMS_TIME_ZONE')) !== false) {
-		$imsTimeZone   = $envVar;
+		$imsTimeZone = $envVar;
 	}
 
 	// Running on heroku
 	if (($envVar = @getenv('IMS_ON_HEROKU')) !== false) {
-		$imsOnHeroku   = booleanValuefromString($envVar);
+		$imsOnHeroku = booleanValuefromString($envVar);
 	}
 	// Send mails via MailGun
 	if (($envVar = @getenv('IMS_ON_MAILGUN')) !== false) {
-		$imsOnMailGun  = booleanValuefromString($envVar);
+		$imsOnMailGun = booleanValuefromString($envVar);
 	}
 
 	// Notification emails will be sent
 	if (($envVar = @getenv('IMS_USE_EMAIL')) !== false) {
-		$imsUseEmail   = booleanValuefromString($envVar);
+		$imsUseEmail = booleanValuefromString($envVar);
 	}
 	// From imsBotEmail to imsAdminEmail
 	if (($envVar = @getenv('IMS_BOT_EMAIL')) !== false) {
-		$imsBotEmail   = $envVar;
+		$imsBotEmail = $envVar;
 	}
 	if (($envVar = @getenv('IMS_ADMIN_EMAIL')) !== false) {
 		$imsAdminEmail = $envVar;
@@ -37,23 +37,23 @@
 
 	// Database will be used for logging and authentication
 	if (($envVar = @getenv('IMS_USE_DB')) !== false) {
-		$imsUseDB      = booleanValuefromString($envVar);
+		$imsUseDB = booleanValuefromString($envVar);
 	}
 	if (($envVar = @getenv('IMS_DB_TIME_ZONE')) !== false) {
 		$imsDBTimeZone = $envVar;
 	}
 	// Database configuration
 	if (($envVar = @getenv('IMS_DB_HOST')) !== false) {
-		$imsDBHost     = $envVar;
+		$imsDBHost = $envVar;
 	}
 	if (($envVar = @getenv('IMS_DB_NAME')) !== false) {
-		$imsDBName     = $envVar;
+		$imsDBName = $envVar;
 	}
 	if (($envVar = @getenv('IMS_DB_USER')) !== false) {
-		$imsDBUser     = $envVar;
+		$imsDBUser = $envVar;
 	}
 	if (($envVar = @getenv('IMS_DB_PASS')) !== false) {
-		$imsDBPass     = $envVar;
+		$imsDBPass = $envVar;
 	}
 	// Remove old records
 	if (($envVar = @getenv('IMS_DB_TO_REMOVE')) !== false) {
@@ -64,7 +64,7 @@
 	}
 	// Track requests (need to use DB and also Tempo DB on Heroku)
 	if (($envVar = @getenv('IMS_TRACK_REQ')) !== false) {
-		$imsTrackReq   = booleanValuefromString($envVar);
+		$imsTrackReq = booleanValuefromString($envVar);
 	}
 	if (($envVar = @getenv('IMS_TRACK_REQ_API_KEY')) !== false) {
 		$imsTrackReqAPIKey = $envVar;
@@ -80,7 +80,7 @@
 
 	// Use curl (or not) to get remote contents
 	if (($envVar = @getenv('IMS_USE_CURL')) !== false) {
-		$imsUseCurl    = booleanValuefromString($envVar);
+		$imsUseCurl = booleanValuefromString($envVar);
 	}
 
 	// Need to authenticate users?
@@ -92,12 +92,15 @@
 	// 1. Database is needed
 	// 2. If authentication is enabled, visited pages are automatically logged
 	if (($envVar = @getenv('IMS_LOG_VISITED_PAGE')) !== false) {
-		$imsLogVisitedPage    = booleanValuefromString($envVar);
+		$imsLogVisitedPage = booleanValuefromString($envVar);
 	}
-
-	// Send $html when check.base
-	if (($envVar = @getenv('IMS_CHECK_BASE_SEND_HTML')) !== false) {
-		$imsCheckBaseSendHTML = booleanValuefromString($envVar);
+	// Send $html / $htmlToExplode when check goes wrong
+	if (($envVar = @getenv('IMS_CHECK_SEND_HTML')) !== false) {
+		$imsCheckSendHTML = booleanValuefromString($envVar);
+	}
+	// Log  $html / $htmlToExplode when check goes wrong
+	if (($envVar = @getenv('IMS_CHECK_LOG_HTML')) !== false) {
+		$imsCheckLogHTML = booleanValuefromString($envVar);
 	}
 
 	// Turn off the following adult sites (Eg., 'thisav,tjoob')

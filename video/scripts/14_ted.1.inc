@@ -18,7 +18,7 @@
 	if ((intval($talkPerPage) * intval($page)) >= intval($talkTotal))
 		$pageMax = $page;
 
-	$videos = explode('<div class="col clearfix">', $html);
+	$videos = explode('<div class="col clearfix">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

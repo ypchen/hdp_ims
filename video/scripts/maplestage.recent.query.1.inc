@@ -3,7 +3,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('<div class="latest_show">', $html);
+	$videos = explode('<div class="latest_show">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

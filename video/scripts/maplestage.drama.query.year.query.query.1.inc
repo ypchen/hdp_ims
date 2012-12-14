@@ -7,7 +7,7 @@
 
 	$htmlBody = explode('<div class="shows">', $html);
 
-	$videos = explode('<div class="show">', $htmlBody[1]);
+	$videos = explode('<div class="show">', ($htmlToExplode = $htmlBody[1]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

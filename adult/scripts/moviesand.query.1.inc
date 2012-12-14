@@ -8,7 +8,7 @@
 	if (is_numeric(substr($pages[count($pages)-1], 0, 1)))
 		$pageMax = $page;
 
-	$videos = explode('<div class="clip-title">', $html);
+	$videos = explode('<div class="clip-title">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

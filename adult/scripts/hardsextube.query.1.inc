@@ -11,7 +11,7 @@
 
 	$htmlBody = explode('<div class="pagination', $html);
 
-	$videos = explode('<li class="normal_li', $htmlBody[0]);
+	$videos = explode('<li class="normal_li', ($htmlToExplode = $htmlBody[0]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

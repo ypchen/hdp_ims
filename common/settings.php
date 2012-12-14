@@ -20,26 +20,26 @@
 	$imsAdminEmail = 'admin.IMS <admin.ims@ims.org>';
 
 	// Database will be used for logging and authentication
-	$imsUseDB      = false;
-	$imsDBTimeZone = '+08:00';
+	$imsUseDB                      = false;
+	$imsDBTimeZone                 = '+08:00';
 	// Database configuration
-	$imsDBHost     = 'yourDB_host';
-	$imsDBName     = 'yourDB_name';
-	$imsDBUser     = 'yourDB_username';
-	$imsDBPass     = 'yourDB_password';
+	$imsDBHost                     = 'yourDB_host';
+	$imsDBName                     = 'yourDB_name';
+	$imsDBUser                     = 'yourDB_username';
+	$imsDBPass                     = 'yourDB_password';
 	// Remove old records
-	$imsDBToRemove         = '6 MONTH';
-	$imsDBToRemoveAPIKey   = 'Key you specified';
+	$imsDBToRemove                 = '6 MONTH';
+	$imsDBToRemoveAPIKey           = 'Key you specified';
 	// Track requests (need to use DB and also Tempo DB on Heroku)
-	$imsTrackReq           = false;
-	$imsTrackReqAPIKey     = 'Key you specified';
+	$imsTrackReq                   = false;
+	$imsTrackReqAPIKey             = 'Key you specified';
 	// Tempo DB key for recording all requests
 	$imsTrackReqTempoKeyAll        = 'requests_all';
 	// Tempo DB key for recording all requests from distinct ips
 	$imsTrackReqTempoKeyDistinctIP = 'requests_distinct_ip';
 
 	// Use curl (or not) to get remote contents
-	$imsUseCurl    = true;
+	$imsUseCurl = true;
 
 	// Need to authenticate users?
 	$imsUseAuthentication = false;
@@ -47,10 +47,11 @@
 	// Need to record visited pages?
 	// 1. Database is needed
 	// 2. If authentication is enabled, visited pages are automatically logged
-	$imsLogVisitedPage    = true;
-
-	// Send $html when check.base
-	$imsCheckBaseSendHTML = false;
+	$imsLogVisitedPage = true;
+	// Send $html / $htmlToExplode when check goes wrong
+	$imsCheckSendHTML  = false;
+	// Log  $html / $htmlToExplode when check goes wrong
+	$imsCheckLogHTML   = false;
 
 	// Turn off the following adult sites (Eg., 'thisav,tjoob')
 	$imsTurnOffAdultSites = '';

@@ -5,7 +5,7 @@
 
 	$htmlBody = explode('<div class="daily_top_shows_block">', $html);
 
-	$videos = explode('<div class="daily_top_show">', $htmlBody[1]);
+	$videos = explode('<div class="daily_top_show">', ($htmlToExplode = $htmlBody[1]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

@@ -36,7 +36,7 @@
 	if ($yvTotalResults <= ($yvStartIndex + $yvItemPerPage - 1))
 		$pageMax = $page;
 
-	$videos = explode('<entry gd:etag=', $html);
+	$videos = explode('<entry gd:etag=', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

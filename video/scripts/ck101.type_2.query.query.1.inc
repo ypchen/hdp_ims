@@ -10,9 +10,7 @@
 	else if (strpos($html, '<span class="current">' . strval($page) . '</span><span class="disabled"> &#187;</span>') !== false)
 		$pageMax = $page;
 
-	$html = trim(str_between($html, '<div class="video-box">', '<!--left end-->'));
-
-	$videos = explode('<dt class="off-index"', $html);
+	$videos = explode('<dt class="off-index"', ($htmlToExplode = trim(str_between($html, '<div class="video-box">', '<!--left end-->'))));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

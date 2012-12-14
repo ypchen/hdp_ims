@@ -6,7 +6,7 @@
 	$htmlVideos  = str_between($html, '<div class="menuL"', '</div>');
 	$htmlVideos .= str_between($html, '<div class="menu"', '</div>');
 
-	$videos = explode('<li><a ', $htmlVideos);
+	$videos = explode('<li><a ', ($htmlToExplode = $htmlVideos));
 	unset($videos[count($videos)-1]);	// English Sub
 // "Upcoming" is now "2011 Drama"
 //	unset($videos[5]);	// Upcoming

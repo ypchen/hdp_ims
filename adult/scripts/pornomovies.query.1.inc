@@ -8,7 +8,7 @@
 	if (is_numeric(substr(trim($pages[count($pages)-1]), 0, 1)))
 		$pageMax = $page;
 
-	$videos = explode('<div style="overflow:hidden;width:220px;">', $html);
+	$videos = explode('<div style="overflow:hidden;width:220px;">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

@@ -9,7 +9,7 @@
 
 	$htmlBody = explode('<ul class="yearS', $html);
 
-	$years = explode('<li>', trim(str_between($htmlBody[1], 'orting">', '</ul>')));
+	$years = explode('<li>', ($htmlToExplode = trim(str_between($htmlBody[1], 'orting">', '</ul>'))));
 	unset($years[0]);
 	$years = array_values($years);
 

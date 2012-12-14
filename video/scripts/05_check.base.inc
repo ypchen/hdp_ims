@@ -9,7 +9,7 @@
 				'$myScriptName = ' . $myScriptName .
 					"\r\n" . '$condition = ' . $condition .
 					"\r\n" . '$link = ' . $link .
-					($imsCheckBaseSendHTML
+					($imsCheckSendHTML
 						?
 							"\r\n" . '$html = ' . $html .
 							"\r\n" . '$htmlToExplode = ' . $htmlToExplode
@@ -21,12 +21,12 @@
 			'$emailSent = ' . $emailSent .
 				'; $condition = ' . $condition .
 				'; $link = ' . $link .
-					($imsCheckBaseSendHTML
-						?
-							"\r\n" . '$html = ' . $html .
-							"\r\n" . '$htmlToExplode = ' . $htmlToExplode
-						:
-							'')
+				($imsCheckLogHTML
+					?
+						"\r\n" . '$html = ' . $html .
+						"\r\n" . '$htmlToExplode = ' . $htmlToExplode
+					:
+						'')
 		);
 
 		throw new Exception($condition);

@@ -8,7 +8,7 @@
 
 	$main_col_ary = explode('id="content">', $html);
 	$main_col = $main_col_ary[1];
-	$videos = explode('class="video_box">', $main_col);
+	$videos = explode('class="video_box">', ($htmlToExplode = $main_col));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

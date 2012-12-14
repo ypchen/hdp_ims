@@ -9,7 +9,7 @@
 	if (strpos($html, ' prev-next-inactive">NEXT</li>') === true)
 		$pageMax = $page;
 
-	$videos = explode('<div id="video_', $html);
+	$videos = explode('<div id="video_', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

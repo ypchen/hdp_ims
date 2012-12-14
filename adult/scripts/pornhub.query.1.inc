@@ -8,7 +8,7 @@
 	if (strpos($html, '<li class="page_next">') === false)
 		$pageMax = $page;
 
-	$videos = explode('<li class="videoblock ', $html);
+	$videos = explode('<li class="videoblock ', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

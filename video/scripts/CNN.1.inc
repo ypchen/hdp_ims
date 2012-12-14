@@ -5,7 +5,7 @@
 
 	$htmlBlocks = explode('<div class="cnnPODhdr cnnPODtop12">AUDIO PODCASTS</div>', $html);
 
-	$videos = explode('<td class="cnnPODcast', $htmlBlocks[0]); // Audio Podcasts Not included
+	$videos = explode('<td class="cnnPODcast', ($htmlToExplode = $htmlBlocks[0])); // Audio Podcasts Not included
 	unset($videos[0]);
 	$videos = array_values($videos);
 

@@ -5,7 +5,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videoHtml = explode('<ul class="subMenu">', $html);
+	$videoHtml = explode('<ul class="subMenu">', ($htmlToExplode = $html));
 	$videos = explode('<li >', $videoHtml[1]);
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);

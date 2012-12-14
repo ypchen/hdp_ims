@@ -7,7 +7,7 @@
 
 	$htmlBody = explode(' id="show_table"', $html);
 
-	$videos = explode('<tr>', trim(str_between($htmlBody[1], '<tbody>', '</tbody>')));
+	$videos = explode('<tr>', ($htmlToExplode = trim(str_between($htmlBody[1], '<tbody>', '</tbody>'))));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

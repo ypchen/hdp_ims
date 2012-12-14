@@ -8,7 +8,7 @@
 
 	$htmlMain = explode('<section id="video_list">', $html);
 	$htmlBody = explode('<div class="pagination">', $htmlMain[1]);
-	$videos = explode('browse_video_container', $htmlBody[0]);
+	$videos = explode('browse_video_container', ($htmlToExplode = $htmlBody[0]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

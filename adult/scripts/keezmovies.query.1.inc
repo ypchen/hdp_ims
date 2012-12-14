@@ -9,7 +9,7 @@
 	if (strpos($html, '<li class="next" id="paginator_next">') === false)
 		$pageMax = $page;
 
-	$videos = explode('<li class="videoblock float-left" id=', $html);
+	$videos = explode('<li class="videoblock float-left" id=', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

@@ -5,14 +5,12 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlVideos = str_between($html, '<div class="menu"', '</div>');
-
-	$videos = explode('</a></li>', $htmlVideos);
+	$videos = explode('</a></li>', ($htmlToExplode = str_between($html, '<div class="menu"', '</div>')));
 	unset($videos[count($videos)-1]);	// Suffix
-	unset($videos[count($videos)-1]);	// ¦¨¤Hµu¤ù
-	unset($videos[count($videos)-1]);	// ¦¨¤H¼v¤ù
-	unset($videos[count($videos)-1]);	// ¦¨¤H°Êº©
-	unset($videos[0]);	// Prefix + ­º­¶
+	unset($videos[count($videos)-1]);	// æˆäººçŸ­ç‰‡
+	unset($videos[count($videos)-1]);	// æˆäººå½±ç‰‡
+	unset($videos[count($videos)-1]);	// æˆäººå‹•æ¼«
+	unset($videos[0]);	// Prefix + é¦–é 
 	$videos = array_values($videos);
 
 	$itemTotal = count($videos);

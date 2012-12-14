@@ -3,7 +3,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode("<li class='category_pic normal_li'", $html);
+	$videos = explode("<li class='category_pic normal_li'", ($htmlToExplode = $html));
 	unset($videos[1]);
 	unset($videos[0]);
 	$videos = array_values($videos);

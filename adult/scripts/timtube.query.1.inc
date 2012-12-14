@@ -5,7 +5,7 @@
 
 	$htmlMain = explode('<div id="right-column">', $html);
 
-	$videos = explode('<div class="box"', $htmlMain[0]);
+	$videos = explode('<div class="box"', ($htmlToExplode = $htmlMain[0]));
 	unset($videos[0]);
 	$videos = array_values($videos);
 
