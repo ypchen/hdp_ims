@@ -1,8 +1,8 @@
 <?php
-	$siteURLprefix = 'http://video.ck101.com';
+	$siteURLprefix = 'http://video.ck101.com/channel/lists';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
+		$link  = $siteURLprefix . trim(str_between($video, '/lists', '"'));
 		$title = trim(str_between($video, ' title="', '"'));
 		$title = convertUnicodePoints($title);
 		$extra = '';

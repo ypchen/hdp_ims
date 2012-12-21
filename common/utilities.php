@@ -275,9 +275,12 @@
 	function str_between($string, $start, $end) {
 		if (($ini = strpos($string, $start)) === false)
 			return '';
-		$ini += strlen($start);
-		$len = strpos($string, $end, $ini) - $ini;
-		return substr($string, $ini, $len);
+		$ini += strlen($start);			
+		$len = ($endExists = strpos($string, $end, $ini)) - $ini;
+		if ($endExists === false)
+			return substr($string, $ini);
+		else
+			return substr($string, $ini, $len);
 	}
 
 	function wholeURLforTheExecutedFile() {

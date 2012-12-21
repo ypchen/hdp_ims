@@ -63,14 +63,6 @@
 		return $retStr;
 	}
 
-	function str_between($string, $start, $end) {
-		if (($ini = strpos($string, $start)) === false)
-			return '';
-		$ini += strlen($start);
-		$len = strpos($string, $end, $ini) - $ini;
-		return substr($string, $ini, $len);
-	}
-
 	$evalLevel = 0;
 
 // <md5sum>HERE: md5sum of the following lines except for the last line without php tags</md5sum>
@@ -83,6 +75,20 @@
 	$USEcurl = false;
 	if (!empty($_GET['USEcurl']))
 		$USEcurl = true;
+
+	// Check the existence because this part of code may be re-loaded and re-evaluated
+	if (function_exists('yp_str_between_2_1') === false) {
+		function yp_str_between_2_1($string, $start, $end) {
+			if (($ini = strpos($string, $start)) === false)
+				return '';
+			$ini += strlen($start);			
+			$len = ($endExists = strpos($string, $end, $ini)) - $ini;
+			if ($endExists === false)
+				return substr($string, $ini);
+			else
+				return substr($string, $ini, $len);
+		}
+	}
 
 	// Check the existence because this part of code may be re-loaded and re-evaluated
 	if (function_exists('yp_file_get_contents_1_7') === false) {
@@ -169,7 +175,7 @@
 		$mcKey = __FILE__;
 		if (($useMemcache ===  false) || (($meToSend = $mc->get($mcKey)) === false)) {
 			// Read myself and get the body to send
-			$meToSendBody = str_between(local_file_get_contents(__FILE__),
+			$meToSendBody = yp_str_between_2_1(local_file_get_contents(__FILE__),
 							"// ---------- youtube.video.php: BEGIN ----------\r\n",
 							"// ---------- youtube.video.php: END ----------\r\n");
 			$meToSend = '// <md5sum>' .
@@ -199,8 +205,8 @@
 			$rmtSrc = yp_file_get_contents_1_7($rmtSrcURL);
 			// The length of <md5sum /> is already 52
 			if (strlen($rmtSrc) > 52) {
-				$md5sum = str_between($rmtSrc, '<md5sum>', '</md5sum>');
-				$receivedCode = str_between($rmtSrc,
+				$md5sum = yp_str_between_2_1($rmtSrc, '<md5sum>', '</md5sum>');
+				$receivedCode = yp_str_between_2_1($rmtSrc,
 								"// ---------- youtube.video.php: BEGIN ----------\r\n",
 								"// ---------- youtube.video.php: END ----------\r\n");
 				// Run the download source if the md5sum is correct
@@ -231,11 +237,11 @@
 		$html = yp_file_get_contents_1_7($link);
 
 		if (
-			(strlen($link = trim(str_between($html, '"stream_h264_url":"', '"'))) > 0) ||
-			(strlen($link = trim(str_between($html, '"stream_h264_ld_url":"', '"'))) > 0)
+			(strlen($link = trim(yp_str_between_2_1($html, '"stream_h264_url":"', '"'))) > 0) ||
+			(strlen($link = trim(yp_str_between_2_1($html, '"stream_h264_ld_url":"', '"'))) > 0)
 		) {
 			$link = str_replace('\/', '/', $link);
-			$extraInfo = 'H264-' . trim(str_between($link, 'H264-', '/'));
+			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
 
 			// Write the extraInfo file
 			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
@@ -308,9 +314,9 @@
 	foreach ($separators as $separator) {
 		if (strpos($html, $separator[0]) !== false) {
 			if ($separator[2])
-				$fmtList = explode(',', urldecode(trim(str_between($html, $separator[0], $separator[1]))));
+				$fmtList = explode(',', urldecode(trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
 			else
-				$fmtList = explode(',', str_replace('\/', '/', trim(str_between($html, $separator[0], $separator[1]))));
+				$fmtList = explode(',', str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
 			break;
 		}
 	}
@@ -323,9 +329,9 @@
 	foreach ($separators as $separator) {
 		if (strpos($html, $separator[0]) !== false) {
 			if ($separator[2])
-				$urlList = explode(',', urldecode(trim(str_between($html, $separator[0], $separator[1]))));
+				$urlList = explode(',', ($htmlToExplode = urldecode(trim(yp_str_between_2_1($html, $separator[0], $separator[1])))));
 			else
-				$urlList = explode(',', trim(str_between($html, $separator[0], $separator[1])));
+				$urlList = explode(',', ($htmlToExplode = trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
 			break;
 		}
 	}
@@ -335,7 +341,8 @@
 	foreach ($urlList as $urlEntry) {
 		// Decode '&' (\u0026) if necessary
 		$urlEntry = str_replace('\u0026', '&', $urlEntry);
-		$itagInURL = trim(str_between($urlEntry, 'itag=', '&'));
+		$itagInURL = trim(yp_str_between_2_1($urlEntry, 'itag=', '&'));
+		$signature = trim(yp_str_between_2_1($urlEntry, 'sig=', '&'));
 		$key = array_search($itagInURL, $formats);
 		if ($key !== false) {
 			$fmtInfo = '';
@@ -347,7 +354,7 @@
 				}
 			}
 			// Ignore 'itag=XX&url='
-			$supportedVids[$key] = array(urldecode(substr($urlEntry, strpos($urlEntry, 'url=') + 4)), $fmtInfo);
+			$supportedVids[$key] = array(urldecode(yp_str_between_2_1($urlEntry, 'url=', '&')), $fmtInfo, $signature);
 		}
 	}
 
@@ -360,12 +367,12 @@
 	// http://userscripts.org/scripts/review/25105
 	//		url=url+"&signature="+signature;
 	// saved my day
-	$urlToGo = str_replace('&sig=', '&signature=', $urlToGo);
+	$urlToGo .= ('&signature=' . $v[0][2]);
 
 	// It happens to itag=37 and itag=22.
 	// There should be no space and " in the URL.
-	$urlToGo = str_replace(' ', '%20', $urlToGo);
-	$urlToGo = str_replace('"', '%22', $urlToGo);
+//	$urlToGo = str_replace(' ', '%20', $urlToGo);
+//	$urlToGo = str_replace('"', '%22', $urlToGo);
 
 	if ($URLonly === false) {
 		// Set the extra information for display
@@ -396,9 +403,9 @@
 				$allLangs = array();
 				$supportedLangs = array();
 				foreach ($ccList as $ccEntry => $ccData) {
-					$ccCode = trim(str_between($ccData, 'lang_code="', '"'));
-					$ccName = trim(str_between($ccData, 'name="', '"'));
-					$ccOriginal = trim(str_between($ccData, 'lang_original="', '"'));
+					$ccCode = trim(yp_str_between_2_1($ccData, 'lang_code="', '"'));
+					$ccName = trim(yp_str_between_2_1($ccData, 'name="', '"'));
+					$ccOriginal = trim(yp_str_between_2_1($ccData, 'lang_original="', '"'));
 					$allLangs[] = $ccCode;
 					$key = array_search($ccCode, $ccPreferredLangs);
 					if (($key !== false) && (empty($supportedLangs[$key]))) {
@@ -451,11 +458,11 @@
 						fwrite($fileText,  "\n");
 
 						foreach ($data as $dataEntry) {
-							$start = floatval(trim(str_between($dataEntry, 'start="', '"')));
-							$dur   = floatval(trim(str_between($dataEntry, 'dur="', '"')));
+							$start = floatval(trim(yp_str_between_2_1($dataEntry, 'start="', '"')));
+							$dur   = floatval(trim(yp_str_between_2_1($dataEntry, 'dur="', '"')));
 							$text  = trim(htmlspecialchars_decode(
 										convertUnicodePoints(
-											str_between($dataEntry, '">', '</text>')), ENT_QUOTES));
+											yp_str_between_2_1($dataEntry, '">', '</text>')), ENT_QUOTES));
 							$end   = $start + $dur;
 
 							$textLines = explode("\n", $text);
@@ -485,7 +492,7 @@
 						$extraInfo .= (' [' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
 					}
 					else if ((strlen($xml) > 0) && (strpos($xml, '<title>Error') !== false)) {
-						$errorCode = trim(str_between($xml, '<b>', '.</b>'));
+						$errorCode = trim(yp_str_between_2_1($xml, '<b>', '.</b>'));
 						$ccStatus = '無法載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL . ' (Error ' . $errorCode . ')';
 						$ccStatus .= "\n255:0:0";
 						$extraInfo .= (' [' . $errorCode . ' @ ' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
@@ -503,7 +510,7 @@
 				}
 			}
 			else if ((strlen($xml) > 0) && (strpos($xml, '<title>Error') !== false)) {
-				$errorCode = trim(str_between($xml, '<b>', '.</b>'));
+				$errorCode = trim(yp_str_between_2_1($xml, '<b>', '.</b>'));
 				$ccStatus = '無法取得外掛字幕列表 (Error ' . $errorCode . ')';
 				$ccStatus .= "\n255:0:0";
 				$extraInfo .= ' {' . $errorCode . '}';
@@ -535,6 +542,13 @@
 		echo $urlToGo;
 	}
 	else {
+		// For debug purpose, output variables for observation
+		if (!empty($_GET['displayVariables'])) {
+			$variables = explode(',', $_GET['displayVariables']);
+			foreach ($variables as $variable) {
+				echo '<' . $variable . '>' . print_r(${$variable}, true) . '</' . $variable . ">\n";
+			}
+		}
 		echo '<a id="' . $id .
 				'" url_orig="' . $link .
 				'" href="' . $urlToGo . '">' . $urlToGo . "</a>\n";

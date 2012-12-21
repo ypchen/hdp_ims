@@ -9,7 +9,10 @@
 			);
 	$title = convertUnicodePoints($title);
 
-	$idString = trim(str_between($html, ' id="youtubeids">', '</div>'));
+	$idString = trim(str_between($html, ' src="http://www.youtube.com/embed/', '"'));
+	if (strlen($idString) == 0) {
+		$idString = trim(str_between($html, ' id="youtubeids">', '</div>'));
+	}
 	if (strlen($idString) == 0) {
 		$idString = trim(str_between($html, 'so.addVariable("file", "http://www.youtube.com/watch?v=', '"'));
 	}

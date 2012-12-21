@@ -5,8 +5,8 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videoHtml = explode('<ul class="subMenu">', ($htmlToExplode = $html));
-	$videos = explode('<li >', $videoHtml[1]);
+	$videoHtml = explode('', $html);
+	$videos = explode('<a href="/channel', ($htmlToExplode = trim(str_between($html, '<div class="mediaNav">', '</div>'))));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 
