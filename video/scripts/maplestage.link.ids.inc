@@ -22,9 +22,9 @@
 		include('05_check.link.idcount.inc');
 	}
 	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
+		// Daily Motion
 		$links = array();
-		$video_group = str_between($html, '"videoGroup"', '</div>');
-		$videos = explode('<iframe', $video_group);
+		$videos = explode('<iframe ', str_between($html, '"videoGroup"', '</div>'));
 		unset($videos[0]);
 		$videos = array_values($videos);
 		foreach($videos as $video) {
@@ -34,9 +34,36 @@
 					'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
 					'&amp;link='       . urlencode($video_data[0]);
 		}
+
+		$itemTotal = count($links);
+		include('05_check.base.inc');
+	}
+	else if (strpos($html, 'http://www-cdn.jtvnw.net/') !== false) {
+		// Justin TV
+		$links = array();
+		$videos = explode('<object ', ($htmlToExplode = str_between($html, '"node_body drama"', '</div>')));
+		unset($videos[0]);
+		$videos = array_values($videos);
+		foreach($videos as $video) {
+			$archive_id = trim(str_between($video, 'archive_id=', '"'));
+			$link = 'http://api.justin.tv/api/broadcast/by_archive/' . $archive_id . '.xml';
+			$html = yp_file_get_contents($link);
+			include('05_check.file_contents.inc');
+
+			$archives = explode('<archive>', ($htmlToExplode = $html));
+			foreach($archives as $archive) {
+				if (strpos($archive, "<id>$archive_id</id>") !== false) {
+					$links[] = trim(str_between($archive, '<video_file_url>', '</video_file_url>'));
+					break;
+				}
+			}
+		}
+
+		$itemTotal = count($links);
+		include('05_check.base.inc');
 	}
 	else if (count($videos = explode('value="fs=1&amp;', ($htmlToExplode = $html))) > 1) {
-		// maplestage new format -- direct youtube video url without id
+		// Direct youtube video url without id
 		unset($videos[0]);
 		$videos = array_values($videos);
 
