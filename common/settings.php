@@ -54,7 +54,7 @@
 	$imsCheckLogHTML   = false;
 
 	// Turn off the following adult sites (Eg., 'thisav,tjoob')
-	$imsTurnOffAdultSites = '';
+	$imsTurnOffAdultSites = 'hardsextube,sexbot';
 	// Turn off the following video sites (Eg., 'appledaily,maplestage')
 	$imsTurnOffVideoSites = '';
 

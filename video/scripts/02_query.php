@@ -1,11 +1,24 @@
 <?php
-	echo "<?xml version=\"1.0\" encoding=\"UTF8\" ?>\r\n";
-	echo "<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\r\n";
-?>
-<?php
 	require('00_prefix.php');
 	$myName = basename($myScriptName, '.php');
 	$myBaseName = basename($myName, '.query');
+
+	// Sites that are turned off
+	if (strcasecmp($imsDirectory, 'video') == 0) {
+		$sitesTurnedOff = explode(',', $imsTurnOffVideoSites);
+	}
+	else {
+		$sitesTurnedOff = explode(',', $imsTurnOffAdultSites);
+	}
+	$myNameComponents = explode('.', $myName);
+	if (in_array($myNameComponents[0], $sitesTurnedOff)) {
+		header('Object not found', true, 404);
+	}
+	else {
+?>
+<?php
+	echo "<?xml version=\"1.0\" encoding=\"UTF8\" ?>\r\n";
+	echo "<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\r\n";
 ?>
 <onEnter>
 <?php
@@ -597,5 +610,7 @@
 
 </rss>
 <?php
+	}
+
 	require('00_suffix.php');
 ?>

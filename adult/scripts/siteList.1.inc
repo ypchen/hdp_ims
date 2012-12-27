@@ -2,9 +2,6 @@
 	// Display parameters
 	$themeMainBackgroundColor = '10:150:105';
 
-	// Sites that are turned off
-	$sitesTurnedOff = explode(',', $imsTurnOffAdultSites);
-
 	$itemXML   = '';
 
 	// History

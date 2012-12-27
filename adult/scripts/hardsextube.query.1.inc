@@ -1,5 +1,5 @@
 <?php
-	$link = str_replace(' ', '+', $search . '/Relevance/' . ($page-1));
+	$link = str_replace(' ', '+', $search . '/Relevance/' . $page);
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

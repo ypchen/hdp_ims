@@ -5,11 +5,12 @@
 	if ($pass_check) {
 		$siteURLprefix = '';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, 'title="Click for more ', ' porn movies'));
-			$title = convertUnicodePoints($title);
-			$data  = ' (' . trim(str_between($video, "<span class='categorytotal'>", ' videos</span>')) . ' 片段)';
-			$link  = $siteURLprefix . trim(str_between($video, 'porn movies" href="', '"'));
-			$image = trim(str_between($video, "<img src='", "'"));
+			$title = convertUnicodePoints(trim(str_between($video, '">', '<')));
+			$data  = '';
+			$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
+			if (strpos($link, 'hardsextube.com') === false)
+				continue;
+			$image = '';
 			$note  = '';
 			$extra = '';
 

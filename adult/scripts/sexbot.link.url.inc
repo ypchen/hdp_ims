@@ -2,16 +2,20 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$varPlayerOnly = trim(urldecode(str_between($html, 'playerOnly:', ',')));
-	$varPath       = trim(urldecode(str_between($html, "path:'", "'")));
-	$varFile       = trim(urldecode(str_between($html, "file:'", "'")));
-	$varWidth      = trim(urldecode(str_between($html, "width:'", "'")));
-	$varHeight     = trim(urldecode(str_between($html, "height:'", "'")));
-	$varAppdataurl = trim(urldecode(str_between($html, "appdataurl:'", "'")));
-	$varCb         = trim(urldecode(str_between($html, ".swf?cb=", "'")));
+	// Unable to get the video url
+	// Temporarily removed
 
-	$htmlBody = explode('embedSWF(', $html);
-	$varLoaderUrl  = trim(urldecode(str_between($htmlBody[1], "'", "'")));
+	$htmlToExplode = trim(str_between($html, "<param name='flashvars'", '</object>'));
+
+	$varPlayerOnly = trim(urldecode(str_between($htmlToExplode, 'playerOnly=', '&')));
+	$varPath       = trim(urldecode(str_between($htmlToExplode, 'path=', '&')));
+	$varFile       = trim(urldecode(str_between($htmlToExplode, 'file=', '&')));
+	$varWidth      = trim(urldecode(str_between($htmlToExplode, 'width=', '&')));
+	$varHeight     = trim(urldecode(str_between($htmlToExplode, 'height=', '&')));
+	$varAppdataurl = trim(urldecode(str_between($htmlToExplode, 'appdataurl=', '&')));
+	$varCb         = trim(urldecode(str_between($htmlToExplode, ".swf?cb=", "'")));
+	// Not sure if it works
+	$varLoaderUrl  = trim(urldecode(str_between($htmlToExplode, "src='", "'")));
 
 	$json_data = '{"returnType":"json",' .
 		'"file":"' . $varFile . '",' .
