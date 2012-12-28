@@ -24,7 +24,12 @@
 	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
 		// Daily Motion
 		$links = array();
-		$videos = explode('<iframe ', str_between($html, '"videoGroup"', '</div>'));
+		if (strpos($html, ($htmlToExplode = str_between($html, "'videoGroup'", '</div>'))) !== false) {}
+		else if (strpos($html, ($htmlToExplode = str_between($html, '"videoGroup"', '</div>'))) !== false) {}
+		else {
+			$htmlToExplode = str_between($html, '<div class="node_body drama">', '</div>');
+		}
+		$videos = explode('<iframe ', $htmlToExplode);
 		unset($videos[0]);
 		$videos = array_values($videos);
 		foreach($videos as $video) {
