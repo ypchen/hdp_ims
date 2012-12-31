@@ -1,6 +1,11 @@
 <?php
-	$html = yp_file_get_contents($link);
-	include('05_check.file_contents.inc');
+	// Quick fix
+	$link = str_replace(' ', '%20', $link);
+	$link = str_replace('&', '%26', $link);
+	$link = str_replace('[', '%5B', $link);
+	$link = str_replace(']', '%5D', $link);
+	$link = str_replace('{', '%7B', $link);
+	$link = str_replace('}', '%7D', $link);
 
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
