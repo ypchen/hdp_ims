@@ -1,11 +1,6 @@
 <?php
-	// Quick fix
-	$link = str_replace(' ', '%20', $link);
-	$link = str_replace('&', '%26', $link);
-	$link = str_replace('[', '%5B', $link);
-	$link = str_replace(']', '%5D', $link);
-	$link = str_replace('{', '%7B', $link);
-	$link = str_replace('}', '%7D', $link);
+	// Get rid of the tail
+	$link = substr($link, 0, strrpos($link, '/') + 1);
 
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');

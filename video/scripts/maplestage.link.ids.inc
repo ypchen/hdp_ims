@@ -24,10 +24,11 @@
 	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
 		// Daily Motion
 		$links = array();
-		if (strpos($html, ($htmlToExplode = str_between($html, "'videoGroup'", '</div>'))) !== false) {}
-		else if (strpos($html, ($htmlToExplode = str_between($html, '"videoGroup"', '</div>'))) !== false) {}
+		if (strlen($htmlToExplode = str_between($html, "'videoGroup'", '</div>')) > 0) {}
+		else if (strlen($htmlToExplode = str_between($html, '"videoGroup"', '</div>')) > 0) {}
 		else {
-			$htmlToExplode = str_between($html, '<div class="node_body drama">', '</div>');
+			$htmlToExplode = str_between($html, '<div class="node_body ', '</iframe></center>
+');
 		}
 		$videos = explode('<iframe ', $htmlToExplode);
 		unset($videos[0]);
@@ -43,10 +44,11 @@
 		$itemTotal = count($links);
 		include('05_check.base.inc');
 	}
-	else if (strpos($html, 'http://www-cdn.jtvnw.net/') !== false) {
+	else if ((strpos($html, 'http://www-cdn.jtvnw.net/') !== false) ||
+				(strpos($html, 'http://www-cdn.justin.tv/') !== false)) {
 		// Justin TV
 		$links = array();
-		$videos = explode('<object ', ($htmlToExplode = str_between($html, '"node_body drama"', '</div>')));
+		$videos = explode('<object ', ($htmlToExplode = str_between($html, '"node_body ', '</div>')));
 		unset($videos[0]);
 		$videos = array_values($videos);
 		foreach($videos as $video) {
@@ -85,6 +87,42 @@
 			$fmts = explode(',', $fmt_list);
 			// For now, just use the first stream (usually the highest resolution)
 			$extraInfo[] = $fmts[0];
+		}
+
+		$itemTotal = count($links);
+		include('05_check.base.inc');
+	}
+	else if (strpos($html, 'data="http://static.youku.com/v') !== false) {
+		// youku video
+		$link = 'http://v.youku.com/player/getPlayList/VideoIDS/' . trim(str_between($html, 'VideoIDS=', '&'));
+		// Get the JSON object
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$links = array();
+
+		$youku_seed = trim(str_between($html, '"seed":', ','));
+		foreach (array('mp4', 'flv') as $youku_format) {
+
+			$youku_fileID = trim(str_between($html, '"' . $youku_format . '":"', '"'));
+			if (strlen($youku_fileID) <= 0)
+				continue;
+			$youku_fileID_array = youku_getFileID($youku_fileID, $youku_seed);
+
+			$youku_videos = trim(str_between($html, '"' . $youku_format . '":[', ']'));
+			$videos = explode('},', $youku_videos);
+
+			$url_sid = youku_getSid();
+
+			foreach($videos as $video) {
+				$seq_no  = sprintf('%02X', intval(trim(str_between($video, '"no":"', '"'))));
+				$url_key = trim(str_between($video, '"k":"', '"'));
+				$links[] = 'http://f.youku.com/player/getFlvPath/sid/' .
+					$url_sid . '_' . $seq_no .
+					'/st/flv/fileid/' .
+					$youku_fileID_array[1] . $seq_no . $youku_fileID_array[3] .
+					'?K=' . $url_key;
+			}
 		}
 
 		$itemTotal = count($links);

@@ -380,6 +380,55 @@
 		);
 	}
 
+	// http://zyzzsky.iteye.com/blog/1681188
+	function youku_getSid() {
+		$sid = time() . (rand(0, 9000) + 10000);
+		return $sid;
+	}
+
+	function youku_getKey($key1, $key2){
+		$a = hexdec($key1);
+		$b = $a ^ 0xA55AA5A5;
+		$b = dechex($b);
+		return $key2 . $b;
+	}
+
+	function youku_getFileID($fileId, $seed) {
+		$mixed = youku_getMixString($seed);
+		$ids = explode('*', $fileId);
+		unset($ids[count($ids)-1]);
+		$realId = '';
+		$realId_part1 = '';
+		$realId_part2 = '';
+		$realId_part3 = '';
+		for ($i = 0 ; $i < count($ids) ; ++ $i) {
+			$idx = $ids[$i];
+			$char_to_append = substr($mixed, $idx, 1);
+			$realId .= $char_to_append;
+			if ($i < 8)
+				$realId_part1 .= $char_to_append;
+			else if ($i < 10)
+				$realId_part2 .= $char_to_append;
+			else
+				$realId_part3 .= $char_to_append;
+		}
+		return array($realId, $realId_part1, $realId_part2, $realId_part3);
+	}
+
+	function youku_getMixString($seed) {
+		$mixed = '';
+		$source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/\\:._-1234567890";
+		$len = strlen($source);
+		for($i = 0 ; $i < $len ; ++ $i){
+			$seed = ($seed * 211 + 30031) % 65536;
+			$index = ($seed / 65536 * strlen($source));
+			$c = substr($source, $index, 1);
+			$mixed .= $c;
+			$source = str_replace($c, '', $source);
+		}
+		return $mixed;
+	}
+
 	// http://www.dzone.com/snippets/get-remote-ip-address-php
 	function getRemoteIPAddress() {
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
