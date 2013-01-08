@@ -1,0 +1,12 @@
+<?php
+	$link = $search = 'http://v.netstartv.com/';
+	$html = yp_file_get_contents($link);
+	include('05_check.file_contents.inc');
+
+	$videos = explode('<li class=', ($htmlToExplode = str_between($html, '<ul class="nav ', '</ul>')));
+	unset($videos[0]);	// Prefix: search text box
+	$videos = array_values($videos);
+
+	$itemTotal = count($videos);
+	include('05_check.base.inc');
+?>
