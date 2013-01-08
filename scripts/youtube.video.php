@@ -91,6 +91,63 @@
 	}
 
 	// Check the existence because this part of code may be re-loaded and re-evaluated
+	if (function_exists('curl_redirect_exec_2_1') === false) {
+		// http://www.php.net/manual/en/function.curl-setopt.php#95027
+		// http://stackoverflow.com/questions/3890631/php-curl-with-curlopt-followlocation-error
+		function curl_redirect_exec_2_1($ch, $url_array, &$redirects, $curlopt_header = false) {
+			curl_setopt($ch, CURLOPT_HEADER, true);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$data = curl_exec($ch);
+			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			if ($http_code == 301 || $http_code == 302) {
+				list($header) = explode("\r\n\r\n", $data, 2);
+				$matches = array();
+				//this part has been changes from the original
+				preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
+				$url_redir = trim(str_replace($matches[1],"",$matches[0]));
+				//end changes
+				$url_redir_parsed = parse_url($url_redir);
+				if (isset($url_redir_parsed)) {
+					// replace the component for redir
+					foreach ($url_redir_parsed as $k => $v) {
+						$url_array[$k] = $v;
+					}
+					if (isset($url_array['scheme']))
+						$url = $url_array['scheme'];
+					else
+						$url = 'http';
+					$url .= '://';
+					if (isset($url_array['user']))
+						$url .= $url_array['user'];
+					if (isset($url_array['pass']))
+						$url .= ':' . $url_array['pass'];
+					if (isset($url_array['user']))
+						$url .= '@' . $url_array['host'];
+					else
+						$url .= $url_array['host'];
+					if (isset($url_array['port']))
+						$url .= ':' . $url_array['port'];
+					if (isset($url_array['path']))
+						$url .= $url_array['path'];
+					if (isset($url_array['query']))
+						$url .= '?' . $url_array['query'];
+					if (isset($url_array['fragment']))
+						$url .= '#' . $url_array['fragment'];
+					curl_setopt($ch, CURLOPT_URL, $url);
+					$redirects ++;
+					return curl_redirect_exec_2_1($ch, $url_array, $redirects);
+				}
+			}
+			if ($curlopt_header)
+				return $data;
+			else {
+				list(,$body) = explode("\r\n\r\n", $data, 2);
+				return $body;
+			}
+		}
+	}
+
+	// Check the existence because this part of code may be re-loaded and re-evaluated
 	if (function_exists('yp_file_get_contents_1_7') === false) {
 		function yp_file_get_contents_1_7($url, $data_to_post = null,
 			$http_header = null, $user_agent = null, $timeout = 30) {
@@ -116,7 +173,7 @@
 				curl_setopt ($curl, CURLOPT_URL, $url);
 				// The first one must be a complete url
 				$redirects = 0;
-				$html = curl_redirect_exec($curl, parse_url($url), $redirects);
+				$html = curl_redirect_exec_2_1($curl, parse_url($url), $redirects);
 				curl_close ($curl);
 				return $html;
 			}

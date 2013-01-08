@@ -10,16 +10,50 @@
 	$title = convertUnicodePoints($title);
 
 	if (strlen($idString = trim(str_between($html, '<div class="video_ids">', '</div>'))) > 0) {
+		// YouTube ids
 		$ids = explode(',', $idString);
 		include('05_check.link.idcount.inc');
 	}
 	else if (strpos($html, 'http://www.youtube.com/embed/') !== false) {
+		// YouTube ids
 		$ids = array(trim(str_between($html, 'http://www.youtube.com/embed/', '?')));
 		include('05_check.link.idcount.inc');
 	}
-	else if (strpos($html, ' flashvars="hl=zh_CN&amp;video_id=') !== false) {
-		$ids = array(trim(str_between($html, ' flashvars="hl=zh_CN&amp;video_id=', '"')));
-		include('05_check.link.idcount.inc');
+	else if (strpos($html, 'data="http://static.youku.com/v') !== false) {
+		// youku video
+		$link = 'http://v.youku.com/player/getPlayList/VideoIDS/' . trim(str_between($html, 'VideoIDS=', '&'));
+		// Get the JSON object
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$links = array();
+
+		$youku_seed = trim(str_between($html, '"seed":', ','));
+		foreach (array('mp4', 'flv') as $youku_format) {
+
+			$youku_fileID = trim(str_between($html, '"' . $youku_format . '":"', '"'));
+			if (strlen($youku_fileID) <= 0)
+				continue;
+			$youku_fileID_array = youku_getFileID($youku_fileID, $youku_seed);
+
+			$youku_videos = trim(str_between($html, '"' . $youku_format . '":[', ']'));
+			$videos = explode('},', $youku_videos);
+
+			$url_sid = youku_getSid();
+
+			foreach($videos as $video) {
+				$seq_no  = sprintf('%02X', intval(trim(str_between($video, '"no":"', '"'))));
+				$url_key = trim(str_between($video, '"k":"', '"'));
+				$links[] = 'http://f.youku.com/player/getFlvPath/sid/' .
+					$url_sid . '_' . $seq_no .
+					'/st/flv/fileid/' .
+					$youku_fileID_array[1] . $seq_no . $youku_fileID_array[3] .
+					'?K=' . $url_key;
+			}
+		}
+
+		$itemTotal = count($links);
+		include('05_check.base.inc');
 	}
 	else if (strpos($html, 'http://www.dailymotion.com/embed/video/') !== false) {
 		// Daily Motion
@@ -27,8 +61,7 @@
 		if (strlen($htmlToExplode = str_between($html, "'videoGroup'", '</div>')) > 0) {}
 		else if (strlen($htmlToExplode = str_between($html, '"videoGroup"', '</div>')) > 0) {}
 		else {
-			$htmlToExplode = str_between($html, '<div class="node_body ', '</iframe></center>
-');
+			$htmlToExplode = str_between($html, '<div class="node_body ', '</iframe></center>');
 		}
 		$videos = explode('<iframe ', $htmlToExplode);
 		unset($videos[0]);
@@ -69,6 +102,34 @@
 		$itemTotal = count($links);
 		include('05_check.base.inc');
 	}
+	else if (strpos($html, 'http://video.nexttv.com.tw/') !== false) {
+		// Next TV
+		$links = array('http://video.nexttv.com.tw/' . trim(urldecode(
+					str_between(
+						$htmlToExplode = str_between($html, '<div class="node_body ', '</center>'),
+					'http://video.nexttv.com.tw/', '&quot;'))));
+		$itemTotal = count($links);
+		include('05_check.base.inc');
+	}
+	else if (strpos($html, '.letv.com') !== false) {
+		// letv -- http://www.oschina.net/question/554530_61580
+		$letv_id = trim(
+					str_between(
+						$htmlToExplode = str_between($html, '<div class="node_body ', '</center>'),
+					'&amp;id=', '&amp;'));
+		$link = 'http://app.letv.com/v.php?id=' . $letv_id;
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$link = str_replace('\/', '/', trim(str_between($html, '"url":"', '"')));
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$links = array(
+			str_replace('&', '&amp;', str_replace('\/', '/', trim(str_between($html, '"location": "', '"')))));
+		$itemTotal = count($links);
+		include('05_check.base.inc');
+	}
 	else if (count($videos = explode('value="fs=1&amp;', ($htmlToExplode = $html))) > 1) {
 		// Direct youtube video url without id
 		unset($videos[0]);
@@ -92,39 +153,17 @@
 		$itemTotal = count($links);
 		include('05_check.base.inc');
 	}
-	else if (strpos($html, 'data="http://static.youku.com/v') !== false) {
-		// youku video
-		$link = 'http://v.youku.com/player/getPlayList/VideoIDS/' . trim(str_between($html, 'VideoIDS=', '&'));
-		// Get the JSON object
-		$html = yp_file_get_contents($link);
-		include('05_check.file_contents.inc');
-
-		$links = array();
-
-		$youku_seed = trim(str_between($html, '"seed":', ','));
-		foreach (array('mp4', 'flv') as $youku_format) {
-
-			$youku_fileID = trim(str_between($html, '"' . $youku_format . '":"', '"'));
-			if (strlen($youku_fileID) <= 0)
-				continue;
-			$youku_fileID_array = youku_getFileID($youku_fileID, $youku_seed);
-
-			$youku_videos = trim(str_between($html, '"' . $youku_format . '":[', ']'));
-			$videos = explode('},', $youku_videos);
-
-			$url_sid = youku_getSid();
-
-			foreach($videos as $video) {
-				$seq_no  = sprintf('%02X', intval(trim(str_between($video, '"no":"', '"'))));
-				$url_key = trim(str_between($video, '"k":"', '"'));
-				$links[] = 'http://f.youku.com/player/getFlvPath/sid/' .
-					$url_sid . '_' . $seq_no .
-					'/st/flv/fileid/' .
-					$youku_fileID_array[1] . $seq_no . $youku_fileID_array[3] .
-					'?K=' . $url_key;
-			}
-		}
-
+	else if (strpos($html, ' flashvars="hl=zh_CN&amp;video_id=') !== false) {
+		// YouTube ids
+		$ids = array(trim(str_between($html, ' flashvars="hl=zh_CN&amp;video_id=', '"')));
+		include('05_check.link.idcount.inc');
+	}
+	else if (strpos($html, ' flashvars="file=http%3A%2F%2F') !== false) {
+		// Next TV / letv
+		$links = array(trim(urldecode(
+					str_between(
+						$htmlToExplode = str_between($html, '<div class="node_body ', '</center>'),
+					' flashvars="file=', '&amp;'))));
 		$itemTotal = count($links);
 		include('05_check.base.inc');
 	}
