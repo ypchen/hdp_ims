@@ -19,9 +19,12 @@
 		$ids = array(trim(str_between($html, 'http://www.youtube.com/embed/', '?')));
 		include('05_check.link.idcount.inc');
 	}
-	else if (strpos($html, 'data="http://static.youku.com/v') !== false) {
-		// youku video
-		$link = 'http://v.youku.com/player/getPlayList/VideoIDS/' . trim(str_between($html, 'VideoIDS=', '&'));
+	else if (strpos($html, '.youku.com') !== false) {
+		// youku video id
+		if (strlen($youku_id = trim(str_between($html, 'VideoIDS=', '&'))) != 0) {}
+		else
+			$youku_id = trim(str_between($html, 'http://player.youku.com/player.php/sid/', '/v.swf'));
+		$link = 'http://v.youku.com/player/getPlayList/VideoIDS/' . $youku_id;
 		// Get the JSON object
 		$html = yp_file_get_contents($link);
 		include('05_check.file_contents.inc');
