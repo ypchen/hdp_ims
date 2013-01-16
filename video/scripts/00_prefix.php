@@ -31,9 +31,11 @@
 	$serverName       = $_SERVER['SERVER_NAME'];
 	$serverPort       = $_SERVER['SERVER_PORT'];
 	if (!empty($imsOnHeroku))
-		$remoteIP         = getRealIPAddress();
+		$remoteIPStr  = getRealIPAddress();
 	else
-		$remoteIP         = getRemoteIPAddress();
+		$remoteIPStr  = getRemoteIPAddress();
+	$remoteIPs = explode(',', $remoteIPStr);
+	$remoteIP  = trim($remoteIPs[0]);
 
 	$userAgent        = $userAgentFF3;
 
