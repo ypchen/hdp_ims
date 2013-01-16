@@ -2,7 +2,7 @@
 	$itemXML   = '';
 
 	$sites = array(
-		array('CantoneseNews360', '香港蘋果動新聞 [連續]', 'appleactionews',
+		array('appleactionews', '香港蘋果動新聞 [連續]', 'appleactionews',
 			'appleactionews', 'channel', 'continue=1'),
 		array('CantoneseNews360', '粵語新聞 [連續]', 'CantoneseNews360',
 			'CantoneseNews360', 'channel', 'continue=1'),
