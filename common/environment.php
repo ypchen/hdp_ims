@@ -124,4 +124,17 @@
 	if (($envVar = @getenv('DEFAULT_YOUTUBE_VIDEO_FMT_PREFS')) !== false) {
 		$defaultYoutubeVideoFmtPrefs = $envVar;
 	}
+
+	// For multi-hosts deployment
+	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST')) !== false) {
+		$hostnameImsHost = $envVar;
+	}
+	if (($envVar = @getenv('IMS_HOSTNAME_IMS_PORT')) !== false) {
+		$hostnameImsPort = $envVar;
+	}
+
+	// IMS version
+	if (($envVar = @getenv('IMS_VERSION')) !== false) {
+		$imsVersion = $envVar;
+	}	
 ?>

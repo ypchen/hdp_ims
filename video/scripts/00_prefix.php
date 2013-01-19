@@ -26,6 +26,17 @@
 
 	date_default_timezone_set($imsTimeZone);
 
+	// Get the version info
+	if (!isset($imsVersion)) {
+		$fileVersion = '../../imsVersion';
+		if (file_exists($fileVersion)) {
+			$imsVersion = trim(file_get_contents($fileVersion));
+		}
+		else {
+			$imsVersion = '';
+		}
+	}
+
 	$myScriptName     = $_SERVER['SCRIPT_NAME'];
 
 	$serverName       = $_SERVER['SERVER_NAME'];

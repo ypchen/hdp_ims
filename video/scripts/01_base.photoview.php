@@ -49,6 +49,8 @@
 	if (!isset($themeTextBackgroundColor)) $themeTextBackgroundColor = '0:0:0';
 	if (!isset($themeTipsForegroundColor)) $themeTipsForegroundColor = '255:255:0';
 	if (!isset($themeTipsBackgroundColor)) $themeTipsBackgroundColor = $themeTextBackgroundColor;
+	if (!isset($themeVersionForegroundColor)) $themeVersionForegroundColor = '0:140:140';
+	if (!isset($themeVersionBackgroundColor)) $themeVersionBackgroundColor = '-1:-1:-1';
 	if (!isset($themeItemForegroundColorFocused)) $themeItemForegroundColorFocused = $themeTextForegroundColor;
 	if (!isset($themeItemBackgroundColorFocused)) $themeItemBackgroundColorFocused = $themeMainBackgroundColor;
 	if (!isset($themeItemForegroundColorUnfocused)) $themeItemForegroundColorUnfocused = '140:140:140';
@@ -56,6 +58,7 @@
 	if (!isset($themeItemFontSizeFocused)) $themeItemFontSizeFocused = '16';
 	if (!isset($themeItemFontSizeUnfocused)) $themeItemFontSizeUnfocused = $themeItemFontSizeFocused;
 	if (!isset($themeTipsFontSize)) $themeTipsFontSize = '16';
+	if (!isset($themeVersionFontSize)) $themeVersionFontSize = '10';
 
 	// Create my own link
 	$params  = str_replace('&', '&amp;', $_SERVER['QUERY_STRING']);
@@ -219,6 +222,17 @@
 				str = "[↕][↔]移動; [上下頁]最前後;" + historyTips + " 第 " + curNumVal + " 項";
 			}
 			str + message;
+		</script>
+	</text>
+
+	<text redraw="no" align="right"
+		fontSize="<?php echo $themeVersionFontSize; ?>" lines="1"
+		offsetXPC="88" offsetYPC="<?php echo ($itemYPC+(11*$itemHeightPC)); ?>"
+		widthPC="9" heightPC="<?php echo ($itemHeightPC*1.4); ?>"
+		backgroundColor="<?php echo $themeVersionBackgroundColor; ?>"
+		foregroundColor="<?php echo $themeVersionForegroundColor; ?>">
+		<script>
+			"<?php echo $imsVersion; ?>";
 		</script>
 	</text>
 
