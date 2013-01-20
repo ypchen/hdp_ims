@@ -28,12 +28,13 @@
 
 	// Get the version info
 	if (!isset($imsVersion)) {
-		$fileVersion = '../../imsVersion';
-		if (!isset($imsFullVersion) && file_exists($fileVersion)) {
-			$imsFullVersion = trim(file_get_contents($fileVersion));
-		}
-		else {
-			$imsFullVersion = ': : ';
+		if (!isset($imsFullVersion)) {
+			if (file_exists($fileVersion = '../../imsVersion')) {
+				$imsFullVersion = trim(file_get_contents($fileVersion));
+			}
+			else {
+				$imsFullVersion = ': : ';
+			}
 		}
 
 		$imsFullVersionComp = explode(': ', $imsFullVersion);
