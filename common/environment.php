@@ -133,8 +133,9 @@
 		$hostnameImsPort = $envVar;
 	}
 
-	// IMS version
-	if (($envVar = @getenv('IMS_VERSION')) !== false) {
-		$imsVersion = $envVar;
+	// IMS full version
+	// tag: commit: shortCommit
+	if (($envVar = @getenv('IMS_FULL_VERSION')) !== false) {
+		$imsFullVersion = $envVar;
 	}	
 ?>
