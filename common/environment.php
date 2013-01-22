@@ -129,8 +129,8 @@
 	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST')) !== false) {
 		$hostnameImsHost = $envVar;
 	}
-	if (($envVar = @getenv('IMS_HOSTNAME_IMS_PORT')) !== false) {
-		$hostnameImsPort = $envVar;
+	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST_THIS')) !== false) {
+		$hostnameImsHostThis = $envVar;
 	}
 
 	// IMS full version

@@ -56,15 +56,26 @@
 		}
 	}
 
-	function log_ims($conn, $ip, $user_id, $action) {
+	function log_ims($conn, $ip, $user_id, $action, $extra_data = null) {
 		if (!empty($conn)) {
+			$extra_keys = '';
+			$extra_values = '';
+			foreach ($extra_data as $key => $value) {
+				$extra_keys = $extra_keys . ', ' . $key;
+				// escape the single-quote char (')
+				$extra_values = $extra_values . ', ' . "'" . str_replace("'", "\\'", $value) . "'";
+			}
 			mysql_query(
-				'INSERT INTO log_ims ' .
-				'(ip, user_id, action, datetime) VALUES ' .
-					"(INET_ATON('$ip'), " .
-					"$user_id, " .
-					"'$action', " .
-					'NOW());',
+				($query_string =
+					'INSERT INTO log_ims ' .
+					'(ip, user_id, action, datetime' . $extra_keys . ') VALUES ' .
+						"(INET_ATON('$ip'), " .
+						"$user_id, " .
+						"'$action', " .
+						'NOW()' .
+						$extra_values .
+					');'
+				),
 				$conn);
 		}
 	}
