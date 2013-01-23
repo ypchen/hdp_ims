@@ -59,16 +59,18 @@ CREATE TABLE IF NOT EXISTS `log_ims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` int(11) unsigned NOT NULL,
   `user_id` int(11) NOT NULL,
-  `action` varchar(4096) NOT NULL,
   `datetime` datetime NOT NULL,
-  `ims_tag` varchar(16) NOT NULL DEFAULT '',
-  `ims_commit` char(40) NOT NULL DEFAULT '',
-  `fw_tag` varchar(16) NOT NULL DEFAULT '',
-  `fw_commit` char(40) NOT NULL DEFAULT '',
+  `action` varchar(4096) NOT NULL,
+  `action_type` tinyint(1) NOT NULL DEFAULT '0',
+  `ims_tag` varchar(32) NOT NULL DEFAULT '',
+  `ims_commit` varchar(64) NOT NULL DEFAULT '',
+  `fw_tag` varchar(32) NOT NULL DEFAULT '',
+  `fw_commit` varchar(64) NOT NULL DEFAULT '',
   `note` varchar(4096) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`),
+  KEY `action_type` (`action_type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --

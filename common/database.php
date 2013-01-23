@@ -56,7 +56,7 @@
 		}
 	}
 
-	function log_ims($conn, $ip, $user_id, $action, $extra_data = null) {
+	function log_ims($conn, $ip, $user_id, $action, $action_type = 0, $extra_data = null) {
 		if (!empty($conn)) {
 			$extra_keys = '';
 			$extra_values = '';
@@ -68,11 +68,12 @@
 			mysql_query(
 				($query_string =
 					'INSERT INTO log_ims ' .
-					'(ip, user_id, action, datetime' . $extra_keys . ') VALUES ' .
+					'(ip, user_id, datetime, action, action_type' . $extra_keys . ') VALUES ' .
 						"(INET_ATON('$ip'), " .
 						"$user_id, " .
+						'NOW(), ' .
 						"'$action', " .
-						'NOW()' .
+						"'$action_type'" .
 						$extra_values .
 					');'
 				),
@@ -123,7 +124,7 @@
 				$user_id = 0;
 			}
 			else {
-				log_ims($conn, $ip, $user_id, "Login renewed ($page)");
+				log_ims($conn, $ip, $user_id, "Login renewed ($page)", 2);
 			}
 		}
 		return $user_id;
