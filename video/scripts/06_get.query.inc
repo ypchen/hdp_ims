@@ -14,18 +14,15 @@
 	if(!empty($_GET['query'])) {
 		$query = $_GET['query'];
 		$queryArr = explode(',', $query);
-		$page = $queryArr[0];
-		//$search = urldecode($queryArr[1]);
+		$page = intval($queryArr[0]);
 		$search = $queryArr[1];
 		if (count($queryArr) > 2) {
-			//$cat = urldecode($queryArr[2]);
 			$cat = str_replace('%2C', ',', $queryArr[2]);
 			if (strcmp($cat, '') == 0) {
 				unset($cat);
 			}
 		}
 		if (count($queryArr) > 3) {
-			//$extra = urldecode($queryArr[3]);
 			$extra = $queryArr[3];
 			if (strcmp($extra, '') == 0) {
 				unset($extra);
@@ -33,13 +30,40 @@
 		}
 	}
 
-	$history = 0;
+	$history_title = $search;
+	$history_filename = $cat;
 	if(isset($_GET['history'])) {
 		$history = intval($_GET['history']);
 	}
+	else {
+		$history = 0;
+	}
+	if(isset($_GET['history_peer_path'])) {
+		$history_peer_path = $_GET['history_peer_path'];
+	}
+	else {
+		$history_peer_path = '';
+	}
+	if(isset($_GET['history_peer_path_supp'])) {
+		$history_peer_path_supp = $_GET['history_peer_path_supp'];
+	}
+	else {
+		$history_peer_path_supp = '';
+	}
+	if(isset($_GET['history_peer_name'])) {
+		$history_peer_name = $_GET['history_peer_name'];
+	}
+	else {
+		$history_peer_name = '';
+	}
+	if(isset($_GET['history_peer_desc'])) {
+		$history_peer_desc = $_GET['history_peer_desc'];
+	}
+	else {
+		$history_peer_desc = '';
+	}
 
 	if(!empty($_GET['input_method'])) {
-		//$inputMethod = urldecode($_GET['input_method']);
 		$inputMethod = $_GET['input_method'];
 	}
 	else {
@@ -47,15 +71,20 @@
 	}
 
 	if(!empty($_GET['yv_fmt_prefs'])) {
-		//$youtubeVideoFmtPrefs = urldecode($_GET['yv_fmt_prefs']);
 		$youtubeVideoFmtPrefs = $_GET['yv_fmt_prefs'];
 	}
 	else {
 		$youtubeVideoFmtPrefs = $defaultYoutubeVideoFmtPrefs;
 	}
 
+	if(!empty($_GET['yv_cc_prefs'])) {
+		$youtubeVideoCCPrefs = $_GET['yv_cc_prefs'];
+	}
+	else {
+		$youtubeVideoCCPrefs = $defaultYoutubeVideoCCPrefs;
+	}
+
 	if(!empty($_GET['yv_rmt_src'])) {
-		//$youtubeVideoRemoteSource = urldecode($_GET['yv_rmt_src']);
 		$youtubeVideoRemoteSource = $_GET['yv_rmt_src'];
 	}
 	else {
@@ -63,7 +92,6 @@
 	}
 
 	if(!empty($_GET['youtube_video'])) {
-		//$localhostYoutubeVideo = urldecode($_GET['youtube_video']);
 		$localhostYoutubeVideo = $_GET['youtube_video'];
 	}
 	else {

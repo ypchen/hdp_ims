@@ -1,7 +1,7 @@
 <?php
 	$sortedVideos = array();
 
-	$siteURLprefix = 'http://www.maplestage.net';
+	$siteURLprefix = 'http://www.maplestage.com';
 	foreach($videos as $video) {
 		$title = trim(str_between($video, '">', '</a>'));
 		$title = convertUnicodePoints($title);

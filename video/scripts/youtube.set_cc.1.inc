@@ -16,6 +16,7 @@
 						'&amp;input_method='  . urlencode($inputMethod) .
 						'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 						'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+						'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
 						'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 						'&amp;query=1' .
 							',' . $site[0] .
@@ -32,7 +33,7 @@
 	$sites = array(
 		array('',
 			'取消字幕嘗試載入', 'youtube',
-			' -- 確認後將改為不自動嘗試載入字幕'),
+			' -- 確認後將改為使用預設值 (' . $youtubeVideoCCPrefs . ')'),
 		array('en',
 			'字幕嘗試載入順序: 英文', 'youtube',
 			' -- 確認後將設定為: en'),
@@ -61,7 +62,7 @@
 					"\t\t\twriteStringToFile(dataFile, dataStr);\r\n" .
 					"\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 					"\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
-						"\t\t\t\tmessage  = \" -- 已取消自動嘗試載入字幕\";\r\n" .
+						"\t\t\t\tmessage  = \" -- 已取消\";\r\n" .
 					"\t\t\t}\r\n" .
 					"\t\t\telse {\r\n" .
 						"\t\t\t\tmessage  = \" -- 已設定為 {\" + localYoutubeVideoCCPrefs + \"}\";\r\n" .
@@ -74,7 +75,7 @@
 						"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoCCPrefs . "\";\r\n" .
 						"\t\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 						"\t\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
-							"\t\t\t\t\tnoteStr = \"目前設定為不自動嘗試載入字幕\";\r\n" .
+							"\t\t\t\t\tnoteStr = \"目前本機無字幕順序設定 (正使用預設值: " . $youtubeVideoCCPrefs . ")\";\r\n" .
 						"\t\t\t\t}\r\n" .
 						"\t\t\t\telse {\r\n" .
 							"\t\t\t\t\tnoteStr = \"目前嘗試載入字幕順序為: \" + localYoutubeVideoCCPrefs;\r\n" .
@@ -110,7 +111,7 @@
 					"\t\t\t\twriteStringToFile(dataFile, input);\r\n" .
 					"\t\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 					"\t\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
-						"\t\t\t\t\tmessage  = \" -- 已取消自動嘗試載入字幕\";\r\n" .
+						"\t\t\t\t\tmessage  = \" -- 已取消\";\r\n" .
 					"\t\t\t\t}\r\n" .
 					"\t\t\t\telse {\r\n" .
 						"\t\t\t\t\tmessage  = \" -- 已設定為 {\" + localYoutubeVideoCCPrefs + \"}\";\r\n" .
@@ -124,7 +125,7 @@
 						"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoCCPrefs . "\";\r\n" .
 						"\t\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 						"\t\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
-							"\t\t\t\t\tnoteStr = \"目前設定為不自動嘗試載入字幕\";\r\n" .
+							"\t\t\t\t\tnoteStr = \"目前本機無字幕順序設定 (正使用預設值: " . $youtubeVideoCCPrefs . ")\";\r\n" .
 						"\t\t\t\t}\r\n" .
 						"\t\t\t\telse {\r\n" .
 							"\t\t\t\t\tnoteStr = \"目前設定: \" + localYoutubeVideoCCPrefs;\r\n" .

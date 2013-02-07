@@ -337,15 +337,27 @@
 	// Explode the string to get the format preference
 	$formats = explode(',', $fmtPrefs);
 
+	// Default: <EMPTY>
+	$ccPrefs = '';
+
+	// If yv_cc_prefs is given in the url, use it
+	if (!empty($_GET['yv_cc_prefs'])) {
+		$ccPrefs = $_GET['yv_cc_prefs'];
+	}
+
 	// If the local file exists and contains a string whose length > 0, use it
 	$fileLocalYoutubeVideoCCPrefs = '/usr/local/etc/dvdplayer/ims_yv_cc_prefs.dat';
 	if (file_exists($fileLocalYoutubeVideoCCPrefs) &&
 		(strlen($localCCPrefs = local_file_get_contents($fileLocalYoutubeVideoCCPrefs)) > 0)) {
-		// Explode the string to get the cc preference
-		$ccPreferredLangs = explode(',', $localCCPrefs);
+		$ccPrefs = $localCCPrefs;
+	}
+
+	// Explode the string to get the cc preference
+	if (!empty($ccPrefs) && (strlen($ccPrefs) > 0)) {
+		$ccPreferredLangs = explode(',', $ccPrefs);
 	}
 	else {
-		$ccPreferredLangs = null;
+		unset($ccPreferredLangs);
 	}
 
 	// Two ways to get youtube videos

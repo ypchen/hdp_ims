@@ -3,7 +3,7 @@
 
 	$queryYear = $search;
 
-	$link = 'http://www.maplestage.net/drama/';
+	$link = 'http://www.maplestage.com/drama/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

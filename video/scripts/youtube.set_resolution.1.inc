@@ -16,6 +16,7 @@
 						'&amp;input_method='  . urlencode($inputMethod) .
 						'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 						'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+						'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
 						'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 						'&amp;query=1' .
 							',' . $site[0] .
@@ -32,7 +33,7 @@
 	$sites = array(
 		array('',
 			'取消本機解析度設定', 'youtube',
-			' -- 確認後將改為使用 ims 預設值 (' . $youtubeVideoFmtPrefs . ')'),
+			' -- 確認後將改為使用預設值 (' . $youtubeVideoFmtPrefs . ')'),
 		array('37,22,35,18,34,6,5',
 			'可接受最高解析度：1920x1080', 'youtube',
 			' -- 確認後將設定為: 37,22,35,18,34,6,5'),
@@ -68,7 +69,7 @@
 						"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoFmtPrefs . "\";\r\n" .
 						"\t\t\t\tlocalYoutubeVideoFmtPrefs = readStringFromFile(dataFile);\r\n" .
 						"\t\t\t\tif ((localYoutubeVideoFmtPrefs == null) || (localYoutubeVideoFmtPrefs == \"\")) {\r\n" .
-							"\t\t\t\t\tnoteStr = \"目前本機無解析度設定 (正使用 ims 預設值: " . $youtubeVideoFmtPrefs . ")\";\r\n" .
+							"\t\t\t\t\tnoteStr = \"目前本機無解析度設定 (正使用預設值: " . $youtubeVideoFmtPrefs . ")\";\r\n" .
 						"\t\t\t\t}\r\n" .
 						"\t\t\t\telse {\r\n" .
 							"\t\t\t\t\tnoteStr = \"目前本機解析度為: \" + localYoutubeVideoFmtPrefs;\r\n" .
@@ -118,7 +119,7 @@
 						"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoFmtPrefs . "\";\r\n" .
 						"\t\t\t\tlocalYoutubeVideoFmtPrefs = readStringFromFile(dataFile);\r\n" .
 						"\t\t\t\tif ((localYoutubeVideoFmtPrefs == null) || (localYoutubeVideoFmtPrefs == \"\")) {\r\n" .
-							"\t\t\t\t\tnoteStr = \"目前本機無解析度設定 (正使用 ims 預設值: " . $youtubeVideoFmtPrefs . ")\";\r\n" .
+							"\t\t\t\t\tnoteStr = \"目前本機無解析度設定 (正使用預設值: " . $youtubeVideoFmtPrefs . ")\";\r\n" .
 						"\t\t\t\t}\r\n" .
 						"\t\t\t\telse {\r\n" .
 							"\t\t\t\t\tnoteStr = \"目前本機解析度為: \" + localYoutubeVideoFmtPrefs;\r\n" .

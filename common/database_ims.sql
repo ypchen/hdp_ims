@@ -11,7 +11,7 @@ SET time_zone = "+08:00";
 DROP TABLE IF EXISTS `access`;
 CREATE TABLE IF NOT EXISTS `access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `user_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `history_ims` (
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `description` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `status` (`status`)
@@ -122,11 +122,12 @@ CREATE TABLE IF NOT EXISTS `log_request` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `mac` char(17) NOT NULL,
   `description` varchar(255) NOT NULL,
   `adult_lock` tinyint(4) NOT NULL DEFAULT '1',
   `adult_pass` varchar(64) NOT NULL DEFAULT '1234',
+  `note` varchar(4096) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `mac` (`mac`),
   KEY `status` (`status`)

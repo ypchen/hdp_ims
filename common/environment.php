@@ -125,6 +125,11 @@
 		$defaultYoutubeVideoFmtPrefs = $envVar;
 	}
 
+	// Default CC language preference
+	if (($envVar = @getenv('DEFAULT_YOUTUBE_VIDEO_CC_PREFS')) !== false) {
+		$defaultYoutubeVideoCCPrefs = $envVar;
+	}
+
 	// For multi-hosts deployment
 	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST')) !== false) {
 		$hostnameImsHost = $envVar;

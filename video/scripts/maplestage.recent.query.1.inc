@@ -1,5 +1,5 @@
 <?php
-	$link = 'http://www.maplestage.net/';
+	$link = 'http://www.maplestage.com/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

@@ -548,6 +548,7 @@
 				'&amp;input_method='  . urlencode($inputMethod) .
 				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
 				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 				'&amp;query=' . ($page-1) . ',';
 			if (isset($search)) {
@@ -586,6 +587,7 @@
 				'&amp;input_method='  . urlencode($inputMethod) .
 				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
+				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
 				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
 				'&amp;query=' . ($page+1) . ',';
 			if (isset($search)) {

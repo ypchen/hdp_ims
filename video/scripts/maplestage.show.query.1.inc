@@ -1,7 +1,7 @@
 <?php
 	include('15_4_columns.inc');
 
-	$link = 'http://www.maplestage.net/show/';
+	$link = 'http://www.maplestage.com/show/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

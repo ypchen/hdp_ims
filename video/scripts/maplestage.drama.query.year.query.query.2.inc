@@ -1,5 +1,5 @@
 <?php
-	$siteURLprefix = 'http://www.maplestage.net';
+	$siteURLprefix = 'http://www.maplestage.com';
 	foreach($videos as $video) {
 
 		$link  = trim(str_between($video, '" href="', '"'));

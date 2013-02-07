@@ -650,10 +650,10 @@
 				if ((inputNumCount == 0) ||
 						((inputNumCount == itemCountDigits) &amp;&amp;
 						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10,[數字]}+[放大]";
+					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10,[數字]}+[放大/重覆]";
 				}
 				else {
-					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10} [放大]播第 " + curNumVal + " 項";
+					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10} [放大/重覆]播第 " + curNumVal + " 項";
 				}
 				str;
 			</script>
@@ -722,7 +722,8 @@
 				runningHeadWidthPC = displayRunningHeadWidthPC - runningHeadWidthPC;
 				ret = "true";
 			}
-			else if ((selectClip == 1) &amp;&amp; (userInput == "zoom")) {
+			else if ((selectClip == 1) &amp;&amp;
+				((userInput == "zoom") || (userInput == "video_repeat") || (userInput == "video_abrepeat"))) {
 
 				selectClip = 0;
 				selectClipStatusWidthPC = 0;
@@ -895,7 +896,7 @@
 
 				selectClipTimeMark = pbCurInt;
 
-				selectClipStatusOne = "按 [放大] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
+				selectClipStatusOne = "按 [放大/重覆] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
 				selectClipStatusTwo = "現正播放 [" + now + "/" + itemCount + "] " + currentTitle;
 
 				ret = "true";

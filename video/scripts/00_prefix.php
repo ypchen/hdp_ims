@@ -13,6 +13,10 @@
 	else {
 		require('../../common/settings.php');
 	}
+	// local_settings.php overrides other settings.php
+	if (file_exists('../../common/local_settings.php')) {
+		require('../../common/local_settings.php');
+	}
 	// Environment variables, if exist, will override the settings written in PHP files.
 	// Heroku deployment can be done via setting the corresponding variables.
 	require('../../common/environment.php');
@@ -156,6 +160,9 @@
 			log_page($imsDBConn, $remoteIP, $myScriptName, $remoteIP);
 	}
 
+	// for debugging purpose
+	log_page($imsDBConn, $remoteIP, $_SERVER['REQUEST_URI'], $remoteIP);
+
 	$user_id = 0;
 
 	if ((strcmp($imsDirectory, 'hotfix') != 0) && (strcmp($imsDirectory, 'common') != 0)) {
@@ -205,4 +212,6 @@
 			}
 		}
 	}
+
+	header("Content-Type:text/xml; charset=utf-8");
 ?>

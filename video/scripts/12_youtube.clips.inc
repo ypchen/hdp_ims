@@ -49,6 +49,7 @@
 				// 不能用 ims 網站做解析，因為 youtube 會鎖 client IP
 				$link = $localhostYoutubeVideo . '?query=' . $id .
 							'&amp;yv_fmt_prefs=' . urlencode($youtubeVideoFmtPrefs) .
+							'&amp;yv_cc_prefs='  . urlencode($youtubeVideoCCPrefs) .
 							'&amp;yv_rmt_src='   . urlencode($youtubeVideoRemoteSource);
 
 				echo "\tlinkArray   = pushBackStringArray(linkArray, \"" . $link . "\");\r\n";

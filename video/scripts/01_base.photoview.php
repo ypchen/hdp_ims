@@ -88,21 +88,11 @@
 		setRefreshTime(200);
 	}
 	else {
-		if (history == 1) {
-			/* 最近瀏覽 */
-			dataFileThisPage = dataBrowse;
-		}
-		else if (history == 2) {
-			/* 最近觀看 */
-			dataFileThisPage = dataWatch;
-		}
-		else if (history == 3) {
-			/* 本地收藏 */
-			dataFileThisPage = dataFavorite;
-		}
-		else {
-			dataFileThisPage = "";
-		}
+		/* 最近瀏覽 history == 1 */
+		/* 最近觀看 history == 2 */
+		/* 本地收藏 history == 3 */
+
+		dataFileThisPage = "<?php echo $history_filename; ?>";
 
 		historyTips = " [快退]移上; [快進]移下; [紅]刪除項目; [黃]刪除全部;";
 
