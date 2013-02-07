@@ -163,10 +163,10 @@
 		在 heroku 上運行的範例網站 (heroku deployment)
 			<item>
 				<title>IMS: video</title>
-				<link>http://[HOSTNAME].herokuapp.com/video/scripts/siteList.php</link>
+				<link>http://[HOSTNAME].[DOMAIN]/video/scripts/siteList.php</link>
 				<mediaDisplay />
 			</item>
-		目前的 [HOSTNAME] 為 ims-hdp
+		目前的 [HOSTNAME] 為 ims-hdp 而 [DOMAIN] 為 cloudfor.info
 
 	4. 有關 youtube.video.php
 
