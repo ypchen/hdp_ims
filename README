@@ -23,48 +23,51 @@
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
-		A. 台灣蘋果動新聞 (連播、單播)
-		B. 楓林網
-		C. sugoideas
-		D. 卡提諾影音 (ck101)
-		E. TED Talks on TED / YouTube / podcast
-		F. YouTube 搜索與設定、頻道
+		A. netstartv
+		B. 台灣蘋果動新聞 (連播、單播)
+		C. 楓林網
+		D. sugoideas
+		E. 卡提諾影音 (ck101)
+		F. TED Talks on TED / YouTube / podcast
+		G. YouTube 搜索與設定、頻道
 			YouTube 搜索 (本機 hdp_input、播放機內建)
 			YouTube 字幕語言設定
 				字幕測試影片
 			YouTube 解析度設定
 				高清測試影片
-		G. 媒體新聞 on YouTube
+		H 媒體新聞 on YouTube
 			粵語新聞、台灣蘋果動新聞、半島電視新聞、台視、中視、華視、民視、公視、東森、中天、聯合新聞網
-		H. CNN 影音 podcast
-		I. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
-		J. 近三十個成人影片網站
+		I. CNN 影音 podcast
+		J. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
+		K. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
-		A. 台灣蘋果動新聞 (連播、單播)
+		A. netstartv
+				01 -> 02 -> 播放
+		B. 台灣蘋果動新聞 (連播、單播)
 				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 連續、單段)
-		B. 楓林網
+		C. 楓林網
 			a. 每日熱門、最新節目
 				01 -> 02 -> 播放
 			b. 綜藝節目、偶像戲劇
 				01 -> 02 -> 02 -> 播放
-		C. sugoideas
+		D. sugoideas
 				01 -> 02 -> 02 -> 播放
-		D. 卡提諾影音 (ck101)
+		E. 卡提諾影音 (ck101)
 				01 -> 02 -> 02 -> 播放
-		E. TED Talks on TED / YouTube / podcast
+		F. TED Talks on TED / YouTube / podcast
 			a. TED Talks on TED / YouTube
 				01 -> 02 -> 播放
 			b. podcast
 				01 -> podcast
-		F. YouTube 搜索與設定、頻道
+		G. YouTube 搜索與設定、頻道
 				01 -> 02 -> 播放
-		G. 媒體新聞 on YouTube
+		H. 媒體新聞 on YouTube
 				01 -> 02 -> 播放
-		H. CNN 影音 podcast
+		I. CNN 影音 podcast
 				01 -> podcast
-		I. IMS 搜索
+		J. IMS 搜索
 				01 -> HDPfans/HAOIMS 搜索各大站台
-		J. 近三十個成人影片網站
+		K. 近三十個成人影片網站
 				01 -> 01 -> 02 -> 播放
 				01 -> 02 -> 播放
 				01 -> podcast
@@ -81,7 +84,6 @@
 			* 敬請改用 v1.7 版之 youtube.video.php
 			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
 	14. [v2.0] 開始支援 heroku deployment
-	15. []
 
 使用
 	1. 直接放在本機使用
@@ -160,12 +162,11 @@
 
 		楓林網、sugoideas、TED Talks 中文字幕版等 back-end 為 YouTube 則須參考下點說明
 
-		在 heroku 上運行的範例網站 (heroku deployment)
-			<item>
-				<title>IMS: video</title>
-				<link>http://[HOSTNAME].[DOMAIN]/video/scripts/siteList.php</link>
-				<mediaDisplay />
-			</item>
+		<item>
+			<title>IMS: video</title>
+			<link>http://[HOSTNAME].[DOMAIN]/video/scripts/siteList.php</link>
+			<mediaDisplay />
+		</item>
 		目前的 [HOSTNAME] 為 ims-hdp 而 [DOMAIN] 為 cloudfor.info
 
 	4. 有關 youtube.video.php

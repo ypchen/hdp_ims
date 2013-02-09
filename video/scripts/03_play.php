@@ -610,7 +610,7 @@
 		offsetXPC="10" offsetYPC="64"
 		widthPC="80" heightPC="24">
 
-		<bar offsetXPC="45" offsetYPC="46"
+		<bar offsetXPC="40" offsetYPC="46"
 			widthPC="55" heightPC="10"
 			barColor="200:200:200"
 			progressColor="26:129:211"
@@ -618,7 +618,7 @@
 			cornerRounding="10" />
 
 		<text align="left" fontSize="20"
-			offsetXPC="3" offsetYPC="0"
+			offsetXPC="-1" offsetYPC="0"
 			widthPC="97" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
@@ -627,7 +627,7 @@
 		</text>
 
 		<text align="left" fontSize="20"
-			offsetXPC="5" offsetYPC="40"
+			offsetXPC="1" offsetYPC="40"
 			widthPC="40" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
@@ -643,17 +643,17 @@
 		</text>
 
 		<text align="left" fontSize="20"
-			offsetXPC="3" offsetYPC="80"
+			offsetXPC="-1" offsetYPC="80"
 			widthPC="97" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
 				if ((inputNumCount == 0) ||
 						((inputNumCount == itemCountDigits) &amp;&amp;
 						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10,[數字]}+[放大/重覆]";
+					str = "[藍]字幕 | [信息] | {[上下頁,↔]±1,[↕]±10,[數字]}+[放大/A-B]";
 				}
 				else {
-					str = "[藍]字幕 | [信息] | [上下頁]±1 | {[↔]±1,[↕]±10} [放大/重覆]播第 " + curNumVal + " 項";
+					str = "[藍]字幕 | [信息] | {[上下頁,↔]±1,[↕]±10} [放大/A-B]播第 " + curNumVal + " 項";
 				}
 				str;
 			</script>
@@ -896,7 +896,7 @@
 
 				selectClipTimeMark = pbCurInt;
 
-				selectClipStatusOne = "按 [放大/重覆] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
+				selectClipStatusOne = "按 [放大/A-B] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
 				selectClipStatusTwo = "現正播放 [" + now + "/" + itemCount + "] " + currentTitle;
 
 				ret = "true";
