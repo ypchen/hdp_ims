@@ -160,9 +160,6 @@
 			log_page($imsDBConn, $remoteIP, $myScriptName, $remoteIP);
 	}
 
-	// for debugging purpose
-	log_page($imsDBConn, $remoteIP, $_SERVER['REQUEST_URI'], $remoteIP);
-
 	$user_id = 0;
 
 	if ((strcmp($imsDirectory, 'hotfix') != 0) && (strcmp($imsDirectory, 'common') != 0)) {

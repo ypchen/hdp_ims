@@ -4,7 +4,7 @@
 	echo "<title>$myBaseName: 導覽選單</title>\r\n\r\n";
 
 	if ($pass_check) {
-		$siteURLprefix = '';
+		$siteURLprefix = 'http://v.netstartv.com';
 		foreach($videos as $video) {
 			$title = convertUnicodePoints(trim(str_between($video, '">', '</a>')));
 			$data  = '';

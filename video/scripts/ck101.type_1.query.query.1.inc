@@ -10,7 +10,7 @@
 	else if (strpos($html, '<span class="current">' . strval($page) . '</span><span class="disabled"> &#187;</span>') !== false)
 		$pageMax = $page;
 
-	$videos = explode('<dt id="videoright"', ($htmlToExplode = trim(str_between($html, '<h2 class="cover_main-title">', '<fb:title>'))));
+	$videos = explode('<li>', ($htmlToExplode = trim(str_between($html, '<ul class="video', '</ul>'))));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

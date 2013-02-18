@@ -618,6 +618,13 @@
 			cornerRounding="10" />
 
 		<text align="left" fontSize="20"
+			offsetXPC="-1" offsetYPC="-40"
+			widthPC="97" heightPC="24"
+			backgroundColor="-1:-1:-1" foregroundColor="255:255:150">
+			請於視訊順利播放後再進行選集或選段
+		</text>
+
+		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="0"
 			widthPC="97" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
@@ -650,10 +657,10 @@
 				if ((inputNumCount == 0) ||
 						((inputNumCount == itemCountDigits) &amp;&amp;
 						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "[藍]字幕 | [信息] | {[上下頁,↔]±1,[↕]±10,[數字]}+[放大/A-B]";
+					str = "[藍]字幕 | [信息] | {[上下頁/↔]±1,[↕]±10,[數字]}+[放大/A-B]";
 				}
 				else {
-					str = "[藍]字幕 | [信息] | {[上下頁,↔]±1,[↕]±10} [放大/A-B]播第 " + curNumVal + " 項";
+					str = "[藍]字幕 | [信息] | {[上下頁/↔]±1,[↕]±10} [放大/A-B]播第 " + curNumVal + " 項";
 				}
 				str;
 			</script>

@@ -16,6 +16,9 @@
 				$link .= '/1';
 			if (strpos($link, $siteURLprefix) === false)
 				$link = $siteURLprefix . $link;
+			$link = str_replace('/tvshow',	'/tv/lists/2', $link);
+			$link = str_replace('/arts',	'/tv/lists/1', $link);
+			$link = str_replace('/comic',	'/tv/lists/3', $link);
 			$image = '';
 			$note  = '';
 			$extra = $itemNo;
@@ -31,11 +34,6 @@
 				// 人氣排行
 				$title = $titleOrig . ' [排序: 人氣排行]';
 				$link = $linkOrig . '/hot';
-				include('04_query.inc');
-
-				// 最新發佈
-				$title = $titleOrig . ' [排序: 最新發佈]';
-				$link = $linkOrig . '/new';
 				include('04_query.inc');
 
 				// 最新上架

@@ -12,7 +12,7 @@
 	else if (strpos($html, '<span class="current">' . strval($page) . '</span><span class="disabled"> &#187;</span>') !== false)
 		$pageMax = $page;
 
-	$videos = explode('<div class="album-img">', ($htmlToExplode = $html));
+	$videos = explode('<li>', ($htmlToExplode = str_between($html, '<ul class="albumList', '</ul>')));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

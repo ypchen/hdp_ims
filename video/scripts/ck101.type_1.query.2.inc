@@ -9,9 +9,9 @@
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, ' src="', '"'));
+		$image  = trim(str_between($video, '<img lz_src="', '"'));
 		$note   = array();
-		$note[] = trim(str_between($video, '<li class="cast">', '</li>'));
+		$note[] = trim(str_between($video, '<p>', '</p>'));
 		$note[] = '';
 		$note[] = '';
 		$note[] = '';

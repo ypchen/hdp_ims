@@ -4,12 +4,12 @@
 	$siteURLprefix = 'http://video.ck101.com';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, '" href="', '"'));
+		$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
 		$title = trim(str_between($video, ' title="', '"'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, '<img src="', '"'));
+		$image  = trim(str_between($video, ' lz_src="', '"'));
 		$note   = array();
 		$note[] = '';
 		$note[] = '';

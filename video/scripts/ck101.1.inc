@@ -5,7 +5,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('</a></li>', ($htmlToExplode = str_between($html, '<div class="menu"', '</div>')));
+	$videos = explode('</li>', ($htmlToExplode = str_between($html, '<div class="menu"', '</div>')));
 	unset($videos[count($videos)-1]);	// Suffix
 	unset($videos[count($videos)-1]);	// 成人短片
 	unset($videos[count($videos)-1]);	// 成人影片
