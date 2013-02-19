@@ -2,7 +2,13 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('"video-detail-title"', ($htmlToExplode = $html));
+	$title = trim(
+				str_replace('卡提諾影音', '',
+					str_between($html, '<title>', '</title>'))
+			);
+	$title = convertUnicodePoints($title);
+
+	$videos = explode('<video', ($htmlToExplode = str_between($html, '<div class="flashBox"', '</div>')));
 	unset($videos[0]);
 	$videos = array_values($videos);
 
@@ -14,12 +20,9 @@
 
 	$siteURLprefix = '';
 	foreach($videos as $video) {
-		$title = trim(str_between($video, ' title="', '"'));
-		$title = convertUnicodePoints($title);
 		$titles[] = $title;
 
-		$v = explode('<div class="detailed-video4"', $video);
-		$link  = $siteURLprefix . trim(str_between($v[1], ' src="', '"'));
+		$link  = $siteURLprefix . trim(str_between($video, '<source src="', '"'));
 		$links[] = $link;
 	}
 
