@@ -6,7 +6,7 @@
 		$imsUseRedir = booleanValuefromString($envVar);
 	}
 	if (($envVar = @getenv('IMS_REDIR_TO')) !== false) {
-		$imsRedirTo = $envVar; 
+		$imsRedirTo = $envVar;
 	}
 
 	// Time zone
@@ -118,7 +118,7 @@
 	if (($envVar = @getenv('DEFAULT_LOCALHOST_YOUTUBE_VIDEO')) !== false) {
 		$defaultLocalhostYoutubeVideo = $envVar;
 	}
-	
+
 	// Default format preference
 	// http://en.wikipedia.org/wiki/YouTube
 	if (($envVar = @getenv('DEFAULT_YOUTUBE_VIDEO_FMT_PREFS')) !== false) {
@@ -130,6 +130,8 @@
 		$defaultYoutubeVideoCCPrefs = $envVar;
 	}
 
+	// --------------------
+
 	// For multi-hosts deployment
 	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST')) !== false) {
 		$hostnameImsHost = $envVar;
@@ -137,10 +139,13 @@
 	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST_THIS')) !== false) {
 		$hostnameImsHostThis = $envVar;
 	}
+	if (($envVar = @getenv('IMS_HOSTNAME_IMS_HOST_FALLBACK')) !== false) {
+		$hostnameImsHostFallback = $envVar;
+	}
 
 	// IMS full version
 	// tag: commit: shortCommit
 	if (($envVar = @getenv('IMS_FULL_VERSION')) !== false) {
 		$imsFullVersion = $envVar;
-	}	
+	}
 ?>
