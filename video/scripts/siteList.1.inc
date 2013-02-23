@@ -23,7 +23,6 @@
 			"\t\t" . myLogo('history') . "\r\n" .
 			"\t\t<mediaDisplay name=\"threePartsView\" />\r\n" .
 		"\t</item>\r\n\r\n";
-	$itemTotal ++;
 
 	$sites = array(
 		array('netstartv',			'中文節目匯總　 (netstartv)',					'※ 需安裝 youtube.video.php'),

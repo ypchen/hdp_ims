@@ -9,7 +9,17 @@
 	$itemXML   .=
 		"\t<item>\r\n"  .
 			"\t\t<title>瀏覽觀看與收藏</title>\r\n" .
-			"\t\t<link>"  . $scriptsURLprefix . '/history.php?history=1000&amp;uid=' . $user_id . "</link>\r\n" .
+			"\t\t<link>"  . $scriptsURLprefix  . '/history.php?uid=' . $user_id .
+				'&amp;input_method='           . urlencode($inputMethod) .
+				'&amp;youtube_video='          . urlencode($localhostYoutubeVideo) .
+				'&amp;yv_fmt_prefs='           . urlencode($youtubeVideoFmtPrefs) .
+				'&amp;yv_cc_prefs='            . urlencode($youtubeVideoCCPrefs) .
+				'&amp;yv_rmt_src='             . urlencode($youtubeVideoRemoteSource) .
+				'&amp;history_peer_path='      . urlencode($history_peer_path) .
+				'&amp;history_peer_path_supp=' . urlencode($history_peer_path_supp) .
+				'&amp;history_peer_name='      . urlencode($history_peer_name) .
+				'&amp;history_peer_desc='      . urlencode($history_peer_desc) .
+				"</link>\r\n" .
 			"\t\t" . myLogo('history') . "\r\n" .
 			"\t\t<mediaDisplay name=\"threePartsView\" />\r\n" .
 		"\t</item>\r\n\r\n";
