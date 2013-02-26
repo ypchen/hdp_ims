@@ -4,7 +4,13 @@
 	$siteURLprefix = 'http://video.ck101.com';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
+		// Remove the title part in the link such that "next page" may work
+		$link_href = trim(str_between($video, ' href="', '"'));
+		$link_components = explode('/', $link_href);
+		$title_components = explode('-', $link_components[($lc_last = (count($link_components)-1))]);
+		$link_components[$lc_last] = $title_components[0];
+
+		$link  = $siteURLprefix . implode('/', $link_components);
 		$title = trim(str_between($video, ' title="', '"'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
