@@ -8,13 +8,13 @@
 	else
 		$pageMax = $page+1;
 
-	$videos = explode('<section class="video clear', ($htmlToExplode = str_between($html, '<div class="videos clear', '<nav class="pagina')));
+	$videos = explode('video"', ($htmlToExplode = str_between($html, "<ul class='unstyled row-fluid'>", '</ul>')));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 
 	$itemTotal = count($videos);
 	include('05_check.base.inc');
 
-	$myImgWidth   = 18;
+	$myImgWidth   = 20;
 	$myImgHeight  = 40;
 ?>
