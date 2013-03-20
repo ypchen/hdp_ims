@@ -9,7 +9,9 @@
 
 	// Get the content of the download dialog
 	$link = 'http://www.ted.com' .
-			rtrim(trim(str_between($html, "download_dialog.load('", "'")), '/');
+				'/download/links/slug/' .
+					trim(str_between($html, '"mediaSlug":"', '",')) .
+				'/type/talks/ext/mp4';
 	$htmlDownload = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
