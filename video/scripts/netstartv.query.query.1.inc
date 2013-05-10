@@ -8,7 +8,17 @@
 	else
 		$pageMax = $page+1;
 
-	$videos = explode('video"', ($htmlToExplode = str_between($html, "<ul class='unstyled row-fluid'>", '</ul>')));
+	$verLayout = '';
+	if (strpos($html, "<ul class='unstyled row-fluid'>") !== false) {
+		$verLayout = 'v.2.1.8.5';
+		// New format from v2.1.8.5
+		$videos = explode('video"', ($htmlToExplode = str_between($html, "<ul class='unstyled row-fluid'>", '</ul>')));
+	}
+	else {
+		$verLayout = 'v2.1.8.4';
+		// Old format before v2.1.8.5
+		$videos = explode('<section class="video clear', ($htmlToExplode = str_between($html, '<div class="videos clear', '<nav class="pagina')));
+	}
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

@@ -43,6 +43,9 @@
 		$imsDBTimeZone = $envVar;
 	}
 	// Database configuration
+	// Only MySQL is supported
+	// Two methods -- Method 2 overrides method 1
+	// 1. Specify each item
 	if (($envVar = @getenv('IMS_DB_HOST')) !== false) {
 		$imsDBHost = $envVar;
 	}
@@ -55,9 +58,20 @@
 	if (($envVar = @getenv('IMS_DB_PASS')) !== false) {
 		$imsDBPass = $envVar;
 	}
+	// 2. Setup with an URL
+	//		E.g., mysql://dbuser:dbpass@dbhost/dbname
+	if (($envVar = @getenv('IMS_DB_URL')) !== false) {
+		$imsDBURL = $envVar;
+	}
+	// Using another environment variable to get the DB URL
+	if (($envVar = @getenv('IMS_DB_URL_ENV_VAR')) !== false) {
+		if (($envVar = @getenv($envVar)) !== false) {
+			$imsDBURL = $envVar;
+		}
+	}
 	// Remove old records
 	if (($envVar = @getenv('IMS_DB_TO_REMOVE')) !== false) {
-		$imsDBToRemove = $envVar;
+		$imsDBToRemove = booleanValuefromString($envVar);
 	}
 	if (($envVar = @getenv('IMS_DB_TO_REMOVE_API_KEY')) !== false) {
 		$imsDBToRemoveAPIKey = $envVar;
@@ -76,6 +90,11 @@
 	// Tempo DB key for recording all requests from distinct ips
 	if (($envVar = @getenv('IMS_TRACK_REQ_TEMPO_KEY_DISTINCT_IP')) !== false) {
 		$imsTrackReqTempoKeyDistinctIP = $envVar;
+	}
+
+	// General api key
+	if (($envVar = @getenv('IMS_API_KEY')) !== false) {
+		$imsAPIKey = $envVar;
 	}
 
 	// Use curl (or not) to get remote contents

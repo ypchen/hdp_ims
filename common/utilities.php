@@ -6,6 +6,8 @@
 
 		if (!empty($imsUseEmail)) {
 			$to = $imsAdminEmail;
+			// Make the message body Unix-compliant
+			$body = str_replace("\r\n", "\n", $body);
 			if (!empty($imsOnMailGun)) {
 				$ch = curl_init();
 
@@ -30,7 +32,7 @@
 			}
 			else {
 				$headers = "From: $imsBotEmail";
-				return mail($to, $subject, $body, $headers);				
+				return mail($to, $subject, $body, $headers);
 			}
 		}
 		else {
@@ -275,7 +277,7 @@
 	function str_between($string, $start, $end) {
 		if (($ini = strpos($string, $start)) === false)
 			return '';
-		$ini += strlen($start);			
+		$ini += strlen($start);
 		$len = ($endExists = strpos($string, $end, $ini)) - $ini;
 		if ($endExists === false)
 			return substr($string, $ini);
@@ -435,7 +437,7 @@
 		return $ip;
 	}
 	/* If your visitor comes from proxy server you have use another function to get a real IP address: */
-	function getRealIPAddress() {   
+	function getRealIPAddress() {
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			// Check ip from share internet
 			$ip = $_SERVER['HTTP_CLIENT_IP'];

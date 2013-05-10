@@ -136,6 +136,14 @@
 
 	$imsDBConn = null;
 	if (!empty($imsUseDB)) {
+		if (!empty($imsDBURL)) {
+			$dbConfig = parse_url($imsDBURL);
+			$imsDBHost = $dbConfig['host'];
+			$imsDBUser = $dbConfig['user'];
+			$imsDBPass = $dbConfig['pass'];
+			// Skip the leading '/'
+			$imsDBName = substr($dbConfig['path'], 1);
+		}
 		$imsDBConn = mysql_connect($imsDBHost, $imsDBUser, $imsDBPass);
 		if (!$imsDBConn) {
 			$condition = '(!$imsDBConn)';

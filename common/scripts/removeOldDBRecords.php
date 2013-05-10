@@ -8,6 +8,7 @@
 	if ((!isset($_GET['apikey'])) ||
 		(strcmp($apikey = urldecode($_GET['apikey']), $imsDBToRemoveAPIKey) != 0))
 		exit();
+
 	// DB enabled?
 	if (empty($imsUseDB))  exit();
 	if (empty($imsDBConn)) exit();

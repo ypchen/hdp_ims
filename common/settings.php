@@ -23,10 +23,16 @@
 	$imsUseDB                      = false;
 	$imsDBTimeZone                 = '+08:00';
 	// Database configuration
+	// Only MySQL is supported
+	// Two methods -- Method 2 overrides method 1
+	// 1. Specify each item
 	$imsDBHost                     = 'yourDB_host';
 	$imsDBName                     = 'yourDB_name';
 	$imsDBUser                     = 'yourDB_username';
 	$imsDBPass                     = 'yourDB_password';
+	// 2. Setup with an URL
+	//		E.g., mysql://dbuser:dbpass@dbhost/dbname
+	$imsDBURL                      = '';
 	// Remove old records
 	$imsDBToRemove                 = '6 MONTH';
 	$imsDBToRemoveAPIKey           = 'Key you specified';
@@ -37,6 +43,9 @@
 	$imsTrackReqTempoKeyAll        = 'requests_all';
 	// Tempo DB key for recording all requests from distinct ips
 	$imsTrackReqTempoKeyDistinctIP = 'requests_distinct_ip';
+
+	// General api key
+	$imsAPIKey                     = 'Key you specified';
 
 	// Use curl (or not) to get remote contents
 	$imsUseCurl = true;
