@@ -15,7 +15,7 @@
 	notification_email_text(
 		'IMS email test',
 		'$_SERVER["HTTP_HOST"] = ' . $_SERVER["HTTP_HOST"] .
-		'$myScriptName = ' . $myScriptName .
+			"\r\n" . '$myScriptName = ' . $myScriptName .
 			"\r\n" . '$ip = ' . $remoteIP
 	);
 ?>

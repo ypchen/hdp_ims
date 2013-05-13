@@ -16,9 +16,9 @@
 				$link .= '/1';
 			if (strpos($link, $siteURLprefix) === false)
 				$link = $siteURLprefix . $link;
-			$link = str_replace('/tvshow',	'/tv/lists/2', $link);
-			$link = str_replace('/arts',	'/tv/lists/1', $link);
-			$link = str_replace('/comic',	'/tv/lists/3', $link);
+			$link = str_replace('/tvshow',	'/tv/lists/2/7', $link);
+			$link = str_replace('/arts',	'/tv/lists/1/2', $link);
+			$link = str_replace('/comic',	'/tv/lists/3/0', $link);
 			$image = '';
 			$note  = '';
 			$extra = $itemNo;

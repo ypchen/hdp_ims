@@ -6,6 +6,13 @@
 	if ($pass_check) {
 		$siteURLprefix = 'http://v.netstartv.com';
 		foreach($videos as $video) {
+
+			if (strpos($video, 'class="dropdown"') !== false)
+				continue;
+
+			if (strpos($video, 'role="presentation"') !== false)
+				continue;
+
 			$title = convertUnicodePoints(trim(str_between($video, '">', '</a>')));
 			$data  = '';
 			$link  = $siteURLprefix . trim(str_between($video, 'href="', '"'));
