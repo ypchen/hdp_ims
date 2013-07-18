@@ -1,6 +1,6 @@
 <?php
-	// 153 = 15.3 seconds
-	$tedSubtitleDelay = 153;
+	// 115 = 11.5 seconds
+	$tedSubtitleDelay = 115;
 	$tedFinalDuration = 100;
 
 	// Get the talk page
@@ -69,17 +69,43 @@
 
 			$textLines = explode("\n", $text);
 			foreach ($textLines as $textLine) {
-				$dataCount ++;
+
+				$textLineWidthLimit = 45;
+				$textLineWraps = array();
+
+				if (strlen($textLine) > $textLineWidthLimit) {
+					$words = explode(' ', $textLine);
+					$oneLine = array();
+					$oneLineLength = 0;
+					foreach ($words as $word) {
+						if ((($wordLength = strlen($word)) + $oneLineLength) > $textLineWidthLimit) {
+							$textLineWraps[] = implode(' ', $oneLine);
+							$oneLine = array();
+							$oneLineLength = 0;
+						}
+						$oneLine[] = $word;
+						$oneLineLength += $wordLength;
+					}
+					if (count($oneLine) > 0)
+						$textLineWraps[] = implode(' ', $oneLine);
+				}
+				else
+					$textLineWraps[] = $textLine;
+
+				foreach ($textLineWraps as $textLineWrap) {
+
+					$dataCount ++;
 ?>
 	ccDataStart = pushBackStringArray(ccDataStart, "<?php echo strval($start); ?>");
 	ccDataEnd = pushBackStringArray(ccDataEnd, "<?php echo strval($end); ?>");
-	ccDataText = pushBackStringArray(ccDataText, "<?php echo str_replace('"', '\"', $textLine); ?>");
+	ccDataText = pushBackStringArray(ccDataText, "<?php echo str_replace('"', '\"', $textLineWrap); ?>");
 <?php
+				}
 			}
 		}
-		// 'Update the data count
-		$dataCount ++;
 
+		// Update the data count
+		$dataCount ++;
 		$ccStatus = '';
 ?>
 	ccDataStart = pushBackStringArray(ccDataStart, "864000");

@@ -81,7 +81,7 @@
 		function yp_str_between_2_1($string, $start, $end) {
 			if (($ini = strpos($string, $start)) === false)
 				return '';
-			$ini += strlen($start);			
+			$ini += strlen($start);
 			$len = ($endExists = strpos($string, $end, $ini)) - $ini;
 			if ($endExists === false)
 				return substr($string, $ini);
@@ -287,8 +287,8 @@
 	// 'query' is given.
 	$id = $_GET['query'];
 
-	// It's a dailymotion request
 	if (strcmp($id, 'site_dailymotion') == 0) {
+		// It's a dailymotion request
 		// 'link' must be given
 		$link = $_GET['link'];
 		$html = yp_file_get_contents_1_7($link);
@@ -299,6 +299,40 @@
 		) {
 			$link = str_replace('\/', '/', $link);
 			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
+
+			// Write the extraInfo file
+			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
+			fwrite($fileExtraInfo, $extraInfo);
+			fclose($fileExtraInfo);
+
+			// Return the video stream
+			header('Location: ' . $link);
+		}
+		else if (strlen($link = trim(yp_str_between_2_1($html, '"sequence":"', '"'))) > 0) {
+			$link = urldecode(trim(yp_str_between_2_1(urldecode($link), '"video_url":"', '"')));
+			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
+
+			// Write the extraInfo file
+			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
+			fwrite($fileExtraInfo, $extraInfo);
+			fclose($fileExtraInfo);
+
+			// Return the video stream
+			header('Location: ' . $link);
+		}
+		return;
+	}
+	else if (strcmp($id, 'site_56') == 0) {
+		// It's a 56.com request
+		// 'link' must be given
+		$link = $_GET['link'];
+		$html = yp_file_get_contents_1_7($link);
+
+		if (strpos($html, '"rfiles":') !== false) {
+			$video_data = json_decode ($html, true);
+			// Use the first one
+			$link = $video_data['info']['rfiles'][0]['url'];
+			$extraInfo = 'type: ' . $video_data['info']['rfiles'][0]['type'];
 
 			// Write the extraInfo file
 			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
@@ -369,6 +403,13 @@
 	// Try the first way
 	$link = 'http://www.youtube.com/watch?v=' . $id;
 	$html = yp_file_get_contents_1_7($link);
+
+	// This video is unavailable
+	if (strpos($html, 'id="unavailable-message" class="message">') !== false) {
+		header('HTTP/1.1 410 Error');
+		header('Warning: ' . trim(yp_str_between_2_1($html, 'id="unavailable-message" class="message">', '</h1>')));
+		return;
+	}
 
 	if (strpos($html, 'verify_age') !== false) {
 		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;

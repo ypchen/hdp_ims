@@ -161,6 +161,8 @@
 		pbTimeCount = 0;
 
 		pbCurTick = 0;
+
+		pbCurTickShift = 0;
 	}
 	else {
 		pbMaxInt = Integer(pbMax);
@@ -190,6 +192,8 @@
 		}
 
 		pbCurTick = Add(Integer(pbCurInt * 10), pbTimeCount);
+
+		pbCurTick = Add(pbCurTick, pbCurTickShift);
 	}
 
 	if (ccDataCount &gt; 0) {
@@ -683,17 +687,36 @@
 				postMessage("return");
 				ret = "true";
 			}
-			else if (userInput == "option_blue") {
-				/* Toggle the closed caption display */
-				ccTextWidthPC = 100 - ccTextWidthPC;
+			else if (
+				(userInput == "option_blue") ||
+				(userInput == "option_red") ||
+				(userInput == "option_green") ||
+				(userInput == "option_yellow")
+			) {
+				if (userInput == "option_blue") {
+					/* Toggle the closed caption display */
+					ccTextWidthPC = 100 - ccTextWidthPC;
+				}
+				else if (userInput == "option_red") {
+					/* Delay */
+					pbCurTickShift = Minus(pbCurTickShift, 1);
+				}
+				else if (userInput == "option_green") {
+					/* Speedup */
+					pbCurTickShift = Add(pbCurTickShift, 1);
+				}
+				else {
+					/* Reset */
+					pbCurTickShift = 0;
+				}
 
 				if (ccDataCount &gt; 0) {
 					if (ccTextWidthPC == 0) {
-						showCCStatus = "字幕：隱藏";
+						showCCStatus = "字幕：隱藏 -- 時移(0.1s)：" + pbCurTickShift;
 						showCCStatusColor = "";
 					}
 					else {
-						showCCStatus = "字幕：顯示";
+						showCCStatus = "字幕：顯示 -- 時移(0.1s)：" + pbCurTickShift;
 						showCCStatusColor = "";
 					}
 				}

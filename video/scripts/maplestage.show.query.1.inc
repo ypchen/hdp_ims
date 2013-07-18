@@ -5,9 +5,9 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlBody = explode(' id="show_table"', $html);
+	$htmlBody = explode('<ul class="yearS', $html);
 
-	$videos = explode('<tr>', ($htmlToExplode = trim(str_between($htmlBody[1], '<tbody>', '</tbody>'))));
+	$videos = explode('<div>', ($htmlToExplode = trim(str_between($htmlBody[1], 'orting">', '</ul>'))));
 	unset($videos[0]);
 	$videos = array_values($videos);
 
