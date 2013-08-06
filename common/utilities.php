@@ -56,31 +56,38 @@
 			//end changes
 			$url_redir_parsed = parse_url($url_redir);
 			if (isset($url_redir_parsed)) {
-				// replace the component for redir
-				foreach ($url_redir_parsed as $k => $v) {
-					$url_array[$k] = $v;
+				// No modification on a valud url
+				if (isset($url_redir_parsed['scheme']) && isset($url_redir_parsed['host'])) {
+					$url = $url_redir;
+					$url_array = $url_redir_parsed;
 				}
-				if (isset($url_array['scheme']))
-					$url = $url_array['scheme'];
-				else
-					$url = 'http';
-				$url .= '://';
-				if (isset($url_array['user']))
-					$url .= $url_array['user'];
-				if (isset($url_array['pass']))
-					$url .= ':' . $url_array['pass'];
-				if (isset($url_array['user']))
-					$url .= '@' . $url_array['host'];
-				else
-					$url .= $url_array['host'];
-				if (isset($url_array['port']))
-					$url .= ':' . $url_array['port'];
-				if (isset($url_array['path']))
-					$url .= $url_array['path'];
-				if (isset($url_array['query']))
-					$url .= '?' . $url_array['query'];
-				if (isset($url_array['fragment']))
-					$url .= '#' . $url_array['fragment'];
+				else {
+					// replace the component for redir
+					foreach ($url_redir_parsed as $k => $v) {
+						$url_array[$k] = $v;
+					}
+					if (isset($url_array['scheme']))
+						$url = $url_array['scheme'];
+					else
+						$url = 'http';
+					$url .= '://';
+					if (isset($url_array['user']))
+						$url .= $url_array['user'];
+					if (isset($url_array['pass']))
+						$url .= ':' . $url_array['pass'];
+					if (isset($url_array['user']))
+						$url .= '@' . $url_array['host'];
+					else
+						$url .= $url_array['host'];
+					if (isset($url_array['port']))
+						$url .= ':' . $url_array['port'];
+					if (isset($url_array['path']))
+						$url .= $url_array['path'];
+					if (isset($url_array['query']))
+						$url .= '?' . $url_array['query'];
+					if (isset($url_array['fragment']))
+						$url .= '#' . $url_array['fragment'];
+				}
 				curl_setopt($ch, CURLOPT_URL, $url);
 				$redirects ++;
 				return curl_redirect_exec($ch, $url_array, $redirects);

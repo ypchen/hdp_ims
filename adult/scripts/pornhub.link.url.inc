@@ -5,12 +5,19 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$link = trim(urldecode(str_between($html, '"video_url":"', '"')));
+	$link = '';
+	$quality = array('"quality_480p":"', '"quality_240p":"', '"quality_180p":"');
+	foreach ($quality as $q) {
+		if (strpos($html, $q) !== false) {
+			$link = urldecode(str_between($html, $q, '"'));
+			break;
+		}
+	}
 
-	$encrypted = trim(urldecode(str_between($html, '"encrypted":', ',')));
+	$encrypted = urldecode(str_between($html, '"encrypted":', ','));
 	if (strcmp($encrypted, 'true') == 0) {
-		$key  = trim(urldecode(str_between($html, '"video_title":"', '"')));
-		$link = trim(urldecode(AesCtr::decrypt($link, $key, 256)));
+		$key  = urldecode(str_between($html, '"video_title":"', '"'));
+		$link = urldecode(AesCtr::decrypt($link, $key, 256));
 	}
 
 	$link = str_replace('&', '&amp;', $link);

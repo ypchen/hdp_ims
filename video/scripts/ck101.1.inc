@@ -17,8 +17,8 @@
 	unset($videos[count($videos)-1]);	// 影視
 	unset($videos[count($videos)-1]);	// 新聞
 	unset($videos[count($videos)-1]);	// 排行榜
-	unset($videos[count($videos)-1]);	// 專題
-	unset($videos[count($videos)-1]);	// 微電影
+//	unset($videos[count($videos)-1]);	// 專題
+//	unset($videos[count($videos)-1]);	// 微電影
 	unset($videos[0]);	// Prefix + 首頁
 	$videos = array_values($videos);
 

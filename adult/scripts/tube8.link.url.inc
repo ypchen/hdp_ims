@@ -7,7 +7,7 @@
 
 	$link = trim(str_replace('\/', '/', str_between($html, '"video_url":"', '"')));
 
-	$encrypted = trim(str_between($html, '"encrypted":', '}'));
+	$encrypted = trim(str_between($html, '"encrypted":', ','));
 	if (strcmp($encrypted, 'true') == 0) {
 		$key  = trim(str_replace('\/', '/', str_between($html, '"video_title":"', '"')));
 		$link = trim(urldecode(AesCtr::decrypt($link, $key, 256)));

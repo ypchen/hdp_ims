@@ -5,7 +5,7 @@
 	if ($pass_check) {
 		$siteURLprefix = '';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, 'videos">', '</a></strong>'));
+			$title = trim(str_between($video, '\']);">', '</a></strong>'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
 			$link  = $siteURLprefix . trim(str_between($video, '<strong><a href="', '"'));

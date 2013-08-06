@@ -2,7 +2,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$link = trim(urldecode(str_between($html, "\t" . 's1.addVariable("file","', '"')));
+	$link = trim(urldecode(str_between($html, '.addVariable("file", "', '"')));
 	$link = str_replace('&', '&amp;', $link);
 	include('05_check.link.inc');
 

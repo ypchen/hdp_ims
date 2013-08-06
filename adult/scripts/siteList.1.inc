@@ -34,7 +34,7 @@
 		array('penthousevideos', ''),
 		array('pornhub', ''),
 		array('pornomovies', ''),
-		array('pornrabbit', ''),
+//		array('pornrabbit', ''),
 		array('sexbot', ''),
 		array('tjoob', ' (無法選時)'),
 		array('tube8', ''),
@@ -79,7 +79,7 @@
 		array('suicidegirls', 'Suicide Girls', 'http://suicidegirls.com/rss/video/'),
 		array('french_maid_tv', 'French Maid TV', 'http://feeds.feedburner.com/FrenchMaidTV'),
 		array('playboy', 'Playboy Video-Podcast (德國)', 'http://www.playboy.de/cybercastVID.xml'),
-		array('mydirtyipods', 'My Dirty Ipods', 'http://www.mydirtyipods.com/Ipod/IpodClips.xml'),
+//		array('mydirtyipods', 'My Dirty Ipods', 'http://www.mydirtyipods.com/Ipod/IpodClips.xml'),
 		array('nudes4pods', 'Nudes 4 Pods', 'http://nudes4pods.com/podcasts/podcast.xml'),
 	);
 	foreach($sites as $site) {

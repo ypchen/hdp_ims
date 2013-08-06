@@ -3,12 +3,11 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$clipNav = trim(str_between($html, '<div class="clip-navigation">', '</div>'));
-	$pages = explode('<span class="page-link">', $clipNav);
-	if (is_numeric(substr($pages[count($pages)-1], 0, 1)))
+	$clipNav = trim(str_between($html, '<ul class="pagination">', '</ul>'));
+	if (strpos($clipNav, '<span>End</span>') !== false)
 		$pageMax = $page;
 
-	$videos = explode('<div class="clip-title">', ($htmlToExplode = $html));
+	$videos = explode('<div class="video">', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 
