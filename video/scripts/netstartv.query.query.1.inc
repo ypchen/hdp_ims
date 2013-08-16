@@ -1,5 +1,10 @@
 <?php
-	$link = $search . '?page=' . $page;
+	if (strpos($search, '?') === false) {
+		$link = $search . '?page=' . $page;
+	}
+	else {
+		$link = $search . '&page=' . $page;
+	}
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
