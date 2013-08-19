@@ -1,7 +1,13 @@
 <?php
 	$sortedVideos = array();
 
-	$siteURLprefix = 'http://v.netstartv.com';
+	if (empty($extra)) {
+		$siteURLprefix = 'http://v.netstartv.com';
+	}
+	else {
+		// for baijia, xiqu, & ifeng
+		$siteURLprefix = $extra;
+	}
 
 	switch ($verLayout) {
 

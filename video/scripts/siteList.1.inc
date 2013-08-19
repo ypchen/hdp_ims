@@ -25,10 +25,10 @@
 		"\t</item>\r\n\r\n";
 
 	$sites = array(
-		array('netstartv',			'中文節目匯總　 (netstartv)',					'※ 需安裝 youtube.video.php'),
-		array('appledaily_cont',	'台灣蘋果動新聞 [連續]',				''),
+		array('netstartv',			'网星电视　 (netstartv)',					'※ 需安裝 youtube.video.php'),
+		array('appledaily_cont',	'台灣蘋果動新聞 [連續]',					''),
 		array('appledaily',			'台灣蘋果動新聞',							''),
-		array('maplestage',			'綜藝戲劇　 (楓林網)',					'※ 需安裝 youtube.video.php'),
+		array('maplestage',			'綜藝戲劇　 (楓林網)',						'※ 需安裝 youtube.video.php'),
 		array('sugoideas',			'綜藝戲劇　 (sugoideas)',					'※ 需安裝 youtube.video.php'),
 		array('ck101',				'卡提諾影音 (ck101)',						'※ 需安裝 youtube.video.php'),
 		array('ted',				'TED Talks on TED / YouTube / podcast',		'※ 需安裝 youtube.video.php'),
