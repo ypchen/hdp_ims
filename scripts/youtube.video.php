@@ -308,7 +308,10 @@
 			// Return the video stream
 			header('Location: ' . $link);
 		}
-		else if (strlen($link = trim(yp_str_between_2_1($html, '"sequence":"', '"'))) > 0) {
+		else if (
+			(strlen($link = trim(yp_str_between_2_1($html, '"sequence":"', '"'))) > 0) ||
+			(strlen($link = trim(yp_str_between_2_1($html, '<param name="flashvars" value="', '"'))) > 0)
+		) {
 			$link = urldecode(trim(yp_str_between_2_1(urldecode($link), '"video_url":"', '"')));
 			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
 

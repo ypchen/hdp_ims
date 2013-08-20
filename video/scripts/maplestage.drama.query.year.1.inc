@@ -19,8 +19,9 @@
 		$listYear = convertUnicodePoints($listYear);
 
 		if (strcmp($listYear, $queryYear) == 0) {
-			$videos = explode('<div>', $year);
-			unset($videos[0]);
+			$year = trim(str_between($year, '<div class="compact-list">', '</div>'));
+			$videos = explode('</a>', $year);
+			//unset($videos[0]);
 			$videos = array_values($videos);
 			break;
 		}
