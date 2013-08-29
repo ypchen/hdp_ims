@@ -12,7 +12,11 @@
 	$video = $videos[intval($extra)];
 
 	$siteURLprefix = 'http://www.appledaily.com.tw';
-	$link = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
+	$link = trim(str_between($video, ' href="', '"'));
+	// for http://ent.appledaily.com.tw
+	if (strpos($link, 'http://') === false) {
+		$link = $siteURLprefix . $link;
+	}
 	$link = $scriptsURLprefix . '/appledaily.video.php' .
 		'?uid=' . $user_id  . '&amp;query=' . urlencode($link);
 
