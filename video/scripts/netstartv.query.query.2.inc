@@ -55,7 +55,13 @@
 				$title = convertUnicodePoints($title);
 				$image = trim(str_between($video, ' src="', '"'));
 				$extra = '';
-				$note  = array('', '', '', '');
+				$noteYear = '';
+				if (strpos($video, '<i>(') !== false) {
+					$noteYear = trim(str_between($video, '<i>(', ')</i>'));
+					if (!is_numeric($noteYear))
+						$noteYear = '';
+				}
+				$note  = array($noteYear, '', '', '');
 
 				$clickPlay = 'no';
 				include('04_query.items.link.inc');

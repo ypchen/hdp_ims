@@ -17,7 +17,7 @@
 	if (strpos($html, "<ul class='unstyled row-fluid'>") !== false) {
 		$verLayout = 'v.2.1.8.5';
 		// New format from v2.1.8.5
-		$videos = explode('video"', ($htmlToExplode = str_between($html, "<ul class='unstyled row-fluid'>", '</ul>')));
+		$videos = explode('class="span2 video', ($htmlToExplode = str_between($html, "<ul class='unstyled row-fluid'>", '</ul>')));
 	}
 	else {
 		$verLayout = 'v2.1.8.4';
