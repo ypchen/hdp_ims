@@ -13,16 +13,21 @@
 	else
 		$pageMax = $page+1;
 
-	$verLayout = '';
-	if (strpos($html, "<ul class='unstyled row-fluid'>") !== false) {
-		$verLayout = 'v.2.1.8.5';
-		// New format from v2.1.8.5
-		$videos = explode('class="span2 video', ($htmlToExplode = str_between($html, "<ul class='unstyled row-fluid'>", '</ul>')));
+	$typeLayout = '';
+	if (strpos($html, '<li class="grid-item col-md-2">') !== false) {
+		$typeLayout = '<li class="grid-item col-md-2">';
+		$videos = explode($typeLayout, ($htmlToExplode = $html));
+	}
+	else if (strpos($html, '<li class="col-md-6">') !== false) {
+		$typeLayout = '<li class="col-md-6">';
+		$videos = explode($typeLayout, ($htmlToExplode = $html));
+	}
+	else if (strpos($html, '<section class="video clearfix">') !== false) {
+		$typeLayout = '<section class="video clearfix">';
+		$videos = explode($typeLayout, ($htmlToExplode = $html));
 	}
 	else {
-		$verLayout = 'v2.1.8.4';
-		// Old format before v2.1.8.5
-		$videos = explode('<section class="video clear', ($htmlToExplode = str_between($html, '<div class="videos clear', '<nav class="pagina')));
+		$videos = array('Unknown format');
 	}
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);

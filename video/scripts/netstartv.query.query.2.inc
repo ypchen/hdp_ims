@@ -9,9 +9,9 @@
 		$siteURLprefix = $extra;
 	}
 
-	switch ($verLayout) {
+	switch ($typeLayout) {
 
-		case 'v2.1.8.4':
+		case '<section class="video clearfix">':
 			foreach($videos as $video) {
 
 				$link  = $siteURLprefix . trim(str_between($video, 'playbtn" href="', '"'));
@@ -47,25 +47,36 @@
 			}
 			break;
 
-		default:
+
+		case '<li class="col-md-6">':
+		case '<li class="grid-item col-md-2">':
 			foreach($videos as $video) {
 
+				$year = '';
+				if (strpos($video, '<i>(') !== false) {
+					$year = trim(str_between($video, '<i>(', ')</i>'));
+					if (!is_numeric($year)) {
+						$year = '';
+					}
+					else {
+						$year = "($year) ";
+					}
+				}
+
 				$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
-				$title = trim(str_between(str_between($video, '<div class="name">', '</div>'), '">', '<'));
+				$title = $year . trim(str_between(str_between($video, '<div class="name">', '</div>'), '">', '<'));
 				$title = convertUnicodePoints($title);
 				$image = trim(str_between($video, ' src="', '"'));
 				$extra = '';
-				$noteYear = '';
-				if (strpos($video, '<i>(') !== false) {
-					$noteYear = trim(str_between($video, '<i>(', ')</i>'));
-					if (!is_numeric($noteYear))
-						$noteYear = '';
-				}
-				$note  = array($noteYear, '', '', '');
+				$note  = array('', '', '', '');
 
 				$clickPlay = 'no';
 				include('04_query.items.link.inc');
 			}
 			break;
+
+		default:
+			break;
+
 	}
 ?>
