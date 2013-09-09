@@ -14,7 +14,7 @@
 			$extra = '';
 
 			$pageStart = 0;
-			if (strpos($title, "最熱") !== false) {
+			if ((strpos($title, "最熱") !== false) || (strpos($title, "即時") !== false)) {
 				$queryLevel = '.query.query';
 			}
 			else {

@@ -40,4 +40,20 @@
 
 		return ($url);
 	}
+
+	function urlFromChangeRnews($funCall, $page) {
+		// function changeRnews(count,page)
+		//                      [0]   [1]
+		// '/animation/getrnewsajax/mPos/'+count+'/Page/'+page+'/'+Math.random()
+		$args = extractArguments($funCall);
+
+		if ($page == 0) $page = $args[1];
+		$url = 'http://www.appledaily.com.tw' .
+				'/animation/getrnewsajax' .
+				'/mPos/' .			$args[0] .
+				'/Page/' .			$page .
+				'/' . + strval(rand(0, 9.9));
+
+		return ($url);
+	}
 ?>

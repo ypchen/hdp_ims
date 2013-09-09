@@ -455,7 +455,23 @@
 		// Decode '&' (\u0026) if necessary
 		$urlEntry = str_replace('\u0026', '&', $urlEntry);
 		$itagInURL = trim(yp_str_between_2_1($urlEntry, 'itag=', '&'));
-		$signature = trim(yp_str_between_2_1($urlEntry, 'sig=', '&'));
+		if (strpos($urlEntry, 'sig=') !== false) {
+			$signature = trim(yp_str_between_2_1($urlEntry, 'sig=', '&'));
+		}
+		else if (strpos($urlEntry, 's=') !== false) {
+			// encrypted signature
+			// https://github.com/rg3/youtube-dl.git
+			$s_len = strlen($s = trim(yp_str_between_2_1($urlEntry, 's=', '&')));
+			switch ($s_len) {
+				case 86:
+					// commit 09bb17e10881b1840d1f5ca872f3218a40dddd5b
+					// s[5:34] + s[0] + s[35:38] + s[3] + s[39:45] + s[38] + s[46:53] + s[73] + s[54:73] + s[85] + s[74:85] + s[53]
+					$signature = substr($s, 5, 29) . $s[0] . substr($s, 35, 3) . $s[3] . substr($s, 39, 6) . $s[38] . substr($s, 46, 7) . $s[73] . substr($s, 54, 19) . $s[85] . substr($s, 74, 11) . $s[53];
+					break;
+				default:
+					break;
+			}
+		}
 		$key = array_search($itagInURL, $formats);
 		if ($key !== false) {
 			$fmtInfo = '';

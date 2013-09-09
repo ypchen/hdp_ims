@@ -7,12 +7,17 @@
 			javascript:changeMenu(1,'today','sec','1','','','');
 			javascript:changeMenu(3,'entertainment','cat','1','','','');
 
-			javascript:changeData('1','today','sec','headline','s5',1,'20120410')
-			javascript:changeData('1','today','sec','entertainment','s9',1,'20120410'
+			javascript:changeData('1','today','sec','headline','s5',1,'20120410');
+			javascript:changeData('1','today','sec','entertainment','s9',1,'20120410');
+
+			javascript:changeRnews('1',1);
+			javascript:changeRnews('1',2);
 	*/
 
 	if (strpos($search, "changeMenu") !== false)
 		$link = urlFromChangeMenu($search, $page);
+	else if (strpos($search, "changeRnews") !== false)
+		$link = urlFromChangeRnews($search, $page);
 	else
 		$link = urlFromChangeData($search, $page);
 	$html = yp_file_get_contents($link);
