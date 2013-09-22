@@ -11,6 +11,34 @@
 
 	switch ($typeLayout) {
 
+		case '<li class="grid-item col-xs-6 col-md-2">':
+		case '<li class="grid-item col-md-2">':
+		case '<li class="col-md-6">':
+			foreach($videos as $video) {
+
+				$year = '';
+				if (strpos($video, '<i>(') !== false) {
+					$year = trim(str_between($video, '<i>(', ')</i>'));
+					if (!is_numeric($year)) {
+						$year = '';
+					}
+					else {
+						$year = "($year) ";
+					}
+				}
+
+				$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
+				$title = $year . trim(str_between(str_between($video, '<div class="name">', '</div>'), '">', '<'));
+				$title = convertUnicodePoints($title);
+				$image = trim(str_between($video, ' src="', '"'));
+				$extra = '';
+				$note  = array('', '', '', '');
+
+				$clickPlay = 'no';
+				include('04_query.items.link.inc');
+			}
+			break;
+
 		case '<section class="video clearfix">':
 			foreach($videos as $video) {
 
@@ -41,34 +69,6 @@
 					$year  = '';
 				}
 				$title = convertUnicodePoints($title);
-
-				$clickPlay = 'no';
-				include('04_query.items.link.inc');
-			}
-			break;
-
-
-		case '<li class="col-md-6">':
-		case '<li class="grid-item col-md-2">':
-			foreach($videos as $video) {
-
-				$year = '';
-				if (strpos($video, '<i>(') !== false) {
-					$year = trim(str_between($video, '<i>(', ')</i>'));
-					if (!is_numeric($year)) {
-						$year = '';
-					}
-					else {
-						$year = "($year) ";
-					}
-				}
-
-				$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
-				$title = $year . trim(str_between(str_between($video, '<div class="name">', '</div>'), '">', '<'));
-				$title = convertUnicodePoints($title);
-				$image = trim(str_between($video, ' src="', '"'));
-				$extra = '';
-				$note  = array('', '', '', '');
 
 				$clickPlay = 'no';
 				include('04_query.items.link.inc');
