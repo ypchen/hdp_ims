@@ -1,7 +1,7 @@
 <?php
 	$myBaseNameOriginal = $myBaseName;
 
-	$siteURLprefix = 'http://video.ck101.com';
+	$siteURLprefix = 'http://v.ck101.com';
 	foreach($videos as $video) {
 
 		$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));

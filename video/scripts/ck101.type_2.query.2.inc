@@ -1,5 +1,5 @@
 <?php
-	$siteURLprefix = 'http://video.ck101.com/channel/lists';
+	$siteURLprefix = 'http://v.ck101.com/channel/lists';
 	foreach($videos as $video) {
 
 		$link  = $siteURLprefix . trim(str_between($video, '/lists', '"'));

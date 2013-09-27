@@ -1,7 +1,7 @@
 <?php
 	$sortedVideos = array();
 
-	$siteURLprefix = 'http://video.ck101.com';
+	$siteURLprefix = 'http://v.ck101.com';
 	foreach($videos as $video) {
 
 		// Remove the title part in the link such that "next page" may work
