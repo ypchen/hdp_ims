@@ -11,8 +11,8 @@
 	$caption_eval     = '觀眾評價';
 	$caption_uploader = '影片上傳';
 
-	// 86400 x 3
-	$allowedSeconds   = 259200;
+	// 86400 x 32
+	$allowedSeconds   = 2764800;
 
 	// Partial unicode points
 	// http://www.htmlcodetutorial.com/characterentities_famsupp_69.html

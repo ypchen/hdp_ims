@@ -22,6 +22,10 @@
 		$typeLayout = '<li class="grid-item col-md-2">';
 		$videos = explode($typeLayout, ($htmlToExplode = $html));
 	}
+	else if (strpos($html, '<li class="col-md-6 col-sm-8">') !== false) {
+		$typeLayout = '<li class="col-md-6 col-sm-8">';
+		$videos = explode($typeLayout, ($htmlToExplode = $html));
+	}
 	else if (strpos($html, '<li class="col-md-6">') !== false) {
 		$typeLayout = '<li class="col-md-6">';
 		$videos = explode($typeLayout, ($htmlToExplode = $html));
