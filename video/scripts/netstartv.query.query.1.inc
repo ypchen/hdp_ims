@@ -14,7 +14,11 @@
 		$pageMax = $page+1;
 
 	$typeLayout = '';
-	if (strpos($html, '<li class="grid-item col-xs-6 col-md-2">') !== false) {
+	if (strpos($html, '<li class="grid-item col-xs-6 col-md-2 ">') !== false) {
+		$typeLayout = '<li class="grid-item col-xs-6 col-md-2 ">';
+		$videos = explode($typeLayout, ($htmlToExplode = $html));
+	}
+	else if (strpos($html, '<li class="grid-item col-xs-6 col-md-2">') !== false) {
 		$typeLayout = '<li class="grid-item col-xs-6 col-md-2">';
 		$videos = explode($typeLayout, ($htmlToExplode = $html));
 	}

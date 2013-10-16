@@ -11,6 +11,7 @@
 
 	switch ($typeLayout) {
 
+		case '<li class="grid-item col-xs-6 col-md-2 ">':
 		case '<li class="grid-item col-xs-6 col-md-2">':
 		case '<li class="grid-item col-md-2">':
 		case '<li class="col-md-6 col-sm-8">':
