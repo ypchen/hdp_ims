@@ -5,7 +5,7 @@
 		// '/animation/getsectionajax/ParKeyword/'+ParKey+'/Type/'+type+'/mPos/'+count+'/Page/'+page+'/SubKeyword/'+SubKey+'/FileID/'+FID+'/IssueID/'+IssueID+'/'+Math.random()
 		$args = extractArguments($funCall);
 
-		if ($page == 0) $page = $args[3];
+		if ($page == 0) $page = intval($args[3]);
 		$url = 'http://www.appledaily.com.tw' .
 				'/animation/getsectionajax' .
 				'/ParKeyword/' .	$args[1] .
@@ -26,7 +26,7 @@
 		// "/animation/getsectionajax/ParKeyword/"+ParKey+"/Type/"+type+"/mPos/"+mPos+"/SubKeyword/"+SubKey+"/FileID/"+FileID+"/Page/"+page+"/IssueID/"+IssueID+"/"+Math.random()
 		$args = extractArguments($funCall);
 
-		if ($page == 0) $page = $args[5];
+		if ($page == 0) $page = intval($args[5]);
 		$url = 'http://www.appledaily.com.tw' .
 				'/animation/getsectionajax' .
 				'/ParKeyword/' .	$args[1] .
@@ -42,15 +42,16 @@
 	}
 
 	function urlFromChangeRnews($funCall, $page) {
-		// function changeRnews(count,page)
-		//                      [0]   [1]
-		// '/animation/getrnewsajax/mPos/'+count+'/Page/'+page+'/'+Math.random()
+		// function changeRnews(count,file,page)
+		//                      [0]   [1]  [2]
+		// '/animation/getrnewsajax/mPos/'+count+'/File/'+file+'/Page/'+page+'/'+Math.random()
 		$args = extractArguments($funCall);
 
-		if ($page == 0) $page = $args[1];
+		if ($page == 0) $page = intval($args[2]);
 		$url = 'http://www.appledaily.com.tw' .
 				'/animation/getrnewsajax' .
 				'/mPos/' .			$args[0] .
+				'/File/' .			$args[1] .
 				'/Page/' .			$page .
 				'/' . + strval(rand(0, 9.9));
 

@@ -13,11 +13,12 @@
 			$note  = '';
 			$extra = '';
 
-			$pageStart = 0;
-			if ((strpos($title, "最熱") !== false) || (strpos($title, "即時") !== false)) {
+			if ((strpos($title, "最熱") !== false) || (strpos($title, "即時") !== false) || (strpos($title, "正妹") !== false)) {
+				$pageStart = 1;
 				$queryLevel = '.query.query';
 			}
 			else {
+				$pageStart = 0;
 				$queryLevel = '.query';
 			}
 			include('04_query.inc');

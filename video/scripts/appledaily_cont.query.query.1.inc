@@ -10,8 +10,8 @@
 			javascript:changeData('1','today','sec','headline','s5',1,'20120410');
 			javascript:changeData('1','today','sec','entertainment','s9',1,'20120410');
 
-			javascript:changeRnews('1',1);
-			javascript:changeRnews('1',2);
+			javascript:changeRnews(1,'videonoembed','1');
+			javascript:changeRnews(2,'beauty','1');
 	*/
 
 	if (strpos($search, "changeMenu") !== false)

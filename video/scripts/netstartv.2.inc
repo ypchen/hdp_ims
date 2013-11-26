@@ -20,13 +20,8 @@
 			$note  = '';
 			$extra = '';
 
-			if (strpos($link, '/children') !== false) {
-				// Special case for children: No secondary menu
-				$queryLevel = '.query.query';
-			}
-			else {
-				$pageStart = 0;
-			}
+			$pageStart = 0;
+
 			include('04_query.inc');
 		}
 
