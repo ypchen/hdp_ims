@@ -5,7 +5,7 @@
 
 	$htmlBody = explode('<ul class="yearS', $html);
 
-	$videos = explode('<li>', ($htmlToExplode = trim(str_between($htmlBody[1], 'orting">', '</ul>'))));
+	$videos = explode('<li>', ($htmlToExplode = trim(str_between($htmlBody[1], 'orting"', '</ul>'))));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

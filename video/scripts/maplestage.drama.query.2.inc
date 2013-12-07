@@ -5,7 +5,7 @@
 
 	if ($pass_check) {
 		foreach($videos as $video) {
-			$title = trim(str_between($video, '<h2>', '</h2>'));
+			$title = trim(str_between($video, '">', '</h2>'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
 			$link  = $title;
