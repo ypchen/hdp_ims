@@ -408,11 +408,11 @@
 	$html = yp_file_get_contents_1_7($link);
 
 	// This video is unavailable
-	if (strpos($html, 'id="unavailable-message" class="message">') !== false) {
-		header('HTTP/1.1 410 Error');
-		header('Warning: ' . trim(yp_str_between_2_1($html, 'id="unavailable-message" class="message">', '</h1>')));
-		return;
-	}
+//	if (strpos($html, 'id="unavailable-message" class="message">') !== false) {
+//		header('HTTP/1.1 410 Error');
+//		header('Warning: ' . trim(yp_str_between_2_1($html, 'id="unavailable-message" class="message">', '</h1>')));
+//		return;
+//	}
 
 	if (strpos($html, 'verify_age') !== false) {
 		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
@@ -463,6 +463,11 @@
 			// https://github.com/rg3/youtube-dl.git
 			$s_len = strlen($s = trim(yp_str_between_2_1($urlEntry, 's=', '&')));
 			switch ($s_len) {
+				case 81:
+					// commit 46374a56b214cae9f66ef3c01cf3d62a71544030
+					// s[56] + s[79:56:-1] + s[41] + s[55:41:-1] + s[80] + s[40:34:-1] + s[0] + s[33:29:-1] + s[34] + s[28:9:-1] + s[29] + s[8:0:-1] + s[9]
+					$signature = $s[56] . strrev(substr($s, 56, 23)) . $s[41] . strrev(substr($s, 41, 14)) . $s[80] . strrev(substr($s, 34, 6)) . $s[0] . strrev(substr($s, 29, 4)) . $s[34] . strrev(substr($s, 9, 19)) . $s[29] . strrev(substr($s, 0, 8)) . $s[9];
+					break;
 				case 86:
 					// commit 09bb17e10881b1840d1f5ca872f3218a40dddd5b
 					// s[5:34] + s[0] + s[35:38] + s[3] + s[39:45] + s[38] + s[46:53] + s[73] + s[54:73] + s[85] + s[74:85] + s[53]
