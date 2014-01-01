@@ -1,5 +1,5 @@
 <?php
-	$link = $search = 'http://v.netstartv.com/';
+	$link = $search = 'http://v.aibuka.com/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

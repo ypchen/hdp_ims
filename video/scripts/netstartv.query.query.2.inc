@@ -2,7 +2,7 @@
 	$sortedVideos = array();
 
 	if (empty($extra)) {
-		$siteURLprefix = 'http://v.netstartv.com';
+		$siteURLprefix = 'http://v.aibuka.com';
 	}
 	else {
 		// for baijia, xiqu, & ifeng

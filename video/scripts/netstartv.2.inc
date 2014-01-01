@@ -4,7 +4,7 @@
 	echo "<title>$myBaseName: 導覽選單</title>\r\n\r\n";
 
 	if ($pass_check) {
-		$siteURLprefix = 'http://v.netstartv.com';
+		$siteURLprefix = 'http://v.aibuka.com/';
 		foreach($videos as $video) {
 
 			if (strpos($video, 'class="dropdown"') !== false)
@@ -30,11 +30,11 @@
 		$sites = array(
 			array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
 				'本機輸入', $myBaseName, '※ 需安裝 hdp_input',
-				'http://v.netstartv.com/search?q=', 'http://v.netstartv.com',
+				'http://v.aibuka.com/search?q=', 'http://v.aibuka.com',
 				'搜索'),
 			array('input = getInput("Enter a keyword");',
 				'內建輸入', $myBaseName, '使用播放機內建輸入功能',
-				'http://v.netstartv.com/search?q=', 'http://v.netstartv.com',
+				'http://v.aibuka.com/search?q=', 'http://v.aibuka.com',
 				'搜索'),
 		);
 		foreach($sites as $site) {
@@ -72,12 +72,12 @@
 		}
 
 		$sites = array(
-			array('netstartv',	'百家讲坛',			'http://baijia.netstartv.com',		'http://baijia.netstartv.com'),
-			array('netstartv',	'曲艺',				'http://xiqu.netstartv.com',		'http://xiqu.netstartv.com'),
-			array('netstartv',	'凤凰卫视',			'http://ifeng.netstartv.com',		'http://ifeng.netstartv.com'),
-			array('netstartv',	'超清HD: 电视剧',	'http://hd.netstartv.com/tv',		'http://hd.netstartv.com'),
-			array('netstartv',	'超清HD: 电影',		'http://hd.netstartv.com/movie',	'http://hd.netstartv.com'),
-			array('netstartv',	'超清HD: 综艺',		'http://hd.netstartv.com/show',		'http://hd.netstartv.com'),
+			array('netstartv',	'百家讲坛',			'http://baijia.aibuka.com',		'http://baijia.aibuka.com'),
+			array('netstartv',	'曲艺',				'http://xiqu.aibuka.com',		'http://xiqu.aibuka.com'),
+			array('netstartv',	'凤凰卫视',			'http://ifeng.aibuka.com',		'http://ifeng.aibuka.com'),
+			array('netstartv',	'超清HD: 电视剧',	'http://hd.aibuka.com/tv',		'http://hd.aibuka.com'),
+			array('netstartv',	'超清HD: 电影',		'http://hd.aibuka.com/movie',	'http://hd.aibuka.com'),
+			array('netstartv',	'超清HD: 综艺',		'http://hd.aibuka.com/show',		'http://hd.aibuka.com'),
 		);
 		foreach($sites as $site) {
 			$itemTotal ++;
@@ -103,11 +103,11 @@
 		$sites = array(
 			array('input = doModalRss("rss_file://./etc/ypInput/keyboard.rss", "mediaDisplay", "search", 0);',
 				'本機輸入', $myBaseName, '※ 需安裝 hdp_input',
-				'http://hd.netstartv.com/search?q=', 'http://hd.netstartv.com',
+				'http://hd.aibuka.com/search?q=', 'http://hd.aibuka.com',
 				'超清HD: 搜索'),
 			array('input = getInput("Enter a keyword");',
 				'內建輸入', $myBaseName, '使用播放機內建輸入功能',
-				'http://hd.netstartv.com/search?q=', 'http://hd.netstartv.com',
+				'http://hd.aibuka.com/search?q=', 'http://hd.aibuka.com',
 				'超清HD: 搜索'),
 		);
 		foreach($sites as $site) {

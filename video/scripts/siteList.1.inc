@@ -25,7 +25,7 @@
 		"\t</item>\r\n\r\n";
 
 	$sites = array(
-		array('netstartv',			'网星电视　 (netstartv)',					'※ 需安裝 youtube.video.php'),
+		array('netstartv',			'不卡点播　 (原网星电视)',					'※ 需安裝 youtube.video.php'),
 		array('appledaily_cont',	'台灣蘋果動新聞 [連續]',					''),
 		array('appledaily',			'台灣蘋果動新聞',							''),
 		array('maplestage',			'綜藝戲劇　 (楓林網)',						'※ 需安裝 youtube.video.php'),

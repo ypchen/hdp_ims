@@ -1,6 +1,6 @@
 <?php
 	if ($pass_check) {
-		$siteURLprefix = 'http://v.netstartv.com';
+		$siteURLprefix = 'http://v.aibuka.com';
 		foreach($videos as $video) {
 			$title = convertUnicodePoints(trim(str_between($video, '">', '</a>')));
 			$data  = '';
