@@ -15,6 +15,7 @@
 
 	// Notification emails will be sent
 	$imsUseEmail   = false;
+	$imsUseEmailHTMLZeroLength     = false;
 	// From imsBotEmail to imsAdminEmail
 	$imsBotEmail   = 'bot.IMS <bot.ims@ims.org>';
 	$imsAdminEmail = 'admin.IMS <admin.ims@ims.org>';

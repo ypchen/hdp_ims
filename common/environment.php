@@ -27,6 +27,9 @@
 	if (($envVar = @getenv('IMS_USE_EMAIL')) !== false) {
 		$imsUseEmail = booleanValuefromString($envVar);
 	}
+	if (($envVar = @getenv('IMS_USE_EMAIL_ZERO_LENGTH')) !== false) {
+		$imsUseEmailHTMLZeroLength = booleanValuefromString($envVar);
+	}
 	// From imsBotEmail to imsAdminEmail
 	if (($envVar = @getenv('IMS_BOT_EMAIL')) !== false) {
 		$imsBotEmail = $envVar;
