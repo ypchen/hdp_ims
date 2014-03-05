@@ -4,15 +4,13 @@
 	echo "<title>$myBaseName: 項目選單</title>\r\n\r\n";
 
 	if ($pass_check) {
-		$videos = array(
-			array('popular', '每日熱門', '', 'Most Watched Today'),
-			array('recent', '最新節目', '', 'Newly Added'),
-			array('show', '綜藝節目', '', 'Shows'),
-			array('drama', '偶像戲劇', '', 'Dramas')
+		$hot_items = array(
+			array('hot_show', '每日熱門綜藝', '', 'Hot Shows'),
+			array('hot_drama', '每日熱門偶像劇', '', 'Hot Dramas')
 		);
 
 		$siteURLprefix = '';
-		foreach ($videos as $video) {
+		foreach ($hot_items as $video) {
 			$title  = $video[1];
 			$data   = '';
 			$link   = $video[0];
@@ -22,6 +20,25 @@
 
 			$pageStart = 0;
 			$queryLevel = '.' . $link . '.query';
+			include('04_query.inc');
+		}
+
+		$siteURLprefix = 'http://maplestage.com';
+		foreach ($videos as $video) {
+			$tmpArr = explode(' ', trim(str_between($video, '">', '<')));
+			$title  = $tmpArr[0];
+			$title  = convertUnicodePoints($title);
+			unset($tmpArr[0]);
+			$note   = implode(' ', $tmpArr);
+			$data   = '';
+			$link   = trim(str_between($video, '"', '">'));
+			$tmpArr = explode('/', $link);
+			$link   = $siteURLprefix . $link;
+			$image  = '';
+			$extra  = '';
+
+			$pageStart = 0;
+			$queryLevel = '.' . substr($tmpArr[1], 0, -1) . '.query';
 			include('04_query.inc');
 		}
 	}

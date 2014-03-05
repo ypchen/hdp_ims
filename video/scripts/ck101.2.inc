@@ -4,21 +4,27 @@
 
 	if ($pass_check) {
 		$itemNo = 0;
+		// Contributed by absentfriend@HDPFans
 		$siteURLprefix = 'http://v.ck101.com';
+
 		foreach($videos as $video) {
 			$title = trim(str_between($video, 'title="', '"'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
 			$link  = trim(str_between($video, 'href="', '"'));
+
 			// Fix the link
 			$l = explode('/', $link);
 			if (strcmp($l[count($l)-1], 'lists') == 0)
 				$link .= '/1';
 			if (strpos($link, $siteURLprefix) === false)
 				$link = $siteURLprefix . $link;
+
 			$link = str_replace('/tvshow',	'/tv/lists/2/7', $link);
 			$link = str_replace('/arts',	'/tv/lists/1/2', $link);
-			$link = str_replace('/comic',	'/tv/lists/3/0', $link);
+			$link = str_replace('/comic',	'/comic/lists/3/0', $link);
+			$link = str_replace('/variety', '/variety/lists/1/2',$link);
+			$link = str_replace('/dramas', '/dramas/lists/2/7',$link);
 			$image = '';
 			$note  = '';
 			$extra = $itemNo;

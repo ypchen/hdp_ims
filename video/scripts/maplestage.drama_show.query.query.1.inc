@@ -1,5 +1,5 @@
 <?php
-	include('15_4_columns.inc');
+	include('15_2_columns.inc');
 
 	$html = yp_file_get_contents($link = $search);
 	include('05_check.file_contents.inc');

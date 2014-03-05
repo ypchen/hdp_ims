@@ -1,16 +1,1 @@
-<?php
-	include('15_2_columns.inc');
-
-	$link = $search;
-	$html = yp_file_get_contents($link);
-	include('05_check.file_contents.inc');
-
-	$htmlBody = explode('<div class="shows">', $html);
-
-	$videos = explode('<div class="show">', ($htmlToExplode = $htmlBody[1]));
-	unset($videos[0]);
-	$videos = array_values($videos);
-
-	$itemTotal = count($videos);
-	include('05_check.base.inc');
-?>
+maplestage.drama_show.query.query.1.inc

@@ -1,5 +1,5 @@
 <?php
-	$siteURLprefix = '';
+	$siteURLprefix = 'http://maplestage.com';
 	foreach($videos as $video) {
 
 		$section = explode('<a class="', $video);
@@ -11,7 +11,8 @@
 
 		$image  = trim(str_between($section[1], '<img src="', '"'));
 		$note   = array();
-		$note[] = '';
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($section[2], ' timeago" title="', '"'));
 		$note[] = '';
 		$note[] = '';
 		$note[] = '';

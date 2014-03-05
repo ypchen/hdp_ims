@@ -1,12 +1,9 @@
 <?php
-	$link = 'http://www.maplestage.com/drama/';
-	$html = yp_file_get_contents($link);
+	$html = yp_file_get_contents($link = $search);
 	include('05_check.file_contents.inc');
 
-	$htmlBody = explode('<ul class="yearS', $html);
-
-	$videos = explode('<li>', ($htmlToExplode = trim(str_between($htmlBody[1], 'orting"', '</ul>'))));
-	unset($videos[0]);
+	$videos = explode('iv>', ($htmlToExplode = trim(str_between($html, '<div class="listing-block', '<div class="sidebar'))));
+	//unset($videos[0]);
 	$videos = array_values($videos);
 
 	$itemTotal = count($videos);

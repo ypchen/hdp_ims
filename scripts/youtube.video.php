@@ -501,12 +501,8 @@
 	// http://userscripts.org/scripts/review/25105
 	//		url=url+"&signature="+signature;
 	// saved my day
-	$urlToGo .= ('&signature=' . $v[0][2]);
-
-	// It happens to itag=37 and itag=22.
-	// There should be no space and " in the URL.
-//	$urlToGo = str_replace(' ', '%20', $urlToGo);
-//	$urlToGo = str_replace('"', '%22', $urlToGo);
+	if (strpos($urlToGo, 'signature') === false)
+		$urlToGo .= ('&signature=' . $v[0][2]);
 
 	if ($URLonly === false) {
 		// Set the extra information for display
