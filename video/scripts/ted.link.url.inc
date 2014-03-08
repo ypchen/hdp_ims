@@ -7,32 +7,56 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
+	// Quality: from high to low
+	$qualityOrders = array(
+		array('High (854x480)', '"high":"', '"'),
+		array('Medium (512x288)', '"medium":"', '"'),
+		array('Low (320x180)', '"low":"', '"')
+	);
+	foreach ($qualityOrders as $qk => $qv) {
+		if (strpos($html, $qv[1]) !== false) {
+			$url = trim(str_between($html, $qv[1], $qv[2]));
+			$extraInfo = $qv[0];
+			break;
+		}
+	}
+
 	// Get the content of the download dialog
-	$link = 'http://www.ted.com' .
-				'/download/links/slug/' .
-					trim(str_between($html, '"mediaSlug":"', '",')) .
-				'/type/talks/ext/mp4';
-	$htmlDownload = yp_file_get_contents($link);
-	include('05_check.file_contents.inc');
+//	$link = 'http://www.ted.com' .
+//				'/download/links/slug/' .
+//					trim(str_between($html, '"mediaSlug":"', '",')) .
+//				'/type/talks/ext/mp4';
+//	$htmlDownload = yp_file_get_contents($link);
+//	include('05_check.file_contents.inc');
 
 	// Get the URL base
-	$urlBase = 'http://' . trim(str_between($htmlDownload, "var url = 'http://", "'"));
+//	$urlBase = 'http://' . trim(str_between($htmlDownload, "var url = 'http://", "'"));
 
 	// Get the quality list
-	$qualityList = explode('name="download_quality"', $htmlDownload);
+//	$qualityList = explode('name="download_quality"', $htmlDownload);
 	// Use the best quality (at the bottom of the list)
-	$extraInfo = trim(str_between($qualityList[count($qualityList)-1], '">', '</label>'));
-	$quality = trim(str_between($qualityList[count($qualityList)-1], 'value="', '"'));
+//	$extraInfo = trim(str_between($qualityList[count($qualityList)-1], '">', '</label>'));
+//	$quality = trim(str_between($qualityList[count($qualityList)-1], 'value="', '"'));
 
 	// Construct the URL (without the embeded subtitle)
-	$url = str_replace('{quality}', $quality,
-			str_replace('{lang}', '', $urlBase));
+//	$url = str_replace('{quality}', $quality,
+//			str_replace('{lang}', '', $urlBase));
 
-	// Handle the subtitles
-	$htmlSubtitle = str_between($html, '<div id="transcriptText">', '</div>');
-	$subtitles = explode('<a hr', $htmlSubtitle);
-	unset($subtitles[0]);
-	$subtitles = array_values($subtitles);
+	$siteURLprefix = 'http://www.ted.com';
+
+	$link = $siteURLprefix . trim(str_between($html, "transcript-link' href='", "'")) . '?lang=' . $extra;
+	$html = yp_file_get_contents($link);
+	if (($html === false) || (strlen($html) == 0)) {
+		$subtitles = array();
+	}
+	else {
+		// Handle the subtitles
+		$htmlSubtitle = str_between($html, " talk-transcript__body'>", '<footer ');
+		$subtitles = explode("<span class='talk-transcript__fragment", $htmlSubtitle);
+		unset($subtitles[0]);
+		$subtitles = array_values($subtitles);
+	}
+
 	if (count($subtitles) > 0) {
 		// Save the subtitle information on the local disk of HDP
 ?>
@@ -54,18 +78,18 @@
 		for ($i = 0 ; $i < count($subtitles) ; $i ++) {
 
 			if ($i == 0)
-				$start = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i], 'ef="#', '"'))) / 100);
+				$start = $tedSubtitleDelay + round((floatval(trim(str_between($subtitles[$i], "data-time='", "'"))) / 10), 0);
 			else
 				$start = $end;
 
 			if ($i < (count($subtitles)-1))
-				$end = $tedSubtitleDelay + (intval(trim(str_between($subtitles[$i+1], 'ef="#', '"'))) / 100);
+				$end = $tedSubtitleDelay + round((floatval(trim(str_between($subtitles[$i+1], "data-time='", "'"))) / 10), 0);
 			else
 				$end = $start + $tedFinalDuration;
 
 			$text  = trim(htmlspecialchars_decode(
 						convertUnicodePoints(
-							str_between($subtitles[$i], '">', '</a>')), ENT_QUOTES));
+							str_between($subtitles[$i], "'>", '</')), ENT_QUOTES));
 
 			$textLines = explode("\n", $text);
 			foreach ($textLines as $textLine) {
