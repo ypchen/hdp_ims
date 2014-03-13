@@ -90,7 +90,6 @@
 		}
 	}
 
-	// Check the existence because this part of code may be re-loaded and re-evaluated
 	if (function_exists('curl_redirect_exec_2_1') === false) {
 		// http://www.php.net/manual/en/function.curl-setopt.php#95027
 		// http://stackoverflow.com/questions/3890631/php-curl-with-curlopt-followlocation-error
@@ -147,7 +146,6 @@
 		}
 	}
 
-	// Check the existence because this part of code may be re-loaded and re-evaluated
 	if (function_exists('yp_file_get_contents_1_7') === false) {
 		function yp_file_get_contents_1_7($url, $data_to_post = null,
 			$http_header = null, $user_agent = null, $timeout = 30) {
@@ -206,10 +204,208 @@
 		}
 	}
 
-	// Check the existence because this part of code may be re-loaded and re-evaluated
 	if (function_exists('local_file_get_contents') === false) {
 		function local_file_get_contents($file) {
 			return file_get_contents($file);
+		}
+	}
+
+	if (function_exists('fromPYtoPHP_2_2_3_19') === false) {
+		function fromPYtoPHP_2_2_3_19($s, $pyStatements) {
+			$retStr = '';
+			$pyStatItems = explode('+', $pyStatements);
+			foreach ($pyStatItems as $item) {
+				// Handle only three forms:
+				//	1. s[n]
+				//	2. s[n:m]
+				//	3. s[n:m:-1]
+				$paras = explode(':', trim($item));
+				switch(count($paras)) {
+					case 1:
+						// 1. s[n]
+						$retStr .= $s[intval(substr($paras[0], 2, -1))];
+						break;
+					case 2:
+						// 2. s[n:m]
+						$start = intval(substr($paras[0], 2));
+						$length = (intval(substr($paras[1], 0, -1)) -  $start);
+						$retStr .= substr($s, $start, $length);
+						break;
+					case 3:
+						// 3. s[n:m:-1]
+						$start = intval($paras[1]);
+						$length = (intval(substr($paras[0], 2)) - $start);
+						$retStr .= strrev(substr($s, $start, $length));
+						break;
+					default:
+						// Unknown form
+						break;
+				}
+			}
+			return $retStr;
+		}
+	}
+
+	if (function_exists('evalExprJS_2_2_3_19') === false) {
+		function evalExprJS_2_2_3_19($js, $expr, $vars) {
+			// Support the following forms of expr: n, v, v[expr], v.method(paras), FUNC(paras), and +, %
+			if (is_numeric($expr)) {
+				// Only integers
+				return intval($expr);
+			}
+
+			if (($sp = strpos($expr, '[')) !== false) {
+				$varname = trim(substr($expr, 0, $sp));
+				$n = evalExprJS_2_2_3_19($js, trim(yp_str_between_2_1($expr, '[', ']')), $vars);
+				return $vars[$varname][$n];
+			}
+
+			if (($sp = strpos($expr, '(')) !== false) {
+				$varname = trim(substr($expr, 0, $sp));
+				if (($spd = strpos($varname, '.')) !== false) {
+					// Method call
+					$methodname = trim(substr($varname, $spd+1, $sp));
+					$varname = trim(substr($varname, 0, $spd));
+					switch ($methodname) {
+
+						case 'split':
+						case 'join':
+							// Support only split("") & join(""), do nothing
+							return $vars[$varname];
+
+						case 'reverse':
+							return strrev($vars[$varname]);
+
+						case 'slice':
+							// Not considering negative numbers for $start and $end for the time being
+							$args = explode(',', trim(yp_str_between_2_1($expr, '(', ')')));
+							switch (count($args)) {
+
+								case 1:
+									return substr($vars[$varname],
+										($start = evalExprJS_2_2_3_19($js, $xsx = trim($args[0]), $vars)));
+
+								case 2:
+									return substr($vars[$varname],
+										($start = evalExprJS_2_2_3_19($js, trim($args[0]), $vars)),
+										($length = (($end = evalExprJS_2_2_3_19($js, trim($args[1]), $vars)) - $start)));
+
+								default:
+									return '';
+							}
+						default:
+							return '';
+					}
+				}
+				else {
+					// Function call
+					$args = explode(',', trim(yp_str_between_2_1($expr, '(', ')')));
+					$paras = array();
+					foreach ($args as $ak => $av) {
+						$paras[] = evalExprJS_2_2_3_19($js, trim($av), $vars);
+					}
+					return execFuncJS_2_2_3_19($js, $varname, $paras);
+				}
+			}
+
+			if (
+				(($spo = strpos($expr, '+')) !== false) ||
+				(($spo = strpos($expr, '%')) !== false)
+				) {
+				$op = $expr[$spo];
+				$oprands = explode($op, $expr);
+				switch ($op) {
+
+					case '+':
+						return evalExprJS_2_2_3_19($js, trim($oprands[0]), $vars)
+								+
+								evalExprJS_2_2_3_19($js, trim($oprands[1]), $vars);
+
+					case '%':
+						return evalExprJS_2_2_3_19($js, trim($oprands[0]), $vars)
+								%
+								evalExprJS_2_2_3_19($js, trim($oprands[1]), $vars);
+
+					default:
+						return '';
+				}
+
+			}
+
+			if (($spd = strpos($expr, '.')) !== false) {
+				// Property
+				$propertyname = trim(substr($expr, $spd+1));
+				$varname = trim(substr($expr, 0, $spd));
+				switch ($propertyname) {
+
+					case 'length':
+						return strlen($vars[$varname]);
+
+					default:
+						return '';
+				}
+			}
+
+			// $expr should be the variable name now
+			return $vars[$varname = $expr];
+		}
+	}
+
+	if (function_exists('evalStatJS_2_2_3_19') === false) {
+		function evalStatJS_2_2_3_19($js, $stmt, &$vars) {
+			// Support 3 forms of statements
+			//	1. return RHS
+			if (strncmp($stmt, ($keyword = 'return '), ($kw_len = strlen($keyword))) == 0) {
+				return array(true, evalExprJS_2_2_3_19($js, substr($stmt, $kw_len), $vars));
+			}
+			//	2. var LHS=RHS
+			if (strncmp($stmt, ($keyword = 'var '), ($kw_len = strlen($keyword))) == 0) {
+				$stmt = substr($stmt, $kw_len);
+			}
+			//	3. LHS=RHS
+			list ($LHSexpr, $RHSexpr) = explode('=', $stmt);
+
+			$RHSval = evalExprJS_2_2_3_19($js, $RHSexpr, $vars);
+			// Support 2 forms of LHS: v and v[n]
+			if (($sp = strpos($LHSexpr, '[')) !== false) {
+				$varname = trim(substr($LHSexpr, 0, $sp));
+				$n = evalExprJS_2_2_3_19($js, yp_str_between_2_1($LHSexpr, '[', ']'), $vars);
+				$vars[$varname][$n] = $RHSval;
+			}
+			else {
+				$vars[$varname = trim($LHSexpr)] = $RHSval;
+			}
+
+			return array(false, $RHSval);
+		}
+	}
+
+	if (function_exists('extrFuncJS_2_2_3_19') === false) {
+		function extrFuncJS_2_2_3_19($js, $funcname) {
+			// Tested:
+			//	1. http://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflkClbFb.js
+			//	2. http://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflYhChiG.js
+			return '(' . trim(yp_str_between_2_1($js, 'function ' . $funcname . '(', '}')) . '}';
+		}
+	}
+
+	if (function_exists('execFuncJS_2_2_3_19') === false) {
+		function execFuncJS_2_2_3_19($js, $funcname, $paras) {
+			$funccode = extrFuncJS_2_2_3_19($js, $funcname);
+			$args = explode(',', trim(yp_str_between_2_1($funccode, '(', ')')));
+			if (count($args) != count($paras))
+				return '';
+			$vars = array();
+			for ( $i = 0 ; $i < count($args) ; $i ++ ) {
+				$vars[$args[$i]] = $paras[$i];
+			}
+			$stmts = explode(';', trim(yp_str_between_2_1($funccode, '{', '}')));
+			foreach ( $stmts as $stmt ) {
+				list ($isReturn, $retValue) = evalStatJS_2_2_3_19($js, $stmt, $vars);
+				if ($isReturn)
+					return $retValue;
+			}
+			return '';
 		}
 	}
 
@@ -407,13 +603,6 @@
 	$link = 'http://www.youtube.com/watch?v=' . $id;
 	$html = yp_file_get_contents_1_7($link);
 
-	// This video is unavailable
-//	if (strpos($html, 'id="unavailable-message" class="message">') !== false) {
-//		header('HTTP/1.1 410 Error');
-//		header('Warning: ' . trim(yp_str_between_2_1($html, 'id="unavailable-message" class="message">', '</h1>')));
-//		return;
-//	}
-
 	if (strpos($html, 'verify_age') !== false) {
 		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
 		$html = yp_file_get_contents_1_7($link);
@@ -449,9 +638,34 @@
 		}
 	}
 
+	// Get the new adaptive format list
+	$separators = array(
+		array('"adaptive_fmts": "', '"', false),
+	);
+	foreach ($separators as $separator) {
+		if (strpos($html, $separator[0]) !== false) {
+			if ($separator[2])
+				$adaptiveFmtList = explode(',', urldecode(trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
+			else
+				$adaptiveFmtList = explode(',', str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
+			break;
+		}
+	}
+	// Put the adaptive format items into the old lists
+	//	type=video/mp4 only
+	foreach ($adaptiveFmtList as $adaptiveItem) {
+		if (strpos($adaptiveItem, 'type=video%2Fmp4') === false)
+			continue;
+		$urlList[] = $adaptiveItem;
+		$itag = trim(yp_str_between_2_1($adaptiveItem, 'itag=', '\u0026'));
+		$size = trim(yp_str_between_2_1($adaptiveItem, 'size=', '\u0026'));
+		$fmtList[] = $itag . '/' . $size;
+	}
+
 	// Select the video url according to the user preference
 	$supportedVids = array();
 	foreach ($urlList as $urlEntry) {
+		$signature = '';
 		// Decode '&' (\u0026) if necessary
 		$urlEntry = str_replace('\u0026', '&', $urlEntry);
 		$itagInURL = trim(yp_str_between_2_1($urlEntry, 'itag=', '&'));
@@ -460,21 +674,43 @@
 		}
 		else if (strpos($urlEntry, 's=') !== false) {
 			// encrypted signature
-			// https://github.com/rg3/youtube-dl.git
 			$s_len = strlen($s = trim(yp_str_between_2_1($urlEntry, 's=', '&')));
-			switch ($s_len) {
-				case 81:
-					// commit 46374a56b214cae9f66ef3c01cf3d62a71544030
-					// s[56] + s[79:56:-1] + s[41] + s[55:41:-1] + s[80] + s[40:34:-1] + s[0] + s[33:29:-1] + s[34] + s[28:9:-1] + s[29] + s[8:0:-1] + s[9]
-					$signature = $s[56] . strrev(substr($s, 56, 23)) . $s[41] . strrev(substr($s, 41, 14)) . $s[80] . strrev(substr($s, 34, 6)) . $s[0] . strrev(substr($s, 29, 4)) . $s[34] . strrev(substr($s, 9, 19)) . $s[29] . strrev(substr($s, 0, 8)) . $s[9];
-					break;
-				case 86:
-					// commit 09bb17e10881b1840d1f5ca872f3218a40dddd5b
-					// s[5:34] + s[0] + s[35:38] + s[3] + s[39:45] + s[38] + s[46:53] + s[73] + s[54:73] + s[85] + s[74:85] + s[53]
-					$signature = substr($s, 5, 29) . $s[0] . substr($s, 35, 3) . $s[3] . substr($s, 39, 6) . $s[38] . substr($s, 46, 7) . $s[73] . substr($s, 54, 19) . $s[85] . substr($s, 74, 11) . $s[53];
-					break;
-				default:
-					break;
+
+			try {
+				// Try to extract JS decrypt function first
+				$linkJS = 'http:' . str_replace('\/', '/', trim(yp_str_between_2_1($html, '"js": "', '"')));
+				$codeJS = yp_file_get_contents_1_7($linkJS);
+				// Get signature decryption function name
+				$signature = execFuncJS_2_2_3_19($codeJS,
+					$decFuncName = trim(yp_str_between_2_1($codeJS, 'signature=', '(')), array($s));
+			}
+			catch (Exception $e) {
+				$signature = '';
+			}
+
+			if (strlen($signature) <= 0) {
+				// https://github.com/rg3/youtube-dl.git
+				// commit edb7fc5435ef522753aa0a17a018edc1dbea2ad
+				$decTable = array(
+					93 => 's[86:29:-1] + s[88] + s[28:5:-1]',
+					92 => 's[25] + s[3:25] + s[0] + s[26:42] + s[79] + s[43:79] + s[91] + s[80:83]',
+					91 => 's[84:27:-1] + s[86] + s[26:5:-1]',
+					90 => 's[25] + s[3:25] + s[2] + s[26:40] + s[77] + s[41:77] + s[89] + s[78:81]',
+					89 => 's[84:78:-1] + s[87] + s[77:60:-1] + s[0] + s[59:3:-1]',
+					88 => 's[7:28] + s[87] + s[29:45] + s[55] + s[46:55] + s[2] + s[56:87] + s[28]',
+//					87 => 's[6:27] + s[4] + s[28:39] + s[27] + s[40:59] + s[2] + s[60:]',
+//					86 => 's[80:72:-1] + s[16] + s[71:39:-1] + s[72] + s[38:16:-1] + s[82] + s[15::-1]',
+					85 => 's[3:11] + s[0] + s[12:55] + s[84] + s[56:84]',
+//					84 => 's[78:70:-1] + s[14] + s[69:37:-1] + s[70] + s[36:14:-1] + s[80] + s[:14][::-1]',
+					83 => 's[80:63:-1] + s[0] + s[62:0:-1] + s[63]',
+					82 => 's[80:37:-1] + s[7] + s[36:7:-1] + s[0] + s[6:0:-1] + s[37]',
+					81 => 's[56] + s[79:56:-1] + s[41] + s[55:41:-1] + s[80] + s[40:34:-1] + s[0] + s[33:29:-1] + s[34] + s[28:9:-1] + s[29] + s[8:0:-1] + s[9]',
+					80 => 's[1:19] + s[0] + s[20:68] + s[19] + s[69:80]',
+					79 => 's[54] + s[77:54:-1] + s[39] + s[53:39:-1] + s[78] + s[38:34:-1] + s[0] + s[33:29:-1] + s[34] + s[28:9:-1] + s[29] + s[8:0:-1] + s[9]',
+				);
+				if (array_key_exists($s_len, $decTable)) {
+					$signature = fromPYtoPHP($s, $decTable[$s_len]);
+				}
 			}
 		}
 		$key = array_search($itagInURL, $formats);
