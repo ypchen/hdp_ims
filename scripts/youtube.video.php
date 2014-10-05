@@ -483,67 +483,6 @@
 	// 'query' is given.
 	$id = $_GET['query'];
 
-	if (strcmp($id, 'site_dailymotion') == 0) {
-		// It's a dailymotion request
-		// 'link' must be given
-		$link = $_GET['link'];
-		$html = yp_file_get_contents_1_7($link);
-
-		if (
-			(strlen($link = trim(yp_str_between_2_1($html, '"stream_h264_url":"', '"'))) > 0) ||
-			(strlen($link = trim(yp_str_between_2_1($html, '"stream_h264_ld_url":"', '"'))) > 0)
-		) {
-			$link = str_replace('\/', '/', $link);
-			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
-
-			// Write the extraInfo file
-			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-			fwrite($fileExtraInfo, $extraInfo);
-			fclose($fileExtraInfo);
-
-			// Return the video stream
-			header('Location: ' . $link);
-		}
-		else if (
-			(strlen($link = trim(yp_str_between_2_1($html, '"sequence":"', '"'))) > 0) ||
-			(strlen($link = trim(yp_str_between_2_1($html, '<param name="flashvars" value="', '"'))) > 0)
-		) {
-			$link = urldecode(trim(yp_str_between_2_1(urldecode($link), '"video_url":"', '"')));
-			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
-
-			// Write the extraInfo file
-			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-			fwrite($fileExtraInfo, $extraInfo);
-			fclose($fileExtraInfo);
-
-			// Return the video stream
-			header('Location: ' . $link);
-		}
-		return;
-	}
-	else if (strcmp($id, 'site_56') == 0) {
-		// It's a 56.com request
-		// 'link' must be given
-		$link = $_GET['link'];
-		$html = yp_file_get_contents_1_7($link);
-
-		if (strpos($html, '"rfiles":') !== false) {
-			$video_data = json_decode ($html, true);
-			// Use the first one
-			$link = $video_data['info']['rfiles'][0]['url'];
-			$extraInfo = 'type: ' . $video_data['info']['rfiles'][0]['type'];
-
-			// Write the extraInfo file
-			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-			fwrite($fileExtraInfo, $extraInfo);
-			fclose($fileExtraInfo);
-
-			// Return the video stream
-			header('Location: ' . $link);
-		}
-		return;
-	}
-
 	// Check if only URL is wanted
 	$URLonly = false;
 	if (!empty($_GET['URLonly']))
@@ -551,6 +490,10 @@
 
 	// User preferred formats
 	// http://en.wikipedia.org/wiki/YouTube
+	// The following itags are currently supported by 1073:
+	//		37(X),22(O),35(X),18(O),34(X),6(X),5(O)
+	//		X means discontinued by YouTube
+	// These itags are also used for specifying the resolution preference for other sites, such as dailymotion.
 
 	// Default: 22,35,18,34,6,5
 	$fmtPrefs = '22,35,18,34,6,5';
@@ -591,6 +534,67 @@
 	}
 	else {
 		unset($ccPreferredLangs);
+	}
+
+	if (strcmp($id, 'site_dailymotion') == 0) {
+		// It's a dailymotion request
+		// 'link' must be given
+		// No idea how to process http://www.dailymotion.com/video/ for now
+		$link = str_replace('dailymotion.com/video', 'dailymotion.com/embed/video', $_GET['link']);
+		$html = yp_file_get_contents_1_7($link);
+
+		$mapRes = array(
+			'37' => 'hd1080_', '22' => 'hd_', '35' => 'hq_', '34' => 'ld_', '5' => ''
+		);
+
+		if (strpos($html, '"stream_h264_') !== false) {
+			foreach ($formats as $format) {
+				$urlTag = '"stream_h264_' . $mapRes[$format] . 'url":"';
+				if (strlen($link = trim(yp_str_between_2_1($html, $urlTag, '"'))) > 0)
+					break;
+			}
+			$link = str_replace('\/', '/', $link);
+			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
+		}
+		else if (
+			(strlen($link = trim(yp_str_between_2_1($html, '"sequence":"', '"'))) > 0) ||
+			(strlen($link = trim(yp_str_between_2_1($html, '<param name="flashvars" value="', '"'))) > 0)
+		) {
+			$link = urldecode(trim(yp_str_between_2_1(urldecode($link), '"video_url":"', '"')));
+			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
+		}
+
+		// Write the extraInfo file
+		$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
+		fwrite($fileExtraInfo, $extraInfo);
+		fclose($fileExtraInfo);
+
+		// Return the video stream
+		header('Location: ' . $link);
+
+		return;
+	}
+	else if (strcmp($id, 'site_56') == 0) {
+		// It's a 56.com request
+		// 'link' must be given
+		$link = $_GET['link'];
+		$html = yp_file_get_contents_1_7($link);
+
+		if (strpos($html, '"rfiles":') !== false) {
+			$video_data = json_decode ($html, true);
+			// Use the first one
+			$link = $video_data['info']['rfiles'][0]['url'];
+			$extraInfo = 'type: ' . $video_data['info']['rfiles'][0]['type'];
+
+			// Write the extraInfo file
+			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
+			fwrite($fileExtraInfo, $extraInfo);
+			fclose($fileExtraInfo);
+
+			// Return the video stream
+			header('Location: ' . $link);
+		}
+		return;
 	}
 
 	// Two ways to get youtube videos

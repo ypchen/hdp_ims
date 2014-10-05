@@ -20,6 +20,7 @@
 	switch ($src) {
 
 		case 'Youtube':
+		case 'YoutubeBypass':
 			$ids = $res['ids'];
 			include('05_check.link.idcount.inc');
 			break;
@@ -30,7 +31,7 @@
 				$links[] =
 					$localhostYoutubeVideo . '?query=site_dailymotion' .
 						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
-						'&amp;link='       . urlencode('http://www.dailymotion.com/video/' . $id);
+						'&amp;link='       . urlencode('http://www.dailymotion.com/embed/video/' . $id);
 			}
 
 			$itemTotal = count($links);

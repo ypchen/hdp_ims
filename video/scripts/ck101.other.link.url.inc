@@ -48,7 +48,7 @@
 				$link =
 					$localhostYoutubeVideo . '?query=site_dailymotion' .
 						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
-						'&amp;link='       . urlencode('http://www.dailymotion.com/video/' . $id);
+						'&amp;link='       . urlencode('http://www.dailymotion.com/embed/video/' . $id);
 
 				$titles[] = $title;
 				$links[] = $link;
