@@ -21,30 +21,9 @@
 		}
 	}
 
-	// Get the content of the download dialog
-//	$link = 'http://www.ted.com' .
-//				'/download/links/slug/' .
-//					trim(str_between($html, '"mediaSlug":"', '",')) .
-//				'/type/talks/ext/mp4';
-//	$htmlDownload = yp_file_get_contents($link);
-//	include('05_check.file_contents.inc');
-
-	// Get the URL base
-//	$urlBase = 'http://' . trim(str_between($htmlDownload, "var url = 'http://", "'"));
-
-	// Get the quality list
-//	$qualityList = explode('name="download_quality"', $htmlDownload);
-	// Use the best quality (at the bottom of the list)
-//	$extraInfo = trim(str_between($qualityList[count($qualityList)-1], '">', '</label>'));
-//	$quality = trim(str_between($qualityList[count($qualityList)-1], 'value="', '"'));
-
-	// Construct the URL (without the embeded subtitle)
-//	$url = str_replace('{quality}', $quality,
-//			str_replace('{lang}', '', $urlBase));
-
 	$siteURLprefix = 'http://www.ted.com';
 
-	$link = $siteURLprefix . trim(str_between($html, "transcript-link' href='", "'")) . '?lang=' . $extra;
+	$link = $siteURLprefix . trim(str_between($html, "transcript-link' href='", "'"));
 	$html = yp_file_get_contents($link);
 	if (($html === false) || (strlen($html) == 0)) {
 		$subtitles = array();
@@ -78,12 +57,12 @@
 		for ($i = 0 ; $i < count($subtitles) ; $i ++) {
 
 			if ($i == 0)
-				$start = $tedSubtitleDelay + round((floatval(trim(str_between($subtitles[$i], "data-time='", "'"))) / 10), 0);
+				$start = $tedSubtitleDelay + round((floatval(trim(str_between($subtitles[$i], "data-time='", "'"))) / 100), 0);
 			else
 				$start = $end;
 
 			if ($i < (count($subtitles)-1))
-				$end = $tedSubtitleDelay + round((floatval(trim(str_between($subtitles[$i+1], "data-time='", "'"))) / 10), 0);
+				$end = $tedSubtitleDelay + round((floatval(trim(str_between($subtitles[$i+1], "data-time='", "'"))) / 100), 0);
 			else
 				$end = $start + $tedFinalDuration;
 
