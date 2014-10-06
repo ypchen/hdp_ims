@@ -1,8 +1,8 @@
 <?php
-	function urlFromChangeMenu($funCall, $page) {
+	function urlFromChangeMenu($funCall, $page, $strApp) {
 		// function changeMenu(count,ParKey,type,page,SubKey,FID,IssueID)
 		//                     [0]   [1]    [2]  [3]  [4]    [5] [6]
-		// '/animation/getsectionajax/ParKeyword/'+ParKey+'/Type/'+type+'/mPos/'+count+'/Page/'+page+'/SubKeyword/'+SubKey+'/FileID/'+FID+'/IssueID/'+IssueID+'/'+Math.random()
+		// '/animation/getsectionajax/ParKeyword/'+ParKey+'/Type/'+type+'/mPos/'+count+'/Page/'+page+'/SubKeyword/'+SubKey+'/FileID/'+FID+'/IssueID/'+IssueID+'/201410061030',
 		$args = extractArguments($funCall);
 
 		if ($page == 0) $page = intval($args[3]);
@@ -15,36 +15,15 @@
 				'/SubKeyword/' .	$args[4] .
 				'/FileID/' .		$args[5] .
 				'/IssueID/' .		$args[6] .
-				'/' . + strval(rand(0, 9.9));
+				'/' . $strApp;
 
 		return ($url);
 	}
 
-	function urlFromChangeData($funCall, $page) {
-		// function changeData(mPos,ParKey,type,SubKey,FileID,page,IssueID)
-		//                     [0]  [1]    [2]  [3]    [4]    [5]  [6]
-		// "/animation/getsectionajax/ParKeyword/"+ParKey+"/Type/"+type+"/mPos/"+mPos+"/SubKeyword/"+SubKey+"/FileID/"+FileID+"/Page/"+page+"/IssueID/"+IssueID+"/"+Math.random()
-		$args = extractArguments($funCall);
-
-		if ($page == 0) $page = intval($args[5]);
-		$url = 'http://www.appledaily.com.tw' .
-				'/animation/getsectionajax' .
-				'/ParKeyword/' .	$args[1] .
-				'/Type/' . 			$args[2] .
-				'/mPos/' .			$args[0] .
-				'/SubKeyword/' .	$args[3] .
-				'/FileID/' .		$args[4] .
-				'/Page/' .			$page .
-				'/IssueID/' .		$args[6] .
-				'/' . + strval(rand(0, 9.9));
-
-		return ($url);
-	}
-
-	function urlFromChangeRnews($funCall, $page) {
+	function urlFromChangeRnews($funCall, $page, $strApp) {
 		// function changeRnews(count,file,page)
 		//                      [0]   [1]  [2]
-		// '/animation/getrnewsajax/mPos/'+count+'/File/'+file+'/Page/'+page+'/'+Math.random()
+		// '/animation/getrnewsajax/mPos/'+count+'/File/'+file+'/Page/'+page+'/201410061030',
 		$args = extractArguments($funCall);
 
 		if ($page == 0) $page = intval($args[2]);
@@ -53,7 +32,7 @@
 				'/mPos/' .			$args[0] .
 				'/File/' .			$args[1] .
 				'/Page/' .			$page .
-				'/' . + strval(rand(0, 9.9));
+				'/' . $strApp;
 
 		return ($url);
 	}

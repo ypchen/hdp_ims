@@ -7,7 +7,7 @@
 		$link  = str_replace("'", '', str_replace(',', '|', trim(str_between($video, 'ef="', '"'))));
 		$image = '';
 		$note  = '';
-		$extra = '';
+		$extra = $strAppendix;
 
 		$queryLevel = '.query.query';
 		include('04_query.inc');

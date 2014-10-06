@@ -7,19 +7,16 @@
 			javascript:changeMenu(1,'today','sec','1','','','');
 			javascript:changeMenu(3,'entertainment','cat','1','','','');
 
-			javascript:changeData('1','today','sec','headline','s5',1,'20120410');
-			javascript:changeData('1','today','sec','entertainment','s9',1,'20120410');
-
 			javascript:changeRnews(1,'videonoembed','1');
 			javascript:changeRnews(2,'beauty','1');
 	*/
 
+	$strAppendix = $extra;
+
 	if (strpos($search, "changeMenu") !== false)
-		$link = urlFromChangeMenu($search, $page);
-	else if (strpos($search, "changeRnews") !== false)
-		$link = urlFromChangeRnews($search, $page);
+		$link = urlFromChangeMenu($search, $page, $strAppendix);
 	else
-		$link = urlFromChangeData($search, $page);
+		$link = urlFromChangeRnews($search, $page, $strAppendix);
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 

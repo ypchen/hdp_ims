@@ -8,10 +8,10 @@
 			$title = trim(str_between($video, ');" >', '</a>'));
 			$title = cleanFragments('/&#\d+/', convertUnicodePoints(strip_tags($title)));
 			$data  = '';
-			$link  = str_replace("'", '', str_replace(',', '|', trim(str_between($video, ' href="', '"'))));
+			$link  = str_replace("'", '', str_replace(',', '|', ($rawLink = str_replace(';', '', trim(str_between($video, ' href="', '"'))))));
 			$image = '';
 			$note  = '';
-			$extra = '';
+			$extra = $strAppendix . '|' . urlencode($rawLink);
 
 			if ((strpos($title, "最熱") !== false) || (strpos($title, "即時") !== false) || (strpos($title, "正妹") !== false)) {
 				$pageStart = 1;
