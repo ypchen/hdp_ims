@@ -1,5 +1,5 @@
 <?php
-	$siteURLprefix = '';
+	$siteURLprefix = 'http://www.pornhub.com';
 	foreach($videos as $video) {
 
 		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));

@@ -3,7 +3,7 @@
 	foreach($videos as $video) {
 
 		$h3    = str_between($video, '<h3>', '</h3>');
-		$p     = str_between($video, '<p>', '</p>');
+		$p     = str_between($video, '<p', '</p>');
 
 		$link  = $siteURLprefix . trim(str_between($h3, '<a href="', '"'));
 		$title = trim(str_between($h3, '">', '</a>'));
@@ -21,7 +21,7 @@
 		$note[] = $caption_view . ': ' .
 					$view;
 		$note[] = $caption_publish . ': ' .
-					trim(str_between($p, 'Added', 'with'));
+					trim(str_between($p, '>', 'with'));
 		$note[] = '';
 
 		$clickPlay = 'no';

@@ -14,12 +14,13 @@
 				'&amp;video_title=', '&amp;'),
 		// pornhub
 		array('http://www.pornhub.com/view_video.php?viewkey=', '"',
-				true,
+				false,
 				array('"quality_480p":"', '"quality_240p":"', '"quality_180p":"'), '"',
 				'"encrypted":', ',',
 				'"video_title":"', '"')
 	);
 
+	$link = '';
 	foreach ($separators as $separator) {
 		if (strpos($html, $separator[0]) !== false) {
 
@@ -30,7 +31,6 @@
 				include('05_check.file_contents.inc');
 			}
 
-			$link = '';
 			foreach ($separator[3] as $q) {
 				if (strpos($html, $q) !== false) {
 					$link = urldecode(str_between($html, $q, $separator[4]));
@@ -45,6 +45,16 @@
 			}
 
 			break;
+		}
+	}
+
+	if (empty($link)) {
+		if (strpos($html, 'http://www.extremetube.com/embed') !== false) {
+			$link = trim(str_between($html, 'id="embedPlayer" src="', '"'));
+			$html = yp_file_get_contents($link);
+			include('05_check.file_contents.inc');
+
+			$link = trim(str_between($html, "src     : '", "',"));
 		}
 	}
 

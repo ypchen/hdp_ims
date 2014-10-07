@@ -76,7 +76,7 @@
 	$podcast_include = local_file_get_contents('10_podcast.inc');
 	$sites = array(
 		array('xxx4pods', 'XXX 4 Pods', 'http://xxx4pods.com/podcasts/podcast.xml'),
-		array('suicidegirls', 'Suicide Girls', 'http://suicidegirls.com/rss/video/'),
+//		array('suicidegirls', 'Suicide Girls', 'http://suicidegirls.com/rss/video/'),
 		array('french_maid_tv', 'French Maid TV', 'http://feeds.feedburner.com/FrenchMaidTV'),
 		array('playboy', 'Playboy Video-Podcast (德國)', 'http://www.playboy.de/cybercastVID.xml'),
 //		array('mydirtyipods', 'My Dirty Ipods', 'http://www.mydirtyipods.com/Ipod/IpodClips.xml'),

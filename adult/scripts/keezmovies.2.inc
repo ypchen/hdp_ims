@@ -3,9 +3,9 @@
 	echo "\t<title>" . $myBaseName . ": 分類選單</title>\r\n";
 
 	if ($pass_check) {
-		$siteURLprefix = '';
+		$siteURLprefix = 'http://www.keezmovies.com';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, '\']);">', '<'));
+			$title = trim(str_between($video, '\');">', '<'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
 			$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
