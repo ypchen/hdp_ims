@@ -3,9 +3,8 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$strAppendix = trim(str_between($html, "+IssueID+'/", "'"));
-
-	$videos = explode('<a id=', ($htmlToExplode = str_between($html, '<nav class="mmvnv"', '</nav>')));
+	$videos = explode('<li ',
+		($htmlToExplode = str_between($html, '<h2 class="an-tab-tit">動新聞</h2>', '<h2 class="an-tab-tit">')));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

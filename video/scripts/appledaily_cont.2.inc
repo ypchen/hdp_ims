@@ -3,24 +3,18 @@
 	echo "<title>$myBaseName: 導覽選單</title>\r\n\r\n";
 
 	if ($pass_check) {
-		$siteURLprefix = '';
+		$siteURLprefix = 'http://www.appledaily.com.tw';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, ');" >', '</a>'));
+			$title = trim(str_between($video, '<span>', '</span>'));
 			$title = cleanFragments('/&#\d+/', convertUnicodePoints(strip_tags($title)));
 			$data  = '';
-			$link  = str_replace("'", '', str_replace(',', '|', ($rawLink = str_replace(';', '', trim(str_between($video, ' href="', '"'))))));
+			$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
 			$image = '';
 			$note  = '';
-			$extra = $strAppendix . '|' . urlencode($rawLink);
+			$extra = '';
 
-			if ((strpos($title, "最熱") !== false) || (strpos($title, "即時") !== false) || (strpos($title, "正妹") !== false)) {
-				$pageStart = 1;
-				$queryLevel = '.query.query';
-			}
-			else {
-				$pageStart = 0;
-				$queryLevel = '.query';
-			}
+			$pageStart = 0;
+			$queryLevel = '.query.query';
 			include('04_query.inc');
 		}
 	}

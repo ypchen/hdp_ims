@@ -2,7 +2,24 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('<div class="ecs">', ($htmlToExplode = $html));
+	$totalPage = intval(trim(str_between(str_between($html, 'class="listmore', '<'), 'data-totalpage="', '"')));
+
+	$siteURLprefix = 'http://www.appledaily.com.tw';
+	$link = $siteURLprefix . trim(str_between(str_between($html, ".listmore').click", "</script>"), 'url: "', '"'));
+
+	$htmlToExplode = '';
+
+	// Load all pages
+	for ($page = 1 ; $page <= $totalPage ; $page ++) {
+		$html = yp_file_get_contents($link . $page);
+		include('05_check.file_contents.inc');
+
+		$htmlToExplode .= $html;
+	}
+	// Disable the page control
+	$pageMax = $page = 0;
+
+	$videos = explode('class="an-list-box-', $htmlToExplode);
 	unset($videos[0]);
 	$videos = array_values($videos);
 
@@ -15,15 +32,13 @@
 	$siteURLprefix = 'http://www.appledaily.com.tw';
 	foreach($videos as $video) {
 		$link = trim(str_between($video, ' href="', '"'));
-		// for http://ent.appledaily.com.tw
-		if (strpos($link, 'http://') === false) {
+		if (strpos($link, 'http://') === false)
 			$link = $siteURLprefix . $link;
-		}
 		$link = $scriptsURLprefix . '/appledaily.video.php' .
 			'?uid=' . $user_id  . '&amp;query=' . urlencode($link);
 		$links[] = $link;
 
-		$title = trim(str_between($video, '<p>', '</p>'));
+		$title = trim(str_between($video, '<h2>', '</h2>'));
 		$title = cleanFragments('/&#\d+/', convertUnicodePoints($title));
 		$titles[] = $title;
 	}

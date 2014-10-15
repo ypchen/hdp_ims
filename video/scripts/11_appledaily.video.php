@@ -13,7 +13,7 @@
 		$html = yp_file_get_contents($link);
 		include('05_check.file_contents.inc');
 
-		$link = trim(str_between($html, "{url: '", "'}"));
+		$link = trim(str_between($html, "[{url: '", "'}"));
 		include('05_check.link.inc');
 	}
 	catch (Exception $e) {
