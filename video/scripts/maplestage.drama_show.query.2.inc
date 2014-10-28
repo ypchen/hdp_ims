@@ -39,7 +39,7 @@
 		$note  = $video[4];
 		$extra = $video[5];
 
-		$pageStart = 0;
+		$pageStart = 1;
 		$queryLevel = '.query.query';
 		include('04_query.inc');
 	}
