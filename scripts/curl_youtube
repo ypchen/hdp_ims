@@ -1,0 +1,20 @@
+#!/bin/sh
+
+progCAT="/bin/cat"
+progCUT="/usr/bin/cut"
+progGREP="/bin/grep"
+progECHO="/bin/echo"
+progCURL="/usr/bin/curl"
+
+fileURL="/usr/local/etc/dvdplayer/ims_yv_url_data.dat"
+dataURL="`${progCAT} ${fileURL}`"
+
+# Handle 302 redirect
+headLOC=`${progCURL} -s -k -I "${dataURL}" | ${progGREP} "Location:"`
+while [ $? -eq 0 ]
+do
+	dataURL=`${progECHO} "${headLOC}" | ${progCUT} -d " " -f 2`
+	headLOC=`${progCURL} -s -k -I "${dataURL}" | ${progGREP} "Location:"`
+done
+
+exec ${progCURL} -s -k -D - -o - "${dataURL}"

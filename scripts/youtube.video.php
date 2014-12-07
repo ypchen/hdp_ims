@@ -905,6 +905,20 @@
 		fwrite($fileExtraInfo, $extraInfo);
 		fclose($fileExtraInfo);
 
+		// If the local file exists and contains a string whose length > 0, use it
+		$fileLocalYoutubeVideoURLredir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
+		if (file_exists($fileLocalYoutubeVideoURLredir) &&
+			(strlen($localURLredir = local_file_get_contents($fileLocalYoutubeVideoURLredir)) > 0)) {
+			$urlRedir = $localURLredir;
+
+			// Write the url file
+			$fileLocalYoutubeVideoURLdata = fopen('/usr/local/etc/dvdplayer/ims_yv_url_data.dat', 'w');
+			fwrite($fileLocalYoutubeVideoURLdata, $urlToGo);
+			fclose($fileLocalYoutubeVideoURLdata);
+
+			$urlToGo = $urlRedir;
+		}
+
 		// Return the video stream
 		header('Location: ' . $urlToGo);
 	}

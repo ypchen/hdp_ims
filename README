@@ -180,6 +180,25 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
+		--- v.2.2.3.26 YouTube 錯誤修復
+			*不確定是不是因為 YouTube 在 302 重導時給了太長的 URL 而導致無法觀看
+
+		A. 在此版中，增加使用本機 curl (或具 https 能力之 wget) 之方式，來解析 YouTube 之 URL
+
+		B. 使用方式為於 /usr/local/etc/dvdplayer/ims_yv_url_redir.dat 中指定存取本機 curl/wget 之 URL
+			例如：http://localhost/cgi-bin/curl_youtube
+
+		C. curl_youtube (提供於 scripts/curl_youtube)
+			為一個參考實作，需依使用者之本機狀況更改其內容，以及調整其存放位置
+			使用者亦可依本身喜好或所需，自行製作具相同功能之 script 程式
+
+		D. 在設定 ims_yv_url_redir.dat 後並安裝完成 curl_youtube 的情形下，解析 YouTube 之 URL 過程為
+			(1) youtube.video.php 讀取 YouTube 正常網頁 (https://www.youtube.com/watch?v=<<ID>>)
+			(2) 由網頁中取出 video URL
+			(3) 將 URL 存入 /usr/local/etc/dvdplayer/ims_yv_url_data.dat
+			(4) 叫用 ims_yv_url_redir.dat 中所設定之 URL 來使用本機上之 curl/wget 進行解析
+			(5) [若使用 curl_youtube] curl_youtube 將處理可能之 302 重導，並向 YouTube 取得資料轉送
+
 		--- v1.7 更動部分程式碼，以期未來能支援更多影音網站
 			* 敬請改用 v1.7 版之 youtube.video.php
 			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
