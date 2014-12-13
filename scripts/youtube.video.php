@@ -210,42 +210,6 @@
 		}
 	}
 
-	if (function_exists('fromPYtoPHP_2_2_3_19') === false) {
-		function fromPYtoPHP_2_2_3_19($s, $pyStatements) {
-			$retStr = '';
-			$pyStatItems = explode('+', $pyStatements);
-			foreach ($pyStatItems as $item) {
-				// Handle only three forms:
-				//	1. s[n]
-				//	2. s[n:m]
-				//	3. s[n:m:-1]
-				$paras = explode(':', trim($item));
-				switch(count($paras)) {
-					case 1:
-						// 1. s[n]
-						$retStr .= $s[intval(substr($paras[0], 2, -1))];
-						break;
-					case 2:
-						// 2. s[n:m]
-						$start = intval(substr($paras[0], 2));
-						$length = (intval(substr($paras[1], 0, -1)) -  $start);
-						$retStr .= substr($s, $start, $length);
-						break;
-					case 3:
-						// 3. s[n:m:-1]
-						$start = intval($paras[1]);
-						$length = (intval(substr($paras[0], 2)) - $start);
-						$retStr .= strrev(substr($s, $start, $length));
-						break;
-					default:
-						// Unknown form
-						break;
-				}
-			}
-			return $retStr;
-		}
-	}
-
 	if (function_exists('evalExprJS_2_2_3_19') === false) {
 		function evalExprJS_2_2_3_19($js, $expr, $vars) {
 			// Support the following forms of expr: n, v, v[expr], v.method(paras), FUNC(paras), and +, %
@@ -383,8 +347,8 @@
 	if (function_exists('extrFuncJS_2_2_3_19') === false) {
 		function extrFuncJS_2_2_3_19($js, $funcname) {
 			// Tested:
-			//	1. http://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflkClbFb.js
-			//	2. http://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflYhChiG.js
+			//	1. https://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflkClbFb.js
+			//	2. https://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflYhChiG.js
 			return '(' . trim(yp_str_between_2_1($js, 'function ' . $funcname . '(', '}')) . '}';
 		}
 	}
@@ -406,6 +370,43 @@
 					return $retValue;
 			}
 			return '';
+		}
+	}
+
+	if (function_exists('yp_str_until_close_2_3') === false) {
+		// Different from str_between(), will return the (sub-)string from $startPos
+		function yp_str_until_close_2_3($src, $startPos, $charOpen, $charClose) {
+			$retStr = '';
+			$pos = $startPos;
+			$openCount = 0;
+			// Copy until OPEN
+			while($src[$pos] != $charOpen) {
+				$retStr .= $src[$pos ++];
+			}
+			// OPEN
+			$openCount ++;
+			$retStr .= $src[$pos ++];
+			// Copy until CLOSE
+			while($openCount > 0) {
+				if ($src[$pos] == $charOpen)
+					$openCount ++;
+				if ($src[$pos] == $charClose)
+					$openCount --;
+				$retStr .= $src[$pos ++];
+			}
+			return $retStr;
+		}
+	}
+
+	if (function_exists('extrJSCodeID_2_3') === false) {
+		function extrJSCodeID_2_3($js, $id) {
+			if (($codePos = strpos($js, $codeID = 'function ' . $id . '(')) === false) {
+				if (($codePos = strpos($js, $codeID = 'var ' . $id . '=')) === false) {
+					return "// Unknown identifier: [$id]\n";
+				}
+			}
+			$code = trim(yp_str_until_close_2_3($js, $codePos, '{', '}'));
+			return $code . ";\n";
 		}
 	}
 
@@ -506,7 +507,7 @@
 	// If the local file exists and contains a string whose length > 0, use it
 	$fileLocalYoutubeVideoFmtPrefs = '/usr/local/etc/dvdplayer/ims_yv_fmt_prefs.dat';
 	if (file_exists($fileLocalYoutubeVideoFmtPrefs) &&
-		(strlen($localFmtPrefs = local_file_get_contents($fileLocalYoutubeVideoFmtPrefs)) > 0)) {
+		(strlen($localFmtPrefs = trim(local_file_get_contents($fileLocalYoutubeVideoFmtPrefs))) > 0)) {
 		$fmtPrefs = $localFmtPrefs;
 	}
 
@@ -524,7 +525,7 @@
 	// If the local file exists and contains a string whose length > 0, use it
 	$fileLocalYoutubeVideoCCPrefs = '/usr/local/etc/dvdplayer/ims_yv_cc_prefs.dat';
 	if (file_exists($fileLocalYoutubeVideoCCPrefs) &&
-		(strlen($localCCPrefs = local_file_get_contents($fileLocalYoutubeVideoCCPrefs)) > 0)) {
+		(strlen($localCCPrefs = trim(local_file_get_contents($fileLocalYoutubeVideoCCPrefs))) > 0)) {
 		$ccPrefs = $localCCPrefs;
 	}
 
@@ -597,20 +598,37 @@
 		return;
 	}
 
-	// Two ways to get youtube videos
-	// 1. May encounter "age verification"
-	//		$link = 'http://www.youtube.com/watch?v=' . $id;
-	// 2. May be forbidden by the video owner settings
-	//		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
+	$videoUnavailable = false;
+	$msgUnavailable = '';
+	$videoColorBars = array('eSw6mfuLiFo', 'lTzgMwi_SZ8');
+	$posColorBars = 0;
+	do {
+		// Two ways to get youtube videos
+		// 1. May encounter "age verification"
+		//		$link = 'https://www.youtube.com/watch?v=' . $id;
+		// 2. May be forbidden by the video owner settings
+		//		$link = 'https://www.youtube.com/get_video_info?video_id=' . $id;
 
-	// Try the first way
-	$link = 'http://www.youtube.com/watch?v=' . $id;
-	$html = yp_file_get_contents_1_7($link);
-
-	if (strpos($html, 'verify_age') !== false) {
-		$link = 'http://www.youtube.com/get_video_info?video_id=' . $id;
+		// Try the first way
+		$link = 'https://www.youtube.com/watch?v=' . $id;
 		$html = yp_file_get_contents_1_7($link);
-	}
+
+		if (strpos($html, 'verify_age') !== false) {
+			$link = 'https://www.youtube.com/get_video_info?video_id=' . $id;
+			$html = yp_file_get_contents_1_7($link);
+		}
+
+		if (($availability = strpos(yp_str_between_2_1(yp_str_between_2_1($html, 'id="player-unavailable"', '>'), 'class="', '"'), ' hid ')) === false) {
+			if ($videoUnavailable === false) {
+				$videoUnavailable = true;
+				$msgs = explode("\n", trim(yp_str_between_2_1(yp_str_between_2_1($html, '<h1 id="unavailable-message"', '/h1>'), '>', '<')));
+				$msgUnavailable = $msgs[count($msgs)-1];
+			}
+			$id = $videoColorBars[$posColorBars ++];
+		}
+		else
+			break;
+	} while(true);
 
 	// Get the format list
 	$separators = array(
@@ -642,81 +660,12 @@
 		}
 	}
 
-	// Get the new adaptive format list
-	$separators = array(
-		array('"adaptive_fmts": "', '"', false),
-	);
-	foreach ($separators as $separator) {
-		if (strpos($html, $separator[0]) !== false) {
-			if ($separator[2])
-				$adaptiveFmtList = explode(',', urldecode(trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
-			else
-				$adaptiveFmtList = explode(',', str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
-			break;
-		}
-	}
-	// Put the adaptive format items into the old lists
-	//	type=video/mp4 only
-	foreach ($adaptiveFmtList as $adaptiveItem) {
-		if (strpos($adaptiveItem, 'type=video%2Fmp4') === false)
-			continue;
-		$urlList[] = $adaptiveItem;
-		$itag = trim(yp_str_between_2_1($adaptiveItem, 'itag=', '\u0026'));
-		$size = trim(yp_str_between_2_1($adaptiveItem, 'size=', '\u0026'));
-		$fmtList[] = $itag . '/' . $size;
-	}
-
 	// Select the video url according to the user preference
 	$supportedVids = array();
 	foreach ($urlList as $urlEntry) {
-		$signature = '';
 		// Decode '&' (\u0026) if necessary
 		$urlEntry = str_replace('\u0026', '&', $urlEntry);
 		$itagInURL = trim(yp_str_between_2_1($urlEntry, 'itag=', '&'));
-		if (strpos($urlEntry, 'sig=') !== false) {
-			$signature = trim(yp_str_between_2_1($urlEntry, 'sig=', '&'));
-		}
-		else if (strpos($urlEntry, 's=') !== false) {
-			// encrypted signature
-			$s_len = strlen($s = trim(yp_str_between_2_1($urlEntry, 's=', '&')));
-
-			try {
-				// Try to extract JS decrypt function first
-				$linkJS = 'http:' . str_replace('\/', '/', trim(yp_str_between_2_1($html, '"js": "', '"')));
-				$codeJS = yp_file_get_contents_1_7($linkJS);
-				// Get signature decryption function name
-				$signature = execFuncJS_2_2_3_19($codeJS,
-					$decFuncName = trim(yp_str_between_2_1($codeJS, 'signature=', '(')), array($s));
-			}
-			catch (Exception $e) {
-				$signature = '';
-			}
-
-			if (strlen($signature) <= 0) {
-				// https://github.com/rg3/youtube-dl.git
-				// commit edb7fc5435ef522753aa0a17a018edc1dbea2ad
-				$decTable = array(
-					93 => 's[86:29:-1] + s[88] + s[28:5:-1]',
-					92 => 's[25] + s[3:25] + s[0] + s[26:42] + s[79] + s[43:79] + s[91] + s[80:83]',
-					91 => 's[84:27:-1] + s[86] + s[26:5:-1]',
-					90 => 's[25] + s[3:25] + s[2] + s[26:40] + s[77] + s[41:77] + s[89] + s[78:81]',
-					89 => 's[84:78:-1] + s[87] + s[77:60:-1] + s[0] + s[59:3:-1]',
-					88 => 's[7:28] + s[87] + s[29:45] + s[55] + s[46:55] + s[2] + s[56:87] + s[28]',
-//					87 => 's[6:27] + s[4] + s[28:39] + s[27] + s[40:59] + s[2] + s[60:]',
-//					86 => 's[80:72:-1] + s[16] + s[71:39:-1] + s[72] + s[38:16:-1] + s[82] + s[15::-1]',
-					85 => 's[3:11] + s[0] + s[12:55] + s[84] + s[56:84]',
-//					84 => 's[78:70:-1] + s[14] + s[69:37:-1] + s[70] + s[36:14:-1] + s[80] + s[:14][::-1]',
-					83 => 's[80:63:-1] + s[0] + s[62:0:-1] + s[63]',
-					82 => 's[80:37:-1] + s[7] + s[36:7:-1] + s[0] + s[6:0:-1] + s[37]',
-					81 => 's[56] + s[79:56:-1] + s[41] + s[55:41:-1] + s[80] + s[40:34:-1] + s[0] + s[33:29:-1] + s[34] + s[28:9:-1] + s[29] + s[8:0:-1] + s[9]',
-					80 => 's[1:19] + s[0] + s[20:68] + s[19] + s[69:80]',
-					79 => 's[54] + s[77:54:-1] + s[39] + s[53:39:-1] + s[78] + s[38:34:-1] + s[0] + s[33:29:-1] + s[34] + s[28:9:-1] + s[29] + s[8:0:-1] + s[9]',
-				);
-				if (array_key_exists($s_len, $decTable)) {
-					$signature = fromPYtoPHP($s, $decTable[$s_len]);
-				}
-			}
-		}
 		$key = array_search($itagInURL, $formats);
 		if ($key !== false) {
 			$fmtInfo = '';
@@ -728,7 +677,7 @@
 				}
 			}
 			// Ignore 'itag=XX&url='
-			$supportedVids[$key] = array(urldecode(yp_str_between_2_1($urlEntry, 'url=', '&')), $fmtInfo, $signature);
+			$supportedVids[$key] = array(urldecode(yp_str_between_2_1($urlEntry, 'url=', '&')), $fmtInfo, $urlEntry);
 		}
 	}
 
@@ -740,9 +689,65 @@
 
 	// http://userscripts.org/scripts/review/25105
 	//		url=url+"&signature="+signature;
-	// saved my day
-	if (strpos($urlToGo, 'signature') === false)
-		$urlToGo .= ('&signature=' . $v[0][2]);
+	// Get the signature from urlEntry if necessary
+	if (strpos($urlToGo, 'signature') === false) {
+		$urlEntry = $v[0][2];
+		if (strpos($urlEntry, 'sig=') !== false) {
+			$signature = trim(yp_str_between_2_1($urlEntry, 'sig=', '&'));
+		}
+		else if (strpos($urlEntry, 's=') !== false) {
+			// encrypted signature
+			$s_len = strlen($s = trim(yp_str_between_2_1($urlEntry, 's=', '&')));
+
+			try {
+				// Download the JS code
+				$linkJS = 'https:' . str_replace('\/', '/', trim(yp_str_between_2_1($html, '"js": "', '"')));
+				// set("signature",Wq(c))
+				//$linkJS = 'https://s.ytimg.com/yts/jsbin/html5player-zh_TW-vfl3r5wZG/html5player.js';
+				// signature=VD(c)
+				//$linkJS = 'https://s.ytimg.com/yts/jsbin/html5player-ima-en_US-vflkClbFb.js';
+				$codeJS = yp_file_get_contents_1_7($linkJS);
+
+				$fileLocalYoutubeVideoSIGredir = '/usr/local/etc/dvdplayer/ims_yv_sig_redir.dat';
+				if (file_exists($fileLocalYoutubeVideoSIGredir) &&
+					(strlen($localSIGredir = trim(local_file_get_contents($fileLocalYoutubeVideoSIGredir))) > 0)) {
+					$sigRedir = $localSIGredir;
+
+					$sigData = '';
+					$sigData .= "// $linkJS\n";
+					if (strlen($decFuncName = trim(yp_str_between_2_1($codeJS, '"signature",', '('))) <= 0) {
+						$decFuncName = trim(yp_str_between_2_1($codeJS, 'signature=', '('));
+					}
+					$topFunc = $decFuncName;
+
+					while(true) {
+						$sigData .= "// Need: \"$decFuncName\"\n";
+						$sigData .= extrJSCodeID_2_3($codeJS, $decFuncName);
+
+						// Write the sig data file
+						$fileLocalYoutubeVideoSIGdata = fopen('/usr/local/etc/dvdplayer/ims_yv_sig_data.dat', 'w');
+						fwrite($fileLocalYoutubeVideoSIGdata, $sigData . "print($topFunc(\"$s\"));\n");
+						fclose($fileLocalYoutubeVideoSIGdata);
+
+						$signature = trim(yp_file_get_contents_1_7($sigRedir));
+
+						if (strpos($signature, 'ReferenceError:') === false) break;
+
+						$decFuncName = trim(yp_str_between_2_1($signature, 'ReferenceError:', 'is not'));
+					}
+				}
+				else {
+					// Fallback to the previous handler
+					$signature = execFuncJS_2_2_3_19($codeJS,
+						$decFuncName = trim(yp_str_between_2_1($codeJS, 'signature=', '(')), array($s));
+				}
+			}
+			catch (Exception $e) {
+				$signature = '';
+			}
+		}
+		$urlToGo .= ('&signature=' . $signature);
+	}
 
 	if ($URLonly === false) {
 		// Set the extra information for display
@@ -759,7 +764,7 @@
 		if (isset($ccPreferredLangs)) {
 
 			// Get the available cc list
-			$link = 'http://www.youtube.com/api/timedtext?type=list&v=' . $id;
+			$link = 'https://www.youtube.com/api/timedtext?type=list&v=' . $id;
 			$xml = yp_file_get_contents_1_7($link);
 
 			if ((strlen($xml) > 0) && (strpos($xml, '<track ') !== false)) {
@@ -798,7 +803,7 @@
 						$ccNameDisplay = ': ' . $ccNameDisplay;
 					}
 
-					$link = 'http://www.youtube.com/api/timedtext?type=track&v=' . $id . '&lang=' . $cc[0][0] . '&name=' . urlencode($cc[0][1]);
+					$link = 'https://www.youtube.com/api/timedtext?type=track&v=' . $id . '&lang=' . $cc[0][0] . '&name=' . urlencode($cc[0][1]);
 					$xml = yp_file_get_contents_1_7($link);
 
 					if ((strlen($xml) > 0) && (strpos($xml, '<transcript>') !== false)) {
@@ -895,6 +900,12 @@
 			$extraInfo .= ' [-]';
 		}
 
+		// video unavailable, discard any CC status
+		if ($videoUnavailable !== false) {
+			$ccStatus = $msgUnavailable;
+			$ccStatus .= "\n255:0:0";
+		}
+
 		// Write the ccStatus file
 		$fileCCStatus = fopen('/usr/local/etc/dvdplayer/ims_cc_status.dat', 'w');
 		fwrite($fileCCStatus, $ccStatus);
@@ -908,7 +919,7 @@
 		// If the local file exists and contains a string whose length > 0, use it
 		$fileLocalYoutubeVideoURLredir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
 		if (file_exists($fileLocalYoutubeVideoURLredir) &&
-			(strlen($localURLredir = local_file_get_contents($fileLocalYoutubeVideoURLredir)) > 0)) {
+			(strlen($localURLredir = trim(local_file_get_contents($fileLocalYoutubeVideoURLredir))) > 0)) {
 			$urlRedir = $localURLredir;
 
 			// Write the url file

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# It's just a reference implementation.
+# You need to modify it according to your local environment.
+
+progCAT="/bin/cat"
+progECHO="/bin/echo"
+progNICE="/bin/nice"
+progJS="/opt/bin/js"
+
+fileSIG="/usr/local/etc/dvdplayer/ims_yv_sig_data.dat"
+fileSIGoutput="/usr/local/etc/dvdplayer/ims_yv_sig_output.dat"
+
+${progECHO} -e "Content-Type: text/plain\n"
+${progNICE} -n 0 ${progJS} -f "${fileSIG}" > "${fileSIGoutput}" 2>&1
+exec ${progCAT} "${fileSIGoutput}"

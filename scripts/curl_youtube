@@ -1,10 +1,14 @@
 #!/bin/sh
 
+# It's just a reference implementation.
+# You need to modify it according to your local environment.
+
 progCAT="/bin/cat"
 progCUT="/usr/bin/cut"
 progGREP="/bin/grep"
 progECHO="/bin/echo"
-progCURL="/usr/bin/curl"
+progNICE="/bin/nice"
+progCURL="/opt/bin/curl"
 
 fileURL="/usr/local/etc/dvdplayer/ims_yv_url_data.dat"
 dataURL="`${progCAT} ${fileURL}`"
@@ -17,4 +21,4 @@ do
 	headLOC=`${progCURL} -s -k -I "${dataURL}" | ${progGREP} "Location:"`
 done
 
-exec ${progCURL} -s -k -D - -o - "${dataURL}"
+exec ${progNICE} -n 6 ${progCURL} -s -k -N -D - -o - "${dataURL}"

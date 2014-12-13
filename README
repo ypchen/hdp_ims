@@ -180,7 +180,26 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
-		--- v.2.2.3.26 YouTube 錯誤修復
+		--- v2.3 改用 ossp-js (of ipkg) 進行 YouTube signature 解碼以及提供影片無法觀看之訊息
+
+		A. 在此版中，增加使用本機 ossp-js (ipkg 之 package) 之方式，來解析 YouTube 之加密 signature
+
+		B. 使用方式為於 /usr/local/etc/dvdplayer/ims_yv_sig_redir.dat 中指定存取本機 js 之 URL
+			例如：http://localhost/cgi-bin/js_youtube
+
+		C. js_youtube (參考實作提供於 scripts/js_youtube)
+			為一個參考實作，需依使用者之本機狀況更改其內容，以及調整其存放位置
+			使用者亦可依本身喜好或所需，自行製作具相同功能之 script 程式
+
+		D. 在設定 ims_yv_js_redir.dat 後並安裝完成 js_youtube 的情形下，解碼 YouTube 之 signature 過程為
+			(1) youtube.video.php 讀取 YouTube 正常網頁 (https://www.youtube.com/watch?v=<<ID>>)
+			(2) 由網頁中取出 video URL，若含有 "s=<<加密之 signature>>"，則將進行以下步驟
+			(3) 取得 YouTube 提供之 JS 檔案
+			(4) 將相關資料存入 /usr/local/etc/dvdplayer/ims_yv_sig_data.dat
+			(5) 叫用 ims_yv_sig_redir.dat 中所設定之 URL 來使用本機上之 js (ossp-js) 進行解碼
+			(6) 若發現有 undefined reference，則重覆上二步驟再次嘗試
+
+		--- v2.2.3.26 YouTube 錯誤修復
 			*不確定是不是因為 YouTube 在 302 重導時給了太長的 URL 而導致無法觀看
 
 		A. 在此版中，增加使用本機 curl (或具 https 能力之 wget) 之方式，來解析 YouTube 之 URL
@@ -188,7 +207,7 @@
 		B. 使用方式為於 /usr/local/etc/dvdplayer/ims_yv_url_redir.dat 中指定存取本機 curl/wget 之 URL
 			例如：http://localhost/cgi-bin/curl_youtube
 
-		C. curl_youtube (提供於 scripts/curl_youtube)
+		C. curl_youtube (參考實作提供於 scripts/curl_youtube)
 			為一個參考實作，需依使用者之本機狀況更改其內容，以及調整其存放位置
 			使用者亦可依本身喜好或所需，自行製作具相同功能之 script 程式
 
