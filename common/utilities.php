@@ -261,11 +261,15 @@
 
 	// http://www.weberdev.com/get_example-4291.html
 	// --- BEGIN ---
-	function selfURL() {
+	function baseURL() {
 		$s = empty($_SERVER['HTTPS']) ? '' : ($_SERVER['HTTPS'] == 'on') ? 's' : '';
 		$protocol = strleft(strtolower($_SERVER['SERVER_PROTOCOL']), '/') . $s;
 		$port = ($_SERVER['SERVER_PORT'] == '80') ? '' : (':' . $_SERVER['SERVER_PORT']);
-		return $protocol . '://' . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
+		return $protocol . '://' . $_SERVER['HTTP_HOST'] . $port;
+	}
+
+	function selfURL() {
+		return (baseURL() . $_SERVER['REQUEST_URI']);
 	}
 
 	function strleft($s1, $s2) {
@@ -293,10 +297,7 @@
 	}
 
 	function wholeURLforTheExecutedFile() {
-		$s = empty($_SERVER['HTTPS']) ? '' : ($_SERVER['HTTPS'] == 'on') ? 's' : '';
-		$protocol = strleft(strtolower($_SERVER['SERVER_PROTOCOL']), '/') . $s;
-		$port = ($_SERVER['SERVER_PORT'] == '80') ? '' : (':' . $_SERVER['SERVER_PORT']);
-		return $protocol . '://' . $_SERVER['SERVER_NAME'] . $port . $_SERVER['SCRIPT_NAME'];
+		return (baseURL() . $_SERVER['SCRIPT_NAME']);
 	}
 
 	function myImage($imgName, $imgDir = ''){

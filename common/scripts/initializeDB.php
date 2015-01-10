@@ -67,7 +67,7 @@
 			$templine = '';
 		}
 	}
-	echo "DB initialized\r\n";
+	echo "DB initialized (action = " . (($action === true) ? "true" : "false") . ")\r\n";
 ?>
 <?php
 	require('00_suffix.php');

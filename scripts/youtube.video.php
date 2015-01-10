@@ -529,7 +529,6 @@
 		$ccPrefs = $localCCPrefs;
 	}
 
-	// Explode the string to get the cc preference
 	if (!empty($ccPrefs) && (strlen($ccPrefs) > 0)) {
 		$ccPreferredLangs = explode(',', $ccPrefs);
 	}
@@ -565,14 +564,12 @@
 			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
 		}
 
-		// Write the extraInfo file
 		$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
 		fwrite($fileExtraInfo, $extraInfo);
 		fclose($fileExtraInfo);
 
-		// Return the video stream
+		// Redirect to the video stream
 		header('Location: ' . $link);
-
 		return;
 	}
 	else if (strcmp($id, 'site_56') == 0) {
@@ -587,12 +584,11 @@
 			$link = $video_data['info']['rfiles'][0]['url'];
 			$extraInfo = 'type: ' . $video_data['info']['rfiles'][0]['type'];
 
-			// Write the extraInfo file
 			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
 			fwrite($fileExtraInfo, $extraInfo);
 			fclose($fileExtraInfo);
 
-			// Return the video stream
+			// Redirect to the video stream
 			header('Location: ' . $link);
 		}
 		return;
@@ -724,7 +720,6 @@
 						$sigData .= "// Need: \"$decFuncName\"\n";
 						$sigData .= extrJSCodeID_2_3($codeJS, $decFuncName);
 
-						// Write the sig data file
 						$fileLocalYoutubeVideoSIGdata = fopen('/usr/local/etc/dvdplayer/ims_yv_sig_data.dat', 'w');
 						fwrite($fileLocalYoutubeVideoSIGdata, $sigData . "print($topFunc(\"$s\"));\n");
 						fclose($fileLocalYoutubeVideoSIGdata);
@@ -758,17 +753,22 @@
 		unlink($filenameStart  = '/usr/local/etc/dvdplayer/ims_cc_start.dat');
 		unlink($filenameEnd    = '/usr/local/etc/dvdplayer/ims_cc_end.dat');
 		unlink($filenameText   = '/usr/local/etc/dvdplayer/ims_cc_text.dat');
+
 		$ccStatus = '';
 		unlink($filenameStatus = '/usr/local/etc/dvdplayer/ims_cc_status.dat');
 
-		if (isset($ccPreferredLangs)) {
-
+		if ($videoUnavailable !== false) {
+			// video unavailable, discard CC
+			$ccStatus = $msgUnavailable;
+			$ccStatus .= "\n255:0:0";
+			$extraInfo .= " $msgUnavailable";
+		}
+		else if (isset($ccPreferredLangs)) {
 			// Get the available cc list
 			$link = 'https://www.youtube.com/api/timedtext?type=list&v=' . $id;
 			$xml = yp_file_get_contents_1_7($link);
 
 			if ((strlen($xml) > 0) && (strpos($xml, '<track ') !== false)) {
-
 				// Get the available cc list
 				$ccList = explode('<track ', $xml);
 				unset($ccList[0]);
@@ -900,29 +900,19 @@
 			$extraInfo .= ' [-]';
 		}
 
-		// video unavailable, discard any CC status
-		if ($videoUnavailable !== false) {
-			$ccStatus = $msgUnavailable;
-			$ccStatus .= "\n255:0:0";
-		}
-
-		// Write the ccStatus file
 		$fileCCStatus = fopen('/usr/local/etc/dvdplayer/ims_cc_status.dat', 'w');
 		fwrite($fileCCStatus, $ccStatus);
 		fclose($fileCCStatus);
 
-		// Write the extraInfo file
 		$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
 		fwrite($fileExtraInfo, $extraInfo);
 		fclose($fileExtraInfo);
 
-		// If the local file exists and contains a string whose length > 0, use it
 		$fileLocalYoutubeVideoURLredir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
 		if (file_exists($fileLocalYoutubeVideoURLredir) &&
 			(strlen($localURLredir = trim(local_file_get_contents($fileLocalYoutubeVideoURLredir))) > 0)) {
 			$urlRedir = $localURLredir;
 
-			// Write the url file
 			$fileLocalYoutubeVideoURLdata = fopen('/usr/local/etc/dvdplayer/ims_yv_url_data.dat', 'w');
 			fwrite($fileLocalYoutubeVideoURLdata, $urlToGo);
 			fclose($fileLocalYoutubeVideoURLdata);
@@ -930,7 +920,7 @@
 			$urlToGo = $urlRedir;
 		}
 
-		// Return the video stream
+		// Redirect to the video stream
 		header('Location: ' . $urlToGo);
 	}
 	else if (!empty($_GET['URLtext'])) {

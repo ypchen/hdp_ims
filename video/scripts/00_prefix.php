@@ -49,7 +49,7 @@
 
 	$myScriptName     = $_SERVER['SCRIPT_NAME'];
 
-	$serverName       = $_SERVER['SERVER_NAME'];
+	$serverName       = $_SERVER['HTTP_HOST'];
 	$serverPort       = $_SERVER['SERVER_PORT'];
 	if (!empty($imsOnHeroku))
 		$remoteIPStr  = getRealIPAddress();
