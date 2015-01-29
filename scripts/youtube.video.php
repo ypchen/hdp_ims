@@ -544,7 +544,7 @@
 		$html = yp_file_get_contents_1_7($link);
 
 		$mapRes = array(
-			'37' => 'hd1080_', '22' => 'hd_', '35' => 'hq_', '34' => 'ld_', '5' => ''
+			'37' => 'hd1080_', '22' => 'hd_', '35' => 'hq_', '18' => 'ld_', '34' => 'ld_', '5' => ''
 		);
 
 		if (strpos($html, '"stream_h264_') !== false) {
@@ -572,26 +572,50 @@
 		header('Location: ' . $link);
 		return;
 	}
-	else if (strcmp($id, 'site_56') == 0) {
-		// It's a 56.com request
-		// 'link' must be given
-		$link = $_GET['link'];
-		$html = yp_file_get_contents_1_7($link);
+	else if (strcmp($id, 'site_flvxz') == 0) {
+		$fileLocalFLVtoken = '/usr/local/etc/dvdplayer/ims_flv_token.dat';
+		if (file_exists($fileLocalFLVtoken) &&
+			(strlen($localFLVtoken = trim(local_file_get_contents($fileLocalFLVtoken))) > 0)) {
+			$flvToken = $localFLVtoken;
+			// Refer to $formats[0] as the highest acceptable resolution
+			// [0=>低清，1=>标清，2=>高清，3=>超清，4=>720P，5=>1080P，6=>高码1080P，7=>原画，8=>4K，9=>高码4K]
+			// '9' (not used in Youtube): accept everything, the higher the better
+			// '37':   1080 -- <= 6
+			// '22':    720 -- <= 4
+			// '35':    480 -- <= 3
+			// '18/34': 360 -- <= 2
+			// '6':     270 -- <= 1
+			// '5':     240 -- <= 0
+			$resCutOff = array(
+				'9' => 9, '37' => 6, '22' => 4, '35' => 3, '18' => 2, '34' => 2, '6' => 1, '5' => 0
+			);
 
-		if (strpos($html, '"rfiles":') !== false) {
-			$video_data = json_decode ($html, true);
-			// Use the first one
-			$link = $video_data['info']['rfiles'][0]['url'];
-			$extraInfo = 'type: ' . $video_data['info']['rfiles'][0]['type'];
+			// Call flvxz.com (flv.cn) to resolve the video url
+			$link = 'http://api.flvxz.com/' . $flvToken . '/jsonp/purejson/ftype/mp4.flv/url/' . $_GET['link'] . '/';
+			$json = yp_file_get_contents_1_7($link);
+			if (empty($json)) return;
 
-			$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-			fwrite($fileExtraInfo, $extraInfo);
-			fclose($fileExtraInfo);
+			$res = json_decode($json, true);
+			if (empty($res) || count($res) <= 0) return;
+
+			// Go through each entries and look for the best fit
+			$indexBest = -1;
+			$indexBestRes = -1;
+			$countItems = count($res);
+			for ($index = 0 ; $index < $countItems ; $index ++) {
+				$item = $res[$index];
+				if (count($item['files']) > 1) continue;
+				if (($hd = intval($item['hd'])) > intval($resCutOff[$formats[0]])) continue;
+				if ($hd > $indexBestRes) {
+					$indexBestRes = $hd;
+					$indexBest = $index;
+				}
+			}
 
 			// Redirect to the video stream
-			header('Location: ' . $link);
+			header('Location: ' . $res[$indexBest]['files'][0]['furl']);
+			return;
 		}
-		return;
 	}
 
 	$videoUnavailable = false;
@@ -628,30 +652,24 @@
 
 	// Get the format list
 	$separators = array(
-		array('"fmt_list": "', '"', false),
-		array('fmt_list=', '\u0026', true)
+		array('"fmt_list":"', '"'),
+		array('"fmt_list": "', '"')
 	);
 	foreach ($separators as $separator) {
 		if (strpos($html, $separator[0]) !== false) {
-			if ($separator[2])
-				$fmtList = explode(',', urldecode(trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
-			else
-				$fmtList = explode(',', str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
+			$fmtList = explode(',', str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
 			break;
 		}
 	}
 
 	// Get the format <-> url map
 	$separators = array(
-		array('"url_encoded_fmt_stream_map": "', '"', false),
-		array('url_encoded_fmt_stream_map=', '\u0026', true)
+		array('"url_encoded_fmt_stream_map":"', '"'),
+		array('"url_encoded_fmt_stream_map": "', '"')
 	);
 	foreach ($separators as $separator) {
 		if (strpos($html, $separator[0]) !== false) {
-			if ($separator[2])
-				$urlList = explode(',', ($htmlToExplode = urldecode(trim(yp_str_between_2_1($html, $separator[0], $separator[1])))));
-			else
-				$urlList = explode(',', ($htmlToExplode = trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
+			$urlList = explode(',', ($htmlToExplode = trim(yp_str_between_2_1($html, $separator[0], $separator[1]))));
 			break;
 		}
 	}
@@ -683,6 +701,10 @@
 	// User preferred format (use the first one)
 	$urlToGo = $v[0][0];
 
+	$separators = array(
+		array('"js":"', '"'),
+		array('"js": "', '"')
+	);
 	// http://userscripts.org/scripts/review/25105
 	//		url=url+"&signature="+signature;
 	// Get the signature from urlEntry if necessary
@@ -697,7 +719,13 @@
 
 			try {
 				// Download the JS code
-				$linkJS = 'https:' . str_replace('\/', '/', trim(yp_str_between_2_1($html, '"js": "', '"')));
+				foreach ($separators as $separator) {
+					if (strpos($html, $separator[0]) !== false) {
+						$linkJS = 'https:' . str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1])));
+						break;
+					}
+				}
+
 				// set("signature",Wq(c))
 				//$linkJS = 'https://s.ytimg.com/yts/jsbin/html5player-zh_TW-vfl3r5wZG/html5player.js';
 				// signature=VD(c)

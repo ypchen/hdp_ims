@@ -48,6 +48,62 @@
 			include('05_check.base.inc');
 			break;
 
+		case 'Tv56':
+			$links = array();
+			foreach($res['ids'] as $id) {
+				$links[] =
+					$localhostYoutubeVideo . '?query=site_flvxz' .
+						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+						'&amp;link='       . urlencode(
+							strtr(base64_encode(preg_replace('/^(https?:)\/\//', '$1##',
+								'http://www.56.com/u12/v_' . $id . '.html')),'+/','-_'));
+			}
+
+			$itemTotal = count($links);
+			include('05_check.base.inc');
+			break;
+
+		case 'Tudou2':
+			$links = array();
+			foreach($res['ids'] as $id) {
+				$links[] =
+					$localhostYoutubeVideo . '?query=site_flvxz' .
+						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+						'&amp;link='       . urlencode(
+							strtr(base64_encode(preg_replace('/^(https?:)\/\//', '$1##',
+								'http://www.tudou.com/programs/view/' . $id . '/')),'+/','-_'));
+			}
+
+			$itemTotal = count($links);
+			include('05_check.base.inc');
+			break;
+
+		case 'BiliBili':
+			$idAV = $res['ids'][0];
+			$indexStart = intval($res['ids'][1]);
+			if (count($res['ids']) == 3)
+				$indexEnd = intval($res['ids'][2]);
+			else
+				$indexEnd = $indexStart;
+			$ids = array();
+			for ($index = $indexStart ; $index <= $indexEnd ; $index ++) {
+				$ids[] = $idAV . '/index_' . $index . '.html';
+			}
+
+			$links = array();
+			foreach($ids as $id) {
+				$links[] =
+					$localhostYoutubeVideo . '?query=site_flvxz' .
+						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+						'&amp;link='       . urlencode(
+							strtr(base64_encode(preg_replace('/^(https?:)\/\//', '$1##',
+								'http://www.bilibili.com/video/av' . $id)),'+/','-_'));
+			}
+
+			$itemTotal = count($links);
+			include('05_check.base.inc');
+			break;
+
 		default:
 				// Clear-text youtube url(s) not found
 				// Unknown maplestage format

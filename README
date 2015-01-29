@@ -84,6 +84,8 @@
 			* 敬請改用 v1.7 版之 youtube.video.php
 			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
 	14. [v2.0] 開始支援 heroku deployment
+	15. [v2.3] 使用 ossp-js (of ipkg) 進行 YouTube signature 解碼
+	16. [v2.4] 加入支援使用飛驢下載 (http://flv.cn or http://flvxz.com) 進行視頻解析
 
 使用
 	1. 直接放在本機使用
@@ -157,6 +159,8 @@
 
 	3. 範例網站
 
+		*** 範例網站預計於 2016 年 1 月中關閉 (domain name 到期日為 2016-01-26) ***
+
 		我直接把這組 code 建立成範例網站，有興趣的人可以直接用用看，
 		但原則上不提供任何技術支援或服務
 
@@ -179,6 +183,15 @@
 		這個變數讓 IMS 網站知道自己的 youtube.video.php 放置的 URL，例如
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
+
+		--- v2.4 加入支援使用飛驢下載 (http://flv.cn or http://flvxz.com) 進行視頻解析
+
+		A. 必須於 /usr/local/etc/dvdplayer/ims_flv_token.dat 存入自行向 flvxz.com 申請之 token 資料
+
+		B. /usr/local/etc/dvdplayer/ims_flv_token.dat 的內容格式為 (請勿使用下面做為範例而亂寫的字串)
+			token/1234567890abcedfghijklmnopqrstuv
+
+		C. 目前先用於楓林網中用到 Tudou2 及 Tv56 做為後端的部分 (BiliBili 似乎不易成功)
 
 		--- v2.3 改用 ossp-js (of ipkg) 進行 YouTube signature 解碼以及提供影片無法觀看之訊息
 
