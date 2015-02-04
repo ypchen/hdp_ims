@@ -6,109 +6,119 @@
 	$title = trim(str_between($html, '<h3>', '</h3>'));
 	$title = convertUnicodePoints($title);
 
-	if (strlen($base64 = trim(str_between($html, ' data-data="', '"'))) > 0) {
-		// Contributed by absentfriend@HDPFans
-		$json = base64_decode(strrev($base64));
-		$res = json_decode($json, true);
-		$src = $res['source'];
+	$vidSources = explode(' data-data=', $html);
+	if (count($vidSources) >= 2) {
+
+		unset($vidSources[0]);
+		$vidSources = array_values($vidSources);
+
+		$srcPrefix = 'MPLSTG-';
+		$urlComp = array(
+			'Letv'		=> array('http://www.letv.com/ptv/vplay/', '.html', '//', ''),
+			'QQ'		=> array('http://v.qq.com/cover/2/2w2kh6q2wd10uue.html?vid=', '', '//', ''),
+			'Tv56'		=> array('http://www.56.com/u12/v_', '.html', '//', ''),
+			'Tudou2'	=> array('http://www.tudou.com/programs/view/', '/', '//', ''),
+			'Youku'		=> array('http://v.youku.com/v_show/id_', '.html', '//', ''),
+//			'Sohu'		=> array('http://tv.sohu.com/', '.shtml', '/(.*)-/', ''),
+		);
+		// Look for supported video sources
+		foreach ($vidSources as $vidSource) {
+
+			if (strlen($base64 = trim(str_between($vidSource, '"', '"'))) <= 0) continue;
+
+			// Contributed by absentfriend@HDPFans
+			$json = base64_decode(strrev($base64));
+			$res = json_decode($json, true);
+			$src = $res['source'];
+
+			switch ($src) {
+
+				case 'Youtube':
+				case 'YoutubeBypass':
+					$ids = $res['ids'];
+					include('05_check.link.idcount.inc');
+					return;
+
+				case 'Dailymotion':
+					$links = array();
+					foreach($res['ids'] as $id) {
+						$links[] =
+							$localhostYoutubeVideo . '?query=site_dailymotion' .
+								'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+								'&amp;actual_src=' . urlencode($srcPrefix . $src) .
+								'&amp;link='       . urlencode('http://www.dailymotion.com/embed/video/' . $id);
+					}
+					$itemTotal = count($links);
+					include('05_check.base.inc');
+					return;
+
+				case 'Letv':
+				case 'QQ':
+				case 'Tv56':
+				case 'Tudou2':
+				case 'Youku':
+//				case 'Sohu':
+					$links = array();
+					foreach($res['ids'] as $id) {
+						$links[] =
+							$localhostYoutubeVideo . '?query=site_flvxz' .
+								'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+								'&amp;actual_src=' . urlencode($srcPrefix . $src) .
+								'&amp;link='       . urlencode(
+									strtr(base64_encode(
+										preg_replace('/^(https?:)\/\//', '$1##',
+											($urlComp[$src][0] .
+												preg_replace($urlComp[$src][2], $urlComp[$src][3], $id) .
+											$urlComp[$src][1]))), '+/', '-_'));
+					}
+					$itemTotal = count($links);
+					include('05_check.base.inc');
+					return;
+
+				case 'BiliBili':
+					$links = array();
+					$id = $res['ids'][0];
+					if (count($res['ids']) == 3) {
+						$indexStart = intval($res['ids'][1]);
+						$indexNum = intval($res['ids'][2]);
+					}
+					else {
+						$indexStart = 1;
+						$indexNum = intval($res['ids'][1]);
+					}
+					for ($index = $indexStart ; $index < ($indexStart+$indexNum) ; $index ++) {
+						$links[] =
+							$localhostYoutubeVideo . '?query=site_flvxz' .
+								'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+								'&amp;actual_src=' . urlencode($srcPrefix . $src) .
+								'&amp;link='       . urlencode(
+									strtr(base64_encode(
+										preg_replace('/^(https?:)\/\//', '$1##',
+											('http://www.bilibili.com/video/av' .
+												$id .
+											'/index_' . strval($index) . '.html'))), '+/', '-_'));
+					}
+					$itemTotal = count($links);
+					include('05_check.base.inc');
+					return;
+
+				case 'VideoGroup':
+					$links = array();
+					foreach($res['elements'] as $element) {
+						$links[] = str_replace('\/', '/', trim(str_between($element, 'src=\"', '\"')));
+					}
+					$itemTotal = count($links);
+					include('05_check.base.inc');
+					return;
+
+				default:
+					// Try next
+					break;
+			}
+		}
 	}
-	else {
-		$src = 'Unknown';
-		$ids = array();
-	}
 
-	switch ($src) {
-
-		case 'Youtube':
-		case 'YoutubeBypass':
-			$ids = $res['ids'];
-			include('05_check.link.idcount.inc');
-			break;
-
-		case 'Dailymotion':
-			$links = array();
-			foreach($res['ids'] as $id) {
-				$links[] =
-					$localhostYoutubeVideo . '?query=site_dailymotion' .
-						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
-						'&amp;link='       . urlencode('http://www.dailymotion.com/embed/video/' . $id);
-			}
-
-			$itemTotal = count($links);
-			include('05_check.base.inc');
-			break;
-
-		case 'VideoGroup':
-			$links = array();
-			foreach($res['elements'] as $element) {
-				$links[] = str_replace('\/', '/', trim(str_between($element, 'src=\"', '\"')));
-			}
-
-			$itemTotal = count($links);
-			include('05_check.base.inc');
-			break;
-
-		case 'Tv56':
-			$links = array();
-			foreach($res['ids'] as $id) {
-				$links[] =
-					$localhostYoutubeVideo . '?query=site_flvxz' .
-						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
-						'&amp;link='       . urlencode(
-							strtr(base64_encode(preg_replace('/^(https?:)\/\//', '$1##',
-								'http://www.56.com/u12/v_' . $id . '.html')),'+/','-_'));
-			}
-
-			$itemTotal = count($links);
-			include('05_check.base.inc');
-			break;
-
-		case 'Tudou2':
-			$links = array();
-			foreach($res['ids'] as $id) {
-				$links[] =
-					$localhostYoutubeVideo . '?query=site_flvxz' .
-						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
-						'&amp;link='       . urlencode(
-							strtr(base64_encode(preg_replace('/^(https?:)\/\//', '$1##',
-								'http://www.tudou.com/programs/view/' . $id . '/')),'+/','-_'));
-			}
-
-			$itemTotal = count($links);
-			include('05_check.base.inc');
-			break;
-
-		case 'BiliBili':
-			$idAV = $res['ids'][0];
-			$indexStart = intval($res['ids'][1]);
-			if (count($res['ids']) == 3)
-				$indexEnd = intval($res['ids'][2]);
-			else
-				$indexEnd = $indexStart;
-			$ids = array();
-			for ($index = $indexStart ; $index <= $indexEnd ; $index ++) {
-				$ids[] = $idAV . '/index_' . $index . '.html';
-			}
-
-			$links = array();
-			foreach($ids as $id) {
-				$links[] =
-					$localhostYoutubeVideo . '?query=site_flvxz' .
-						'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
-						'&amp;link='       . urlencode(
-							strtr(base64_encode(preg_replace('/^(https?:)\/\//', '$1##',
-								'http://www.bilibili.com/video/av' . $id)),'+/','-_'));
-			}
-
-			$itemTotal = count($links);
-			include('05_check.base.inc');
-			break;
-
-		default:
-				// Clear-text youtube url(s) not found
-				// Unknown maplestage format
-				include('05_check.link.idcount.inc');
-			break;
-
-	}
+	// Unknown format or no 'data-data' section
+	$ids = array();
+	include('05_check.link.idcount.inc');
 ?>

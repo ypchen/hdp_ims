@@ -410,6 +410,20 @@
 		}
 	}
 
+	if (function_exists('simpleFileWrite_2_4_1') === false) {
+		function simpleFileWrite_2_4_1($filePathName, $contentToWrite) {
+			$fileToWrite = fopen($filePathName, 'w');
+			fwrite($fileToWrite, $contentToWrite);
+			fclose($fileToWrite);
+		}
+	}
+
+	if (function_exists('writeExtraInfo_2_4_1') === false) {
+		function writeExtraInfo_2_4_1($extraInfo) {
+			simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_extra_info.dat', $extraInfo);
+		}
+	}
+
 	// If there is no 'query',
 	// respond to the request of youtube.video.php
 	if (($evalLevel == 0) && empty($_GET['query'])) {
@@ -536,6 +550,11 @@
 		unset($ccPreferredLangs);
 	}
 
+	$videoUnavailable = false;
+	$msgUnavailable = '';
+	$videoColorBars = array('eSw6mfuLiFo', 'lTzgMwi_SZ8');
+	$posColorBars = 0;
+
 	if (strcmp($id, 'site_dailymotion') == 0) {
 		// It's a dailymotion request
 		// 'link' must be given
@@ -564,34 +583,65 @@
 			$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
 		}
 
-		$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-		fwrite($fileExtraInfo, $extraInfo);
-		fclose($fileExtraInfo);
+		if (!empty($_GET['actual_src']))
+			$extraInfo .= '; SRC: ' . $_GET['actual_src'];
+		writeExtraInfo_2_4_1($extraInfo);
 
 		// Redirect to the video stream
 		header('Location: ' . $link);
 		return;
 	}
 	else if (strcmp($id, 'site_flvxz') == 0) {
-		$fileLocalFLVtoken = '/usr/local/etc/dvdplayer/ims_flv_token.dat';
-		if (file_exists($fileLocalFLVtoken) &&
-			(strlen($localFLVtoken = trim(local_file_get_contents($fileLocalFLVtoken))) > 0)) {
-			$flvToken = $localFLVtoken;
-			// Refer to $formats[0] as the highest acceptable resolution
-			// [0=>低清，1=>标清，2=>高清，3=>超清，4=>720P，5=>1080P，6=>高码1080P，7=>原画，8=>4K，9=>高码4K]
-			// '9' (not used in Youtube): accept everything, the higher the better
-			// '37':   1080 -- <= 6
-			// '22':    720 -- <= 4
-			// '35':    480 -- <= 3
-			// '18/34': 360 -- <= 2
-			// '6':     270 -- <= 1
-			// '5':     240 -- <= 0
-			$resCutOff = array(
-				'9' => 9, '37' => 6, '22' => 4, '35' => 3, '18' => 2, '34' => 2, '6' => 1, '5' => 0
-			);
 
-			// Call flvxz.com (flv.cn) to resolve the video url
-			$link = 'http://api.flvxz.com/' . $flvToken . '/jsonp/purejson/ftype/mp4.flv/url/' . $_GET['link'] . '/';
+		$methodFlvxz = 0;
+
+		if ((!empty($USEcurl)) || (extension_loaded('openssl') && in_array('https', stream_get_wrappers()))) {
+			$methodFlvxz = 1;
+		}
+		else {
+			$fileLocalFLVtoken = '/usr/local/etc/dvdplayer/ims_flv_token.dat';
+			if (file_exists($fileLocalFLVtoken) &&
+				(strlen($localFLVtoken = trim(local_file_get_contents($fileLocalFLVtoken))) > 0)) {
+				$flvToken = $localFLVtoken;
+				$methodFlvxz = 2;
+			}
+		}
+
+		// Refer to $formats[0] as the highest acceptable resolution
+		// [0=>低清，1=>标清，2=>高清，3=>超清，4=>720P，5=>1080P，6=>高码1080P，7=>原画，8=>4K，9=>高码4K]
+		// '9' (not used in Youtube): accept everything, the higher the better
+		// '37':   1080 -- <= 6
+		// '22':    720 -- <= 4
+		// '35':    480 -- <= 3
+		// '18/34': 360 -- <= 2
+		// '6':     270 -- <= 1
+		// '5':     240 -- <= 0
+		$resCutOff = array(
+			'9' => 9, '37' => 6, '22' => 4, '35' => 3, '18' => 2, '34' => 2, '6' => 1, '5' => 0
+		);
+
+		if ($methodFlvxz > 0) {
+			if ($methodFlvxz == 1) {
+				// Need to use curl or openssl for making https requests
+				$link = 'http://www.flv.cn/?url=' . ($forFlv = urlencode($_GET['link']));
+				$html = yp_file_get_contents_1_7($link);
+				$urlBase = trim(yp_str_between_2_1($html, "baseurl = '", "'"));
+
+				$linkRef = $link;
+				$link = $urlBase . '/getFlv.php?url=' . $forFlv;
+				$html = yp_file_get_contents_1_7($link, null, array('Referer: ' . $linkRef));
+				$flvToken = 'verify/' . trim(yp_str_between_2_1($html, '/verify/', '"'));
+
+				$urlAPI = str_replace('https', 'http', $urlBase);
+				$link = $urlAPI . '/api/url/' . $_GET['link'] .
+					'/jsonp/purejson/ftype/mp4.flv/' . $flvToken;
+			}
+			else if ($methodFlvxz == 2) {
+				// Call flvxz.com (flv.cn) to resolve the video url
+				$link = 'http://api.flvxz.com/url/' . $_GET['link'] .
+					'/jsonp/purejson/ftype/mp4.flv/' . $flvToken;
+			}
+
 			$json = yp_file_get_contents_1_7($link);
 			if (empty($json)) return;
 
@@ -602,26 +652,35 @@
 			$indexBest = -1;
 			$indexBestRes = -1;
 			$countItems = count($res);
+			$hdCutOff = intval($resCutOff[$formats[0]]);
+			$strHDavail = '';
 			for ($index = 0 ; $index < $countItems ; $index ++) {
 				$item = $res[$index];
 				if (count($item['files']) > 1) continue;
-				if (($hd = intval($item['hd'])) > intval($resCutOff[$formats[0]])) continue;
-				if ($hd > $indexBestRes) {
+				$strHDavail .= (' ' . $item['hd'] . '-' . $item['files'][0]['ftype']);
+				if (($hd = intval($item['hd'])) > $hdCutOff) continue;
+				// Prefer: 1. higher resolution; 2. mp4
+				if (($hd > $indexBestRes) || (($hd == $indexBestRes) && (strcmp($item['files'][0]['ftype'], 'mp4') == 0))) {
 					$indexBestRes = $hd;
 					$indexBest = $index;
 				}
 			}
 
+			$extraInfo = strval($indexBestRes) . '-' . $res[$indexBest]['files'][0]['ftype'] . ' of' . $strHDavail .
+							'; S=' . $_GET['actual_src']. '; M=' . strval($methodFlvxz);
+			writeExtraInfo_2_4_1($extraInfo);
+
 			// Redirect to the video stream
 			header('Location: ' . $res[$indexBest]['files'][0]['furl']);
 			return;
 		}
+		else {
+			$videoUnavailable = true;
+			$msgUnavailable = '無法使用飛驢--' . $_GET['actual_src'];
+			$id = $videoColorBars[$posColorBars ++];
+		}
 	}
 
-	$videoUnavailable = false;
-	$msgUnavailable = '';
-	$videoColorBars = array('eSw6mfuLiFo', 'lTzgMwi_SZ8');
-	$posColorBars = 0;
 	do {
 		// Two ways to get youtube videos
 		// 1. May encounter "age verification"
@@ -642,7 +701,9 @@
 			if ($videoUnavailable === false) {
 				$videoUnavailable = true;
 				$msgs = explode("\n", trim(yp_str_between_2_1(yp_str_between_2_1($html, '<h1 id="unavailable-message"', '/h1>'), '>', '<')));
-				$msgUnavailable = $msgs[count($msgs)-1];
+				if (!empty($msgUnavailable))
+					$msgUnavailable .= '; ';
+				$msgUnavailable .= $msgs[count($msgs)-1];
 			}
 			$id = $videoColorBars[$posColorBars ++];
 		}
@@ -747,10 +808,7 @@
 					while(true) {
 						$sigData .= "// Need: \"$decFuncName\"\n";
 						$sigData .= extrJSCodeID_2_3($codeJS, $decFuncName);
-
-						$fileLocalYoutubeVideoSIGdata = fopen('/usr/local/etc/dvdplayer/ims_yv_sig_data.dat', 'w');
-						fwrite($fileLocalYoutubeVideoSIGdata, $sigData . "print($topFunc(\"$s\"));\n");
-						fclose($fileLocalYoutubeVideoSIGdata);
+						simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_yv_sig_data.dat', $sigData . "print($topFunc(\"$s\"));\n");
 
 						$signature = trim(yp_file_get_contents_1_7($sigRedir));
 
@@ -887,9 +945,7 @@
 						fclose($fileText);
 
 						// Write the number of lines
-						$fileCount = fopen($filenameCount, 'w');
-						fwrite($fileCount,  strval($dataCount));
-						fclose($fileCount);
+						simpleFileWrite_2_4_1($filenameCount, strval($dataCount));
 
 						$ccStatus = '成功載入外掛字幕 ' . $cc[0][0] . $ccNameDisplay . ', 全部: ' . $allL;
 						$extraInfo .= (' [' . $cc[0][0] . $ccNameDisplay . ']{' . $allL . '}');
@@ -928,23 +984,14 @@
 			$extraInfo .= ' [-]';
 		}
 
-		$fileCCStatus = fopen('/usr/local/etc/dvdplayer/ims_cc_status.dat', 'w');
-		fwrite($fileCCStatus, $ccStatus);
-		fclose($fileCCStatus);
-
-		$fileExtraInfo = fopen('/usr/local/etc/dvdplayer/ims_extra_info.dat', 'w');
-		fwrite($fileExtraInfo, $extraInfo);
-		fclose($fileExtraInfo);
+		simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_cc_status.dat', $ccStatus);
+		writeExtraInfo_2_4_1($extraInfo);
 
 		$fileLocalYoutubeVideoURLredir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
 		if (file_exists($fileLocalYoutubeVideoURLredir) &&
 			(strlen($localURLredir = trim(local_file_get_contents($fileLocalYoutubeVideoURLredir))) > 0)) {
 			$urlRedir = $localURLredir;
-
-			$fileLocalYoutubeVideoURLdata = fopen('/usr/local/etc/dvdplayer/ims_yv_url_data.dat', 'w');
-			fwrite($fileLocalYoutubeVideoURLdata, $urlToGo);
-			fclose($fileLocalYoutubeVideoURLdata);
-
+			simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_yv_url_data.dat', $urlToGo);
 			$urlToGo = $urlRedir;
 		}
 
