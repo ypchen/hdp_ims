@@ -3,7 +3,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('/a>', ($htmlToExplode = str_between($html, '<div class="catmenu_holder">', '<div class="clear">')));
+	$videos = explode('/a>', ($htmlToExplode = str_between($html, '<div class="catmenu_holder">', ' class="nmenu')));
 	unset($videos[count($videos)-1]);
 	$videos = array_values($videos);
 

@@ -1,63 +1,32 @@
 <?php
-	require('../../common/Aes.class.php');
-	require('../../common/AesCtr.class.php');
-
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$separators = array(
-		// keezmovies
-		array('&amp;video_url=', '',
-				false,
-				array('&amp;video_url='), '&amp;',
-				'&amp;encrypted=', '"',
-				'&amp;video_title=', '&amp;'),
-		// pornhub
-		array('http://www.pornhub.com/view_video.php?viewkey=', '"',
-				false,
-				array('"quality_480p":"', '"quality_240p":"', '"quality_180p":"'), '"',
-				'"encrypted":', ',',
-				'"video_title":"', '"')
-	);
-
 	$link = '';
-	foreach ($separators as $separator) {
-		if (strpos($html, $separator[0]) !== false) {
-
-			if ($separator[2]) {
-				// $separator[2]: need to reload the html
-				$link = $separator[0] . trim(str_between($html, $separator[0], $separator[1]));
-				$html = yp_file_get_contents($link);
-				include('05_check.file_contents.inc');
-			}
-
-			foreach ($separator[3] as $q) {
-				if (strpos($html, $q) !== false) {
-					$link = urldecode(str_between($html, $q, $separator[4]));
-					break;
-				}
-			}
-
-			$encrypted = urldecode(str_between($html, $separator[5], $separator[6]));
-			if (strcmp($encrypted, 'true') == 0) {
-				$key  = urldecode(str_between($html, $separator[7], $separator[8]));
-				$link = urldecode(AesCtr::decrypt($link, $key, 256));
-			}
-
-			break;
-		}
+	if (strpos($html, '<source src="') !== false) {
+		$link = trim(urldecode(str_between($html, '<source src="', '"')));
 	}
+	else if (strpos($html, '<iframe id="embedPlayer"') !== false) {
+		// actual content is somewhere else
+		$link = trim(str_between(str_between($html, '<iframe id="embedPlayer"', '</iframe>'), ' href="', '"'));
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
 
-	if (empty($link)) {
-		if (strpos($html, 'http://www.extremetube.com/embed') !== false) {
-			$link = trim(str_between($html, 'id="embedPlayer" src="', '"'));
-			$html = yp_file_get_contents($link);
-			include('05_check.file_contents.inc');
-
-			$link = trim(str_between($html, "src     : '", "',"));
+		$separators = array(
+			array(".video_url = '", "'"),
+			array(".cdnPath720         = '", "'"),
+			array(".cdnPath480         = '", "'"),
+			array(".cdnPath240         = '", "'"),
+			array(".cdnPath180         = '", "'"),
+			array("video.src = '", "'"),
+		);
+		foreach ($separators as $separator) {
+			$link = trim(str_between($html, $separator[0], $separator[1]));
+			if (!empty($link)) break;
 		}
+		if (strpos($link, '://') === false)
+			$link = urldecode($link);
 	}
-
 	$link = str_replace('&', '&amp;', $link);
 	include('05_check.link.inc');
 

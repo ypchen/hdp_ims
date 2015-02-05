@@ -3,7 +3,7 @@
 	echo "\t<title>" . $myBaseName . ": 分類選單</title>\r\n";
 
 	if ($pass_check) {
-		$siteURLprefix = '';
+		$siteURLprefix = 'http://www.tube8.com/';
 		foreach($videos as $video) {
 			$title = trim(str_between($video, '<h2 class="sh1"><span>', '</span></h2>'));
 			$title = convertUnicodePoints($title);

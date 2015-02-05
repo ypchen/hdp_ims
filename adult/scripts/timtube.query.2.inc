@@ -1,22 +1,18 @@
 <?php
-	$siteURLprefix = 'http://www.timtube.com';
+	$siteURLprefix = 'http://timtube.com';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, '<h4><a href="', '"'));
-		$title = trim(
-			str_replace('&nbsp;', ' ',
-				str_replace('<br />', ' ', str_between($video, 'onClick="traffic();">', '</a>'))
-			)
-		);
+		$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
+		$title = trim(str_between($video, 'alt="', '"'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, ';" src="', '"'));
+		$image  = $siteURLprefix . trim(str_between($video, '<img src="', '"'));
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim(str_between($video, '<span style="color:#FFFFFF">', '</span>'));
-		$note[] = $caption_view . ': ' .
-					trim(str_between($video, '<td align="right">', ' Hits'));
+					trim(str_between($video, '<span class="watermark duration label label-info">', '</span>'));
+		$note[] = $caption_publish . ': ' .
+					trim(str_between($video, 'class="addtime">', '<'));
 		$note[] = '';
 		$note[] = '';
 

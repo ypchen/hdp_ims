@@ -3,7 +3,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$videos = explode('<li>', ($htmlToExplode = str_between($html, '<ul class="taglist"', '</ul>')));
+	$videos = explode('<a target', ($htmlToExplode = str_between($html, '<div id="skyscrape"', '</div>')));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

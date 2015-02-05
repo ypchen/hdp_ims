@@ -10,7 +10,7 @@
 		$image  = trim(str_between($video, 'data-srcdata="', '"'));
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim(str_between($video, 'class="vd_dr">', '</span>'));
+					trim(str_between(str_between($video, 'class="vd_dr">', '</div>'), '<span>', '</span>'));
 		$note[] = $caption_eval . ': ' .
 					trim(str_between($video, 'class="liked_span">', '</span>'));
 		$note[] = $caption_view . ': ' .

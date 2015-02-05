@@ -13,9 +13,9 @@
 		$note[] = $caption_length . ': ' .
 					trim(str_between($video, '<strong>', '</strong>'));
 		$note[] = $caption_eval . ': ' .
-					trim(str_between($video, 'style="padding:2px 0 0 0; color:green;">', '</div>'));
+					trim(str_between($video, 'vote-percentage">', '</div>'));
 		$note[] = $caption_view . ': ' .
-					trim(str_between($dataA[2], '<div class="video-right-text float-right">', ' views</div>'));
+					trim(str_between($dataA[2], '<div class="video-right-text float-right">', ' views'));
 		$note[] = $caption_publish . ': ' .
 					trim(str_between($dataA[3], '<div class="video-right-text float-right">', '</div>'));
 

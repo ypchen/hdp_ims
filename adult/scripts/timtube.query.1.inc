@@ -1,11 +1,12 @@
 <?php
-	$link = $search . $page;
+	$link = $search . $page . '/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlMain = explode('<div id="right-column">', $html);
+	if (strpos($html, '<strong> &rarr;</strong>') !== false)
+		$pageMax = $page;
 
-	$videos = explode('<div class="box"', ($htmlToExplode = $htmlMain[0]));
+	$videos = explode('<li class="video', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

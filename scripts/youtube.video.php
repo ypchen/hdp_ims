@@ -584,7 +584,7 @@
 		}
 
 		if (!empty($_GET['actual_src']))
-			$extraInfo .= '; SRC: ' . $_GET['actual_src'];
+			$extraInfo .= '; S=' . $_GET['actual_src'];
 		writeExtraInfo_2_4_1($extraInfo);
 
 		// Redirect to the video stream

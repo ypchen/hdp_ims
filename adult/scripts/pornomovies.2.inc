@@ -5,10 +5,10 @@
 	if ($pass_check) {
 		$siteURLprefix = 'http://www.pornomovies.com';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, '">', '<'));
+			$title = trim(str_between($video, '</i>', '<'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
-			$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
+			$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
 			$image = '';
 			$note  = '';
 			$extra = '';
