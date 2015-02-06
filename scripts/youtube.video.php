@@ -703,7 +703,7 @@
 				$msgs = explode("\n", trim(yp_str_between_2_1(yp_str_between_2_1($html, '<h1 id="unavailable-message"', '/h1>'), '>', '<')));
 				if (!empty($msgUnavailable))
 					$msgUnavailable .= '; ';
-				$msgUnavailable .= $msgs[count($msgs)-1];
+				$msgUnavailable .= '** ' . $msgs[count($msgs)-1] . ' **';
 			}
 			$id = $videoColorBars[$posColorBars ++];
 		}
