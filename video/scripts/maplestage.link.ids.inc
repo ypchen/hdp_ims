@@ -111,6 +111,39 @@
 					include('05_check.base.inc');
 					return;
 
+				case 'Html':
+					$html = $res['html'];
+					$src = '';
+					if (strpos($html, 'static.youku.com') !== false) {
+						$src = 'Youku';
+						$id = trim(str_between(str_between($html, 'VideoID', '"'), 'S=', '&'));
+					}
+					else if (strpos($html, 'player.youku.com') !== false) {
+						$src = 'Youku';
+						$id = trim(str_between($html, '/sid/', '/'));
+					}
+					else if (strpos($html, 'player.56.com') !== false) {
+						$src = 'Tv56';
+						$id = trim(str_between($html, 'cpm_', '.'));
+					}
+					if (!empty($src)) {
+						$links = array();
+						$links[] =
+							$localhostYoutubeVideo . '?query=site_flvxz' .
+								'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+								'&amp;actual_src=' . urlencode($srcPrefix . $src) .
+								'&amp;link='       . urlencode(
+									strtr(base64_encode(
+										preg_replace('/^(https?:)\/\//', '$1##',
+											($urlComp[$src][0] .
+												preg_replace($urlComp[$src][2], $urlComp[$src][3], $id) .
+											$urlComp[$src][1]))), '+/', '-_'));
+						$itemTotal = count($links);
+						include('05_check.base.inc');
+						return;
+					}
+					break;
+
 				default:
 					// Try next
 					break;
