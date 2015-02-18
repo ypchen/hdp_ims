@@ -45,11 +45,10 @@
 	foreach($sites as $site) {
 		$searchTitle   = $site[6] . ': ' . $site[1] . ' ' . $site[7];
 		$searchUrlBase = $scriptsURLprefix . '/' . $myBaseName . '.query.php?uid=' . $user_id .
-				'&amp;input_method='  . urlencode($inputMethod) .
-				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
+				'&amp;cc_prefs='      . urlencode($videoCCPrefs) .
+				'&amp;fmt_prefs='     . urlencode($videoFmtPrefs) .
 				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 				'&amp;query=1';
 
 		$itemTotal ++;
@@ -82,7 +81,7 @@
 			'取消或設定: 嘗試載入順序 (YouTube)、字型大小 (YouTube, TED)、字幕顏色 (YouTube, TED)'),
 		array('youtube.set_resolution',
 			'設定: 影片解析度之喜好順序', 'youtube',
-			'取消本機設定或設定影片解析度之喜好順序'),
+			'取消本機設定或設定影片解析度之喜好順序 (YouTube, Dailymotion, 飛驢)'),
 	);
 
 	foreach($sites as $site) {
@@ -91,11 +90,10 @@
 			"\t<item>\r\n"  .
 				"\t\t<title>" . $site[1] . "</title>\r\n" .
 				"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".php?uid=" . $user_id .
-					'&amp;input_method='  . urlencode($inputMethod) .
-					'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-					'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-					'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
+					'&amp;fmt_prefs='     . urlencode($videoFmtPrefs) .
+					'&amp;cc_prefs='      . urlencode($videoCCPrefs) .
 					'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+					'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 					"</link>\r\n" .
 				"\t\t" . siteLogo($site[2]) . "\r\n" .
 				"\t\t<note>" . $site[3] . "</note>\r\n" .

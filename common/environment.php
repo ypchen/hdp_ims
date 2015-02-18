@@ -143,13 +143,13 @@
 
 	// Default format preference
 	// http://en.wikipedia.org/wiki/YouTube
-	if (($envVar = @getenv('DEFAULT_YOUTUBE_VIDEO_FMT_PREFS')) !== false) {
-		$defaultYoutubeVideoFmtPrefs = $envVar;
+	if (($envVar = @getenv('DEFAULT_VIDEO_FMT_PREFS')) !== false) {
+		$defaultVideoFmtPrefs = $envVar;
 	}
 
-	// Default CC language preference
-	if (($envVar = @getenv('DEFAULT_YOUTUBE_VIDEO_CC_PREFS')) !== false) {
-		$defaultYoutubeVideoCCPrefs = $envVar;
+	// Default CC preference
+	if (($envVar = @getenv('DEFAULT_VIDEO_CC_PREFS')) !== false) {
+		$defaultVideoCCPrefs = $envVar;
 	}
 
 	// --------------------

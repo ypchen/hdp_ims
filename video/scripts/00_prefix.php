@@ -69,6 +69,8 @@
 
 	$idleImagePrefix  = 'busy';
 
+	$uniquePageId     = substr(md5(time()), 4, 7) . substr(md5(rand()), 4, 3);
+
 	// Default main image width and height
 	$myImgWidth       = 35;
 	$myImgHeight      = 35;
@@ -92,44 +94,36 @@
 	$maxFavorite      = 55;
 	$historyCheckMax  = 5;
 
-	// Default url for input methods
-	// it can be changed by using input_method
-	if ((strcmp($serverName, 'localhost') == 0) ||
-		(strcmp($serverName, '127.0.0.1') == 0)) {
-		$defaultInputMethod =
-			strrleft($wholeURL, $imsDirectory . '/scripts') .
-				'common/ypInput/getFile.php?file=keyboard.rss';
-	}
-	else {
-		$defaultInputMethod =
-			strrleft($wholeURL, $imsDirectory . '/scripts') .
-				'ypInput/getFile.php?file=keyboard.rss';
-	}
-
 	// Default url for updating youtube.video.php
 	// it can be changed by using yv_rmt_src
 	$defaultYoutubeVideoRemoteSource =
 		strrleft($wholeURL, $imsDirectory . '/scripts') .
 			'scripts/youtube.video.php';
 
-	// Default local youtube format prefs file
-	$fileLocalYoutubeVideoFmtPrefs = $filePath . 'ims_yv_fmt_prefs.dat';
+	// 50 is the max value allowed by YouTube
+	$defaultYVItemPerPage   = 20;
 
-	// Default local youtube cc prefs file
-	$fileLocalYoutubeVideoCCPrefs  = $filePath . 'ims_yv_cc_prefs.dat';
+	// Default local input prefs file
+	$fileLocalInputPrefs    = $filePath . 'ims_input_prefs.dat';
+
+	// Default local format prefs file
+	$fileLocalVideoFmtPrefs = $filePath . 'ims_fmt_prefs.dat';
+
+	// Default local cc prefs file
+	$fileLocalVideoCCPrefs  = $filePath . 'ims_cc_prefs.dat';
 
 	// Local cc fsize file
-	$fileLocalCCFSize   = $filePath . 'ims_cc_fsize.dat';
+	$fileLocalCCFSize       = $filePath . 'ims_cc_fsize.dat';
 
 	// Local cc fcolor file
-	$fileLocalCCFColor  = $filePath . 'ims_cc_fcolor.dat';
+	$fileLocalCCFColor      = $filePath . 'ims_cc_fcolor.dat';
 
 	// Local files for handling closed captioning
-	$fileLocalCCCount   = $filePath . 'ims_cc_count.dat';
-	$fileLocalCCStart   = $filePath . 'ims_cc_start.dat';
-	$fileLocalCCEnd     = $filePath . 'ims_cc_end.dat';
-	$fileLocalCCText    = $filePath . 'ims_cc_text.dat';
-	$fileLocalCCStatus  = $filePath . 'ims_cc_status.dat';
+	$fileLocalCCCount       = $filePath . 'ims_cc_count.dat';
+	$fileLocalCCStart       = $filePath . 'ims_cc_start.dat';
+	$fileLocalCCEnd         = $filePath . 'ims_cc_end.dat';
+	$fileLocalCCText        = $filePath . 'ims_cc_text.dat';
+	$fileLocalCCStatus      = $filePath . 'ims_cc_status.dat';
 
 	// Local file for extra information
 	$fileLocalExtraInfo = $filePath . 'ims_extra_info.dat';

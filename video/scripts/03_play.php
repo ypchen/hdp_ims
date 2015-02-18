@@ -36,7 +36,9 @@
 	include($myName . '.inc');
 
 	$titleComponents = explode('.', $myBaseName);
-	$pageTitleBase = $titleComponents[0];
+	$pageTitleBaseElements = explode('__', $titleComponents[0]);
+	$pageTitleBase = $pageTitleBaseElements[0];
+
 	$pageTitle = $pageTitleBase;
 	if (isset($title)) {
 		$pageTitle = $pageTitle . ': ' . $title;
@@ -47,21 +49,34 @@
 	$currUrl = $scriptsURLprefix . '/' . $myName . '.php?' . $params;
 ?>
 
+<getContMsg>
+	continueFlagTotal = 6;
+	if (continueFlag == "0") contMsg = "{個別播放} ";
+	else if (continueFlag == "1") contMsg = "{正序連續} ";
+	else if (continueFlag == "2") contMsg = "{正序循環} ";
+	else if (continueFlag == "3") contMsg = "{隨機播放} ";
+	else if (continueFlag == "4") contMsg = "{反序連續} ";
+	else if (continueFlag == "5") contMsg = "{反序循環} ";
+	else contMsg = "";
+</getContMsg>
+
 <onEnter>
-	inputNumCount = 0;
-	inputNumVal = -1;
-	curNumVal = -1;
+	randSeed = 97;
 
 	if (linkArray == null) {
 		postMessage("return");
 	}
-	n = readStringFromFile(storagePath);
+	n = readStringFromFile(tmpItemSelected);
 	if (n == null) {
 		n = <?php echo (isset($iStart) ? $iStart : 0) ;?>;
 	}
 	else {
 		n = Integer(n);
 	}
+	if ((continueFlag == null) || (continueFlag == "")) {
+		continueFlag = "<?php echo (isset($continueFlag) ? $continueFlag : '1') ;?>";
+	}
+	executeScript("getContMsg");
 
 	dataBrowse   = "<?php echo $fileBrowse; ?>";
 	dataWatch    = "<?php echo $fileWatch; ?>";
@@ -246,9 +261,6 @@
 		if (pbCurInt &gt; Add(selectClipTimeMark, 6)) {
 			selectClip = 0;
 			selectClipStatusWidthPC = 0;
-			inputNumCount = 0;
-			inputNumVal = -1;
-			curNumVal = -1;
 		}
 	}
 
@@ -304,10 +316,6 @@
 				postMessage("return");
 			}
 			else {
-				inputNumCount = 0;
-				inputNumVal = -1;
-				curNumVal = -1;
-
 				pbLastInt = -1;
 				pbTimeCount = 0;
 
@@ -332,7 +340,7 @@
 			if (currentTitle == null) {
 				currentTitle = "";
 			}
-			writeStringToFile(storagePath, n);
+			writeStringToFile(tmpItemSelected, n);
 			startVideo = 0;
 			setRefreshTime(100);
 			updatePlaybackProgress(bufProgress, "mediaDisplay", "progressBar");
@@ -345,16 +353,43 @@
 				}
 			}
 			else if (playStatus == 0) {
-				if ((n+1) &gt; (itemCount-1)) {
+				if ((continueFlag == "0") ||
+					((continueFlag == "1") &amp;&amp; ((n+1) &gt; (itemCount-1))) ||
+					((continueFlag == "4") &amp;&amp; ((n-1) &lt; 0))) {
 					playItemURL(-1, 1);
 					setRefreshTime(-1);
 					postMessage("return");
 				}
 				else {
-					n = Add(n, 1);
-					if (n &lt; 0) {
-						n = 0;
+					if (continueFlag == "3") {
+						if (randSeed == 97) {
+							urlYVRemoteSrc = "<?php echo $youtubeVideoRemoteSource; ?>";
+							urllocalhostYV = "<?php echo $localhostYoutubeVideo; ?>";
+							urlYVapi = urllocalhostYV
+										+ "?query=get_a_random_int"
+										+ "&amp;yv_rmt_src=" + urlEncode(urlYVRemoteSrc);
+							xmlYVapi = loadXMLFile(urlYVapi);
+							if (xmlYVapi == null)
+								randSeed = 97;
+							else
+								randSeed = Integer(getXMLText("root", "int")) % 503;
+						}
+
+						m = n;
+						while (m == n) {
+							randSeed = Add((251*randSeed), 113) % 503;
+							m = randSeed % itemCount;
+						}
+						n = m;
 					}
+					else if ((continueFlag == "1") || (continueFlag == "2"))
+						n = Add(n, 1);
+					else
+						n = n-1;
+
+					if (n &lt; 0)
+						n = (itemCount-1);
+					n = n % itemCount;
 					startVideo = 1;
 				}
 			}
@@ -623,18 +658,19 @@
 
 		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="-40"
-			widthPC="97" heightPC="24"
+			widthPC="100" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:150">
-			請於視訊順利播放後再進行選集或選段
+			<script>
+				executeScript("getContMsg");
+				contMsg + "請於視訊順利播放後再進行選集、選段、或其他操作";
+			</script>
 		</text>
 
 		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="0"
-			widthPC="97" heightPC="24"
+			widthPC="100" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
-			<script>
-				currentTitle;
-			</script>
+			<script>currentTitle;</script>
 		</text>
 
 		<text align="left" fontSize="20"
@@ -655,18 +691,10 @@
 
 		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="80"
-			widthPC="97" heightPC="24"
+			widthPC="100" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>
-				if ((inputNumCount == 0) ||
-						((inputNumCount == itemCountDigits) &amp;&amp;
-						((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-					str = "[藍]字幕 | [信息] | {[上下頁/↔]±1,[↕]±10,[數字]}+[放大/A-B]";
-				}
-				else {
-					str = "[藍]字幕 | [信息] | {[上下頁/↔]±1,[↕]±10} [放大/A-B]播第 " + curNumVal + " 項";
-				}
-				str;
+				"[藍/9]字幕 [信息/4] [重覆/6] {[上下頁/↔]±1,[↕]±10}+[放大/5]";
 			</script>
 		</text>
 
@@ -682,41 +710,45 @@
 			ret = "false";
 			userInput = currentUserInput();
 
-			if (userInput == "video_stop") {
+			if ((userInput == "video_stop") || (userInput == "two")) {
 				startVideo = 0;
 				postMessage("return");
 				ret = "true";
 			}
 			else if (
-				(userInput == "option_blue") ||
 				(userInput == "option_red") ||
+				(userInput == "seven") ||
 				(userInput == "option_green") ||
-				(userInput == "option_yellow")
+				(userInput == "one") ||
+				(userInput == "option_yellow") ||
+				(userInput == "three") ||
+				(userInput == "option_blue") ||
+				(userInput == "nine")
 			) {
-				if (userInput == "option_blue") {
-					/* Toggle the closed caption display */
-					ccTextWidthPC = 100 - ccTextWidthPC;
-				}
-				else if (userInput == "option_red") {
+				if ((userInput == "option_red") || (userInput == "seven")) {
 					/* Delay */
 					pbCurTickShift = Minus(pbCurTickShift, 1);
 				}
-				else if (userInput == "option_green") {
+				else if ((userInput == "option_green") || (userInput == "one")) {
 					/* Speedup */
 					pbCurTickShift = Add(pbCurTickShift, 1);
 				}
-				else {
+				else if ((userInput == "option_yellow") || (userInput == "three")) {
 					/* Reset */
 					pbCurTickShift = 0;
+				}
+				else if ((userInput == "option_blue") || (userInput == "nine")) {
+					/* Toggle the closed caption display */
+					ccTextWidthPC = 100 - ccTextWidthPC;
 				}
 
 				if (ccDataCount &gt; 0) {
 					if (ccTextWidthPC == 0) {
-						showCCStatus = "字幕：隱藏 -- 時移(0.1s)：" + pbCurTickShift;
+						showCCStatus = "字幕：隱藏 -- 時移(0.1s)：" + pbCurTickShift + " -- [紅/7]減慢 [綠/1]加速 [黃/3]重置";
 						showCCStatusColor = "";
 					}
 					else {
-						showCCStatus = "字幕：顯示 -- 時移(0.1s)：" + pbCurTickShift;
+						showCCStatus = "字幕：顯示 -- 時移(0.1s)：" + pbCurTickShift + " -- [紅/7]減慢 [綠/1]加速 [黃/3]重置";
 						showCCStatusColor = "";
 					}
 				}
@@ -729,7 +761,7 @@
 
 				ret = "true";
 			}
-			else if (userInput == "display") {
+			else if ((userInput == "display") || (userInput == "four")) {
 				/* If there is no extra information present, try again */
 				if ((runningHeadTwo == null) || (runningHeadTwo == "")) {
 					runningHeadTwo = readStringFromFile(extraInfoFile);
@@ -744,16 +776,13 @@
 				/* Pressing display always hides the select clip status */
 				selectClip = 0;
 				selectClipStatusWidthPC = 0;
-				inputNumCount = 0;
-				inputNumVal = -1;
-				curNumVal = -1;
 
 				/* Toggle the playback status display */
 				runningHeadWidthPC = displayRunningHeadWidthPC - runningHeadWidthPC;
 				ret = "true";
 			}
 			else if ((selectClip == 1) &amp;&amp;
-				((userInput == "zoom") || (userInput == "video_repeat") || (userInput == "video_abrepeat"))) {
+				((userInput == "zoom") || (userInput == "five"))) {
 
 				selectClip = 0;
 				selectClipStatusWidthPC = 0;
@@ -798,87 +827,9 @@
 				(userInput == "up") ||
 				(userInput == "right") ||
 				(userInput == "left") ||
-				(userInput == "one") ||
-				(userInput == "two") ||
-				(userInput == "three") ||
-				(userInput == "four") ||
-				(userInput == "five") ||
-				(userInput == "six") ||
-				(userInput == "seven") ||
-				(userInput == "eight") ||
-				(userInput == "nine") ||
-				(userInput == "zero")
+				(userInput == "video_repeat") ||
+				(userInput == "six")
 			) {
-				if (
-					(userInput == "one") ||
-					(userInput == "two") ||
-					(userInput == "three") ||
-					(userInput == "four") ||
-					(userInput == "five") ||
-					(userInput == "six") ||
-					(userInput == "seven") ||
-					(userInput == "eight") ||
-					(userInput == "nine") ||
-					(userInput == "zero")
-				) {
-					if (userInput == "one") {
-						inputNumVal = 1;
-					}
-					else if (userInput == "two") {
-						inputNumVal = 2;
-					}
-					else if (userInput == "three") {
-						inputNumVal = 3;
-					}
-					else if (userInput == "four") {
-						inputNumVal = 4;
-					}
-					else if (userInput == "five") {
-						inputNumVal = 5;
-					}
-					else if (userInput == "six") {
-						inputNumVal = 6;
-					}
-					else if (userInput == "seven") {
-						inputNumVal = 7;
-					}
-					else if (userInput == "eight") {
-						inputNumVal = 8;
-					}
-					else if (userInput == "nine") {
-						inputNumVal = 9;
-					}
-					else if (userInput == "zero") {
-						inputNumVal = 0;
-					}
-
-					if ((inputNumCount == 0) || (inputNumCount == itemCountDigits)) {
-						inputNumCount = 1;
-						curNumVal = inputNumVal;
-					}
-					else {
-						inputNumCount = inputNumCount + 1;
-						curNumVal = (10*curNumVal) + inputNumVal;
-					}
-
-					if ((curNumVal &gt;= 1) &amp;&amp; (curNumVal &lt;= itemCount)) {
-						if (selectClip == 1)
-							clipToPlay = (curNumVal - 1);
-					}
-					else if ((inputNumVal &gt;= 1) &amp;&amp; (inputNumVal &lt;= itemCount)) {
-						/* Keep the last digit which makes the value out of range unless invalid */
-						inputNumCount = 1;
-						curNumVal = inputNumVal;
-						if (selectClip == 1)
-							clipToPlay = (curNumVal - 1);
-					}
-					else {
-						inputNumCount = 0;
-						inputNumVal = -1;
-						curNumVal = -1;
-					}
-				}
-
 				if (selectClip == 0) {
 					/* Selecting clips always hides the CC status */
 					showCCStatusWidthPC = 0;
@@ -889,14 +840,8 @@
 					/* Toggle the select clip display */
 					selectClip = 1;
 					selectClipStatusWidthPC = displaySelectClipStatusWidthPC;
-					if ((inputNumCount == 0) ||
-							((inputNumCount == itemCountDigits) &amp;&amp;
-							((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-						clipToPlay = n;
-					}
-					else {
-						clipToPlay = (curNumVal - 1);
-					}
+
+					clipToPlay = n;
 				}
 				else if (
 					(userInput == "down") ||
@@ -924,10 +869,15 @@
 						clipToPlay = (itemCount-1);
 				}
 
+				if ((userInput == "video_repeat") || (userInput == "six")) {
+					continueFlag = (Add(continueFlag, 1) % continueFlagTotal);
+					executeScript("getContMsg");
+				}
+
 				selectClipTimeMark = pbCurInt;
 
-				selectClipStatusOne = "按 [放大/A-B] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
-				selectClipStatusTwo = "現正播放 [" + now + "/" + itemCount + "] " + currentTitle;
+				selectClipStatusOne = "按 [放大/5] 播放 [" + Add(clipToPlay, 1) + "] " + getStringArrayAt(titleArray, clipToPlay);
+				selectClipStatusTwo = contMsg + "現正播放 [" + now + "/" + itemCount + "] " + currentTitle;
 
 				ret = "true";
 			}

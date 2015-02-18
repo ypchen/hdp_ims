@@ -23,55 +23,47 @@
 說明
 	1. 有興趣的人可以使用這整套 php code 來建立自己 (或者公開給別人使用) 的 IMS
 	2. 也可以直接使用我目前實作來當範例的幾個站台:
-		A. 網星電視 (netstartv)
-		B. 台灣蘋果動新聞 (連播、單播)
-		C. 楓林網
-		D. sugoideas
-		E. 卡提諾影音 (ck101)
-		F. TED Talks on TED / YouTube / podcast
-		G. YouTube 搜索與設定、頻道
-			YouTube 搜索 (本機 hdp_input、播放機內建)
-			YouTube 字幕語言設定
-				字幕測試影片
-			YouTube 解析度設定
-				高清測試影片
-		H 媒體新聞 on YouTube
-			粵語新聞、台灣蘋果動新聞、半島電視新聞、台視、中視、華視、民視、公視、東森、中天、聯合新聞網
-		I. CNN 影音 podcast
-		J. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
-		K. 近三十個成人影片網站
+		A. 眾遙電視 (不卡點播、網星電視)
+		B. 楓林網
+		C. sugoideas
+		D. 卡提諾影音 (ck101)
+		E. TED Talks on TED / YouTube / podcast
+		F. YouTube 帳戶功能 (YouTube Data API v3)
+			個人清單建立與播放、YouTube 搜索
+		G. 台灣蘋果動新聞
+		H. CNN 影音 podcast
+		I. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
+		J. 近三十個成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
-		A. 網星電視 (netstartv)
+		A. 眾遙電視 (不卡點播、網星電視)
 				01 -> 02 -> 02 -> 播放
-		B. 台灣蘋果動新聞 (連播、單播)
-				01 -> 01 -> 02 -> 02 -> 播放 (兩種播放模式: 連續、單段)
-		C. 楓林網
+		B. 楓林網
 			a. 每日熱門、最新節目
 				01 -> 02 -> 播放
 			b. 綜藝節目、偶像戲劇
 				01 -> 02 -> 02 -> 播放
-		D. sugoideas
+		C. sugoideas
 				01 -> 02 -> 02 -> 播放
-		E. 卡提諾影音 (ck101)
+		D. 卡提諾影音 (ck101)
 				01 -> 02 -> 02 -> 播放
-		F. TED Talks on TED / YouTube / podcast
+		E. TED Talks on TED / YouTube / podcast
 			a. TED Talks on TED / YouTube
 				01 -> 02 -> 播放
 			b. podcast
 				01 -> podcast
-		G. YouTube 搜索與設定、頻道
-				01 -> 02 -> 播放
-		H. 媒體新聞 on YouTube
-				01 -> 02 -> 播放
-		I. CNN 影音 podcast
+		F. YouTube 帳戶功能 (YouTube Data API v3)
+				複雜交互叫用流程
+		G. 台灣蘋果動新聞
+				01 -> 01 -> 02 -> 02 -> 播放
+		H. CNN 影音 podcast
 				01 -> podcast
-		J. IMS 搜索
+		I. IMS 搜索
 				01 -> HDPfans/HAOIMS 搜索各大站台
-		K. 近三十個成人影片網站
+		J. 近三十個成人影片網站
 				01 -> 01 -> 02 -> 播放
 				01 -> 02 -> 播放
 				01 -> podcast
-	4. 可以播放 YouTube 的搜索結果、頻道、以及公開的播放清單
+	4. 可以播放 YouTube 的搜索結果、頻道、以及公開的播放清單 (YouTube Data API v2)
 	5. 內建歷史自動記錄功能: 最近瀏覽、最近觀看、本地收藏
 	6. 具有當網站錯誤發生時通知管理者進行處理的功能
 	7. 具有使用 MySQL database 記錄使用者動作的功能
@@ -85,7 +77,34 @@
 			* 不再支援 v1.7 版之前版本中自動由 IMS 來源網站載入功能
 	14. [v2.0] 開始支援 heroku deployment
 	15. [v2.3] 使用 ossp-js (of ipkg) 進行 YouTube signature 解碼
-	16. [v2.4] 加入支援使用飛驢下載 (http://flv.cn or http://flvxz.com) 進行視頻解析
+	16. [v2.4] 加入支援使用飛驢下載 (http://flv.cn or http://flvxz.com) 進行視訊解析
+	17. [v3.0] 支援 YouTube Data API v3; 部分操作介面增加使用數字按鍵; 支援多種播放模式與切換; 設定輸入方式
+			* 支援 YouTube Data API v3
+				-- 必須設定 YouTube 帳戶方能使用，詳情請見: http://hdp-ims.neocities.org/
+				-- 可新建個人播放清單 (新建清單之隱私模式為「私人」)
+				-- 可管理個人播放清單內之項目 (加入視訊、設定順序、刪除視訊)
+				-- 可查詢個人頻道
+				-- 可使用不同搜索條件對視訊、清單、頻道進行搜索
+				-- 結合本版 (v3.0) 其他新功能，可實現以下使用情境:
+					a. 新建個人播放清單，並指定之
+					b. 透過 YouTube 搜索功能，將視訊加入指定之播放清單
+					c. 若有必要可調整清單內之視訊順序或刪除
+					d. 開始播放清單內之項目，預設為正序連續播放模式
+					e. 在視訊播放中，可按 [重覆/6] 切換播放模式，例如：隨機播放
+				-- 破壞性高 (例如: 刪除清放清單)、操作複雜 (例如: 清單資訊變更) 之功能恕不支援
+			* 部分操作介面增加使用數字按鍵
+				-- 目前含此功能之模組為 02_query.php 與 03_play.php
+				-- 為因應各遙控器之按鍵設置不同而增加使用數字按鍵功能，安排原則如下：
+					　綠: 1		停止: 2		　黃: 3
+					信息: 4		放大: 5		重覆: 6
+					　紅: 7		播放: 8		　藍: 9
+			* 支援多種播放模式與切換
+				-- 共六種播放模式
+					個別視訊播放、正序連續播放、正序循環播放、隨機視訊播放、反序連續播放、反序循環播放
+				-- 可於 03_play.php 作用時，使用 [重覆/6] 切換播放模式
+				-- 連續、循環、隨機等播放模式之範圍限制於「同一頁」之中 (而非「整個播放清單內之項目」)
+			* 設定輸入方式
+				-- 可將本 IMS 中之輸入方式設定為播放機內建輸入法、hdp_input、或使用者自訂之輸入方式
 
 使用
 	1. 直接放在本機使用
@@ -184,7 +203,13 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
-		--- v2.4 加入支援使用飛驢下載 (http://flv.cn or http://flvxz.com) 進行視頻解析
+		--- v3.0 支援 YouTube Data API v3
+
+		A. 必須設定 YouTube 帳戶方能使用，詳情請見: http://hdp-ims.neocities.org/
+
+		B. 新增使用 temporary local copy，在一回開機使用過程中只會向 remote source 進行一次更新
+
+		--- v2.4 加入支援使用飛驢下載 (http://flv.cn or http://flvxz.com) 進行視訊解析
 
 		A. 必須於 /usr/local/etc/dvdplayer/ims_flv_token.dat 存入自行向 flvxz.com 申請之 token 資料
 

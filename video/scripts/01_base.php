@@ -94,7 +94,7 @@
 
 		dataFileThisPage = "<?php echo $history_filename; ?>";
 
-		historyTips = " [快退]移上; [快進]移下; [紅]刪除項目; [黃]刪除全部;";
+		historyTips = " [停止]移上 [播放]移下 [紅]刪除項目 [黃]刪除全部";
 
 		userMenuFile = getStoragePath("tmp") + "ims.<?php echo $imsDirectory; ?>.history." + history + ".rss.dat";
 		userMenuItem = readStringFromFile(userMenuFile);
@@ -225,7 +225,8 @@
 		widthPC="<?php echo $myImgWidth; ?>" heightPC="<?php echo $myImgHeight; ?>"
 		backgroundColor="0:0:0">
 		<script>
-			img;
+			if (imgSpecial == null)	img;
+			else imgSpecial;
 		</script>
 	</image>
 
@@ -247,7 +248,8 @@
 		backgroundColor="<?php echo $themeTextBackgroundColor; ?>"
 		foregroundColor="<?php echo $themeTextForegroundColor; ?>">
 		<script>
-			note;
+			if (msgSpecialNote == null)	note;
+			else msgSpecialNote;
 		</script>
 	</text>
 
@@ -261,10 +263,10 @@
 			if ((inputNumCount == 0) ||
 					((inputNumCount == itemCountDigits) &amp;&amp;
 					((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-				str = "[↕]±1; [↔]±<?php echo $itemPerPage; ?>; [上下頁]最前後;" + historyTips + " [數字直選]";
+				str = "[↕↔上下頁]移動" + historyTips + " [數字直選]";
 			}
 			else {
-				str = "[↕]±1; [↔]±<?php echo $itemPerPage; ?>; [上下頁]最前後;" + historyTips + " 第 " + curNumVal + " 項";
+				str = "[↕↔上下頁]移動" + historyTips + " 第 " + curNumVal + " 項";
 			}
 			str + message;
 		</script>
@@ -288,7 +290,8 @@
 		backgroundColor="<?php echo $themeMainBackgroundColor; ?>"
 		foregroundColor="<?php echo $themeMainForegroundColor; ?>">
 		<script>
-			itemTitle;
+			if (msgSpecial == null)	itemTitle;
+			else msgSpecial;
 		</script>
 	</text>
 
@@ -515,7 +518,7 @@
 
 					ret = "true";
 				}
-				else if (userInput == "video_frwd") {
+				else if (userInput == "video_stop") {
 					if (idx &gt; 0) {
 						dataFile   = dataFileThisPage;
 						dataIdx    = (idx-1);
@@ -530,7 +533,7 @@
 					}
 					ret = "true";
 				}
-				else if (userInput == "video_ffwd") {
+				else if (userInput == "video_play") {
 					if (idx &lt; (itemCount-1)) {
 						dataFile   = dataFileThisPage;
 						dataIdx    = idx;
@@ -551,23 +554,27 @@
 	</onUserInput>
 </mediaDisplay>
 
+<getInputFromUser>
+	inputPrefs = readStringFromFile("<?php echo $fileLocalInputPrefs; ?>");
+	input = null;
+	if ((inputPrefs == null) || (inputPrefs == "")
+	 || (((inputType = getStringArrayAt(inputPrefs, 0)) != "1") &amp;&amp; (inputType != "2"))
+	 || ((inputMethod = getStringArrayAt(inputPrefs, 1)) == null)
+	 || (inputMethod == "")) {
+		input = getInput("Enter a keyword");
+	}
+	else {
+		input = doModalRss(inputMethod, "mediaDisplay", "search", 0);
+	}
+</getInputFromUser>
+
 <?php
 	if ($history > 0) {
 ?>
 	<item_template>
-		<displayTitle>
-			<script>getStringArrayAt(titleArray, -1);</script>
-		</displayTitle>
-		<title>
-			<script>getStringArrayAt(titleArray, -1);</script>
-		</title>
-		<link>
-			<script>getStringArrayAt(linkArray, -1);</script>
-		</link>
-<?php
-		// Output the image tags
-		echo myLogo($myName);
-?>
+		<displayTitle><script>getStringArrayAt(titleArray, -1);</script></displayTitle>
+		<title><script>getStringArrayAt(titleArray, -1);</script></title>
+		<link><script>getStringArrayAt(linkArray, -1);</script></link>
 		<mediaDisplay />
 	</item_template>
 <?php } ?>

@@ -1,6 +1,8 @@
 <script>
 	/* Default to be 0 for sites except YouTube */
 	ccCleanAtPlayItemURL = 0;
+	bufferSize  = 262144;
+	tmpItemSelected = getStoragePath("tmp") + "<?php echo 'ims_clips.' . $myBaseName . '-' . $uniquePageId . '.dat'; ?>";
 
 	/* Clean first */
 	writeStringToFile("<?php echo $fileLocalExtraInfo; ?>", "");
@@ -9,17 +11,6 @@
 	writeStringToFile("<?php echo $fileLocalCCEnd; ?>", "");
 	writeStringToFile("<?php echo $fileLocalCCText; ?>", "");
 	writeStringToFile("<?php echo $fileLocalCCCount; ?>", "0");
-
-	bufferSize  = 262144;
-
-	xmlUrl = getStoragePath("tmp") + "tmp.rss";
-	writeStringToFile(xmlUrl, "ok");
-
-	nameArray   = null;
-	nameArray   = "<?php echo md5(time()); ?>";
-
-	storagePath = getStoragePath("tmp");
-	storagePath = storagePath + nameArray + ".dat";
 
 <?php
 	$pass_check = true;

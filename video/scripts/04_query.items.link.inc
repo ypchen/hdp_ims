@@ -11,11 +11,10 @@
 	$linkAll = $scriptsURLprefix . '/' .
 		$myBaseName . $linkLevel . '.php' .
 			'?uid=' . $user_id  .
-			'&amp;input_method='  . urlencode($inputMethod) .
-			'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-			'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-			'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
-			'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+			'&amp;cc_prefs='        . urlencode($videoCCPrefs) .
+			'&amp;fmt_prefs='       . urlencode($videoFmtPrefs) .
+			'&amp;yv_rmt_src='      . urlencode($youtubeVideoRemoteSource) .
+			'&amp;youtube_video='   . urlencode($localhostYoutubeVideo) .
 			'&amp;query=' . urlencode($link) .
 				',' . urlencode(str_replace(',', '%2C', $title)) .
 				',' . urlencode($extra) .

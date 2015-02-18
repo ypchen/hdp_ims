@@ -1,1 +1,0 @@
-appledaily_cont.query.link.php

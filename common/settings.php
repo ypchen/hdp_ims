@@ -75,8 +75,8 @@
 
 	// Default format preference
 	// http://en.wikipedia.org/wiki/YouTube
-	$defaultYoutubeVideoFmtPrefs = '22,35,18,34,6,5';
+	$defaultVideoFmtPrefs = '22,35,18,34,6,5';
 
 	// Default CC language preference
-	$defaultYoutubeVideoCCPrefs = '';
+	$defaultVideoCCPrefs = '';
 ?>

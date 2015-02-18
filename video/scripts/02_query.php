@@ -87,13 +87,46 @@
 
 	// Create history link
 	$historyUrl = $scriptsURLprefix . '/history.php?uid=' . $user_id;
+
+	$sThisFile = $wholeURL;
+	$urlPrevPage = $sThisFile . '?uid=' . $user_id  .
+		'&amp;cc_prefs='        . urlencode($videoCCPrefs) .
+		'&amp;fmt_prefs='       . urlencode($videoFmtPrefs) .
+		'&amp;yv_rmt_src='      . urlencode($youtubeVideoRemoteSource) .
+		'&amp;youtube_video='   . urlencode($localhostYoutubeVideo) .
+		'&amp;query=' . ($page-1) . ',';
+	if (isset($search)) {
+		$urlPrevPage .= urlencode($search);
+	}
+	$urlPrevPage .= ',';
+	if (isset($cat)) {
+		$urlPrevPage .= urlencode($cat);
+	}
+	$urlPrevPage .= ',';
+	if (isset($extra_02_query)) {
+		$urlPrevPage .= urlencode($extra_02_query);
+	}
+	$urlNextPage = $sThisFile . '?uid=' . $user_id  .
+		'&amp;cc_prefs='        . urlencode($videoCCPrefs) .
+		'&amp;fmt_prefs='       . urlencode($videoFmtPrefs) .
+		'&amp;yv_rmt_src='      . urlencode($youtubeVideoRemoteSource) .
+		'&amp;youtube_video='   . urlencode($localhostYoutubeVideo) .
+		'&amp;query=' . ($page+1) . ',';
+	if (isset($search)) {
+		$urlNextPage .= urlencode($search);
+	}
+	$urlNextPage .= ',';
+	if (isset($cat)) {
+		$urlNextPage .= urlencode($cat);
+	}
+	$urlNextPage .= ',';
+	if (isset($extra_02_query)) {
+		$urlNextPage .= urlencode($extra_02_query);
+	}
 ?>
 
 	focus = 0;
 	message = "";
-	inputNumCount = 0;
-	inputNumVal = -1;
-	curNumVal = -1;
 
 	dataBrowse   = "<?php echo $fileBrowse; ?>";
 	dataWatch    = "<?php echo $fileWatch; ?>";
@@ -102,10 +135,6 @@
 	dataBrowseMax   = <?php echo $maxBrowse; ?>;
 	dataWatchMax    = <?php echo $maxWatch; ?>;
 	dataFavoriteMax = <?php echo $maxFavorite; ?>;
-
-	/* Static items */
-	itemCount = getPageInfo("itemCount");
-	setRefreshTime(200);
 
 	history = <?php echo $history; ?>;
 	if (history == 0) {
@@ -118,10 +147,37 @@
 		<?php include('08_history.record.inc'); ?>
 	}
 
+	fileQueryMenuItem     = getStoragePath("tmp") + "<?php echo 'ims_query.' . $myBaseName . '-' . $uniquePageId . '.dat'; ?>";
+	fileQueryMenuItemOnce = getStoragePath("tmp") + "<?php echo 'ims_query.' . $myBaseName . '-once.dat'; ?>";
+
+	if (dynamicItem == 1) {
+		itemCount = itemSize;
+		queryMenuItem = readStringFromFile(fileQueryMenuItem);
+		if ((queryMenuItem == null) || (queryMenuItem == ""))
+			queryMenuItem = 0;
+		else
+			queryMenuItem = Integer(queryMenuItem);
+	}
+	else
+		itemCount = getPageInfo("itemCount");
+
+	queryMenuItemOnce = readStringFromFile(fileQueryMenuItemOnce);
+	if ((queryMenuItemOnce != null) &amp;&amp; (queryMenuItemOnce != "")) {
+		queryMenuItem = Integer(queryMenuItemOnce);
+		writeStringToFile(fileQueryMenuItemOnce, "");
+	}
+	setFocusItemIndex(queryMenuItem);
+
+	setRefreshTime(200);
+
 	x = itemCount;
 	<?php include('00_utils.digits.inc'); ?>
 	itemCountDigits = y;
 </onEnter>
+
+<onExit>
+	writeStringToFile(fileQueryMenuItem, getFocusItemIndex());
+</onExit>
 
 <onRefresh>
 	setRefreshTime(-1);
@@ -204,7 +260,8 @@
 		widthPC="<?php echo $myImgWidth; ?>" heightPC="<?php echo $myImgHeight; ?>"
 		backgroundColor="0:0:0">
 		<script>
-			img;
+			if (imgSpecial == null)	img;
+			else imgSpecial;
 		</script>
 	</image>
 
@@ -259,14 +316,15 @@
 		backgroundColor="<?php echo $themeTipsBackgroundColor; ?>"
 		foregroundColor="<?php echo $themeTipsForegroundColor; ?>">
 		<script>
-			if ((inputNumCount == 0) ||
-					((inputNumCount == itemCountDigits) &amp;&amp;
-					((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-				str = "[↕]±1; [↔]±<?php echo $itemPerPage; ?>; [上下頁]最前後; [綠]至收藏夾; [黃]收藏本頁; [藍]收藏項目; [數字直選]";
+			if ((youtubeType == "mine") &amp;&amp; (typeExtraInfo == "playlists"))
+				str = "[↕↔上下頁]移動 [紅/7]收藏夾 [綠/1]收本頁 [黃/3]收項目 [藍/9]指定清單";
+			else if (contentType == "video") {
+				str = "[↕↔上下頁]移動 [紅/7]收藏夾 [綠/1]收本頁 [黃/3]收項目 [藍/9]加入清單";
+				if (fromType == "mine")
+					str = "[↕↔上下頁]移動 [藍/9]加入清單 [停止/2]上移 [播放/8]下移 [信息/4]刪除";
 			}
-			else {
-				str = "[↕]±1; [↔]±<?php echo $itemPerPage; ?>; [上下頁]最前後; [綠]至收藏夾; [黃]收藏本頁; [藍]收藏項目; 第 " + curNumVal + " 項";
-			}
+			else
+				str = "[↕↔上下頁]移動 [紅/7]收藏夾 [綠/1]收本頁 [黃/3]收項目";
 			str + message;
 		</script>
 	</text>
@@ -289,7 +347,8 @@
 		backgroundColor="<?php echo $themeMainBackgroundColor; ?>"
 		foregroundColor="<?php echo $themeMainForegroundColor; ?>">
 		<script>
-			itemTitle;
+			if (msgSpecial == null)	itemTitle;
+			else msgSpecial;
 		</script>
 	</text>
 
@@ -377,19 +436,12 @@
 				(userInput == "pageup") ||
 				(userInput == "left") ||
 				(userInput == "right") ||
-				(userInput == "option_green") ||
-				(userInput == "option_yellow") ||
-				(userInput == "option_blue") ||
-				(userInput == "one") ||
-				(userInput == "two") ||
-				(userInput == "three") ||
-				(userInput == "four") ||
-				(userInput == "five") ||
-				(userInput == "six") ||
+				(userInput == "option_red") ||
 				(userInput == "seven") ||
-				(userInput == "eight") ||
-				(userInput == "nine") ||
-				(userInput == "zero")
+				(userInput == "option_green") ||
+				(userInput == "one") ||
+				(userInput == "option_yellow") ||
+				(userInput == "three")
 			) {
 				if (userInput == "pagedown") {
 					idx = itemCount-1;
@@ -405,11 +457,11 @@
 					idx -= <?php echo $itemPerPage; ?>;
 					if(idx &lt; 0) idx = 0;
 				}
-				else if (userInput == "option_green") {
+				else if ((userInput == "option_red") || (userInput == "seven")) {
 					jumpToLink("historyItem");
 					redrawDisplay();
 				}
-				else if (userInput == "option_yellow") {
+				else if ((userInput == "option_green") || (userInput == "one")) {
 					/* Parameters */
 					dataFile   = dataFavorite;
 					dataMax    = dataFavoriteMax;
@@ -419,7 +471,7 @@
 					<?php include('08_history.record.inc'); ?>
 					message    = " -- 本頁已收藏";
 				}
-				else if (userInput == "option_blue") {
+				else if ((userInput == "option_yellow") || (userInput == "three")) {
 					/* Parameters */
 					dataFile   = dataFavorite;
 					dataMax    = dataFavoriteMax;
@@ -448,65 +500,177 @@
 						message = " -- 項目已收藏";
 					}
 				}
-				else {
-					if (userInput == "one") {
-						inputNumVal = 1;
-					}
-					else if (userInput == "two") {
-						inputNumVal = 2;
-					}
-					else if (userInput == "three") {
-						inputNumVal = 3;
-					}
-					else if (userInput == "four") {
-						inputNumVal = 4;
-					}
-					else if (userInput == "five") {
-						inputNumVal = 5;
-					}
-					else if (userInput == "six") {
-						inputNumVal = 6;
-					}
-					else if (userInput == "seven") {
-						inputNumVal = 7;
-					}
-					else if (userInput == "eight") {
-						inputNumVal = 8;
-					}
-					else if (userInput == "nine") {
-						inputNumVal = 9;
-					}
-					else if (userInput == "zero") {
-						inputNumVal = 0;
-					}
-
-					if ((inputNumCount == 0) || (inputNumCount == itemCountDigits)) {
-						inputNumCount = 1;
-						curNumVal = inputNumVal;
-					}
-					else {
-						inputNumCount = inputNumCount + 1;
-						curNumVal = (10*curNumVal) + inputNumVal;
-					}
-
-					if ((curNumVal &gt;= 1) &amp;&amp; (curNumVal &lt;= itemCount)) {
-						idx = (curNumVal - 1);
-					}
-					else if ((inputNumVal &gt;= 1) &amp;&amp; (inputNumVal &lt;= itemCount)) {
-						/* Keep the last digit which makes the value out of range unless invalid */
-						inputNumCount = 1;
-						curNumVal = inputNumVal;
-						idx = (curNumVal - 1);
-					}
-					else {
-						inputNumCount = 0;
-						inputNumVal = -1;
-						curNumVal = -1;
-					}
-				}
 				setFocusItemIndex(idx);
 				redrawDisplay();
 				ret = "true";
+			}
+			else if ((userInput == "option_blue") || (userInput == "nine")) {
+				if ((youtubeType == "mine") &amp;&amp; (typeExtraInfo == "playlists")) {
+					plID    = getStringArrayAt(idArray, (idx - hasPrevPage));
+					plTitle = getStringArrayAt(titleArray, (idx - hasPrevPage));
+					plDest  = null;
+					plDest  = pushBackStringArray(plDest, plID);
+					plDest  = pushBackStringArray(plDest, plTitle);
+					writeStringToFile(filePlaylistDest, plDest);
+					message = " -- 指定 \"" + plTitle + "\"";
+				}
+				else if (contentType == "video") {
+					plDest = readStringFromFile(filePlaylistDest);
+					if (((plID = getStringArrayAt(plDest, 0)) == null) || (plID == ""))
+						message = " -- 錯誤: 未指定播放清單";
+					else {
+						plTitle = getStringArrayAt(plDest, 1);
+						videoId = getStringArrayAt(idArray, (idx - hasPrevPage));
+
+						requestBody = "{\"snippet\":{\"playlistId\":\"" + plID + "\",\"resourceId\":{\"kind\":\"youtube#video\",\"videoId\":\"" + videoId + "\"}}}";
+						urlYVapi = urllocalhostYV
+							+ "?query=yv_api"
+							+ "&amp;yv_rmt_src=" + urlEncode(urlYVRemoteSrc)
+							+ "&amp;cmd=" + urlEncode("playlistItems?part=snippet")
+							+ "&amp;post=" + urlEncode(requestBody);
+						xmlYVapi = loadXMLFile(urlYVapi);
+						message  = " -- " . $site[0] . "失敗";
+						if (xmlYVapi == null)
+							msgSpecial = "叫用本機 youtube.video.php 失敗";
+						else {
+							code = getXMLText("root", "code");
+							if (code != "200") {
+								imgSpecial     = getXMLText("root", "imgSpecial");
+								msgSpecial     = "[" + code + "]" + getXMLText("root", "msgSpecial");
+								msgSpecialNote = getXMLText("root", "msgSpecialNote");
+							}
+							else
+								message = " -- 已加入 \"" + plTitle + "\"";
+						}
+					}
+				}
+				redrawDisplay();
+				ret = "true";
+			}
+			else if ((userInput == "video_stop") || (userInput == "two") ||
+					(userInput == "video_play") || (userInput == "eight") ||
+					(userInput == "display") || (userInput == "four")) {
+				if ((contentType == "video") &amp;&amp; (fromType == "mine")) {
+					videoId = getStringArrayAt(idArray, (idx - hasPrevPage));
+					plID    = getStringArrayAt(plIdsArray, (idx - hasPrevPage));
+					plPos   = Integer(getStringArrayAt(plPosArray, (idx - hasPrevPage)));
+					if ((userInput == "video_stop") || (userInput == "two")) {
+						if (plPos &gt; 0) {
+							newPLPos = plPos-1;
+							requestBody = "{\"id\":\"" + plID + "\",\"snippet\":{\"playlistId\":\"<?php echo $thisItemId; ?>\",\"position\":" + newPLPos + ",\"resourceId\":{\"kind\":\"youtube#video\",\"videoId\":\"" + videoId + "\"}}}";
+							urlYVapi = urllocalhostYV
+								+ "?query=yv_api"
+								+ "&amp;yv_rmt_src=" + urlEncode(urlYVRemoteSrc)
+								+ "&amp;cmd=" + urlEncode("playlistItems?part=snippet")
+								+ "&amp;put=" + urlEncode(requestBody);
+							xmlYVapi = loadXMLFile(urlYVapi);
+							message  = " -- 上移失敗";
+							if (xmlYVapi == null)
+								msgSpecial = "叫用本機 youtube.video.php 失敗";
+							else {
+								code = getXMLText("root", "code");
+								if (code != "200") {
+									imgSpecial     = getXMLText("root", "imgSpecial");
+									msgSpecial     = "[" + code + "]" + getXMLText("root", "msgSpecial");
+									msgSpecialNote = getXMLText("root", "msgSpecialNote");
+								}
+								else {
+									itemPerPage = yvItemPerPage;
+									if ((newPLPos % itemPerPage) == (itemPerPage-1)) {
+										if (newPLPos &gt;= itemPerPage)
+											writeStringToFile(fileQueryMenuItemOnce, itemPerPage);
+										else
+											writeStringToFile(fileQueryMenuItemOnce, (itemPerPage-1));
+										jumpToLink("prevPageItem");
+									}
+									else {
+										writeStringToFile(fileQueryMenuItemOnce, (idx-1));
+										jumpToLink("refreshItem");
+									}
+								}
+							}
+						}
+						else
+							message = " -- 無法上移";
+					}
+					else if ((userInput == "video_play") || (userInput == "eight")) {
+						if (plPos &lt; (totalResults-1)) {
+							newPLPos = Add(plPos,1);
+							requestBody = "{\"id\":\"" + plID + "\",\"snippet\":{\"playlistId\":\"<?php echo $thisItemId; ?>\",\"position\":" + newPLPos + ",\"resourceId\":{\"kind\":\"youtube#video\",\"videoId\":\"" + videoId + "\"}}}";
+							urlYVapi = urllocalhostYV
+								+ "?query=yv_api"
+								+ "&amp;yv_rmt_src=" + urlEncode(urlYVRemoteSrc)
+								+ "&amp;cmd=" + urlEncode("playlistItems?part=snippet")
+								+ "&amp;put=" + urlEncode(requestBody);
+							xmlYVapi = loadXMLFile(urlYVapi);
+							message  = " -- 下移失敗";
+							if (xmlYVapi == null)
+								msgSpecial = "叫用本機 youtube.video.php 失敗";
+							else {
+								code = getXMLText("root", "code");
+								if (code != "200") {
+									imgSpecial     = getXMLText("root", "imgSpecial");
+									msgSpecial     = "[" + code + "]" + getXMLText("root", "msgSpecial");
+									msgSpecialNote = getXMLText("root", "msgSpecialNote");
+								}
+								else {
+									itemPerPage = yvItemPerPage;
+									if ((newPLPos % itemPerPage) == 0) {
+										writeStringToFile(fileQueryMenuItemOnce, "1");
+										jumpToLink("nextPageItem");
+									}
+									else {
+										writeStringToFile(fileQueryMenuItemOnce, Add(idx,1));
+										jumpToLink("refreshItem");
+									}
+								}
+							}
+						}
+						else
+							message = " -- 無法下移";
+					}
+					else if ((userInput == "display") || (userInput == "four")) {
+						urlYVapi = urllocalhostYV
+							+ "?query=yv_api"
+							+ "&amp;yv_rmt_src=" + urlEncode(urlYVRemoteSrc)
+							+ "&amp;cmd=" + urlEncode("playlistItems?id=" + urlEncode(plID))
+							+ "&amp;delete=YES";
+						xmlYVapi = loadXMLFile(urlYVapi);
+						message  = " -- 刪除失敗";
+						if (xmlYVapi == null)
+							msgSpecial = "叫用本機 youtube.video.php 失敗";
+						else {
+							code = getXMLText("root", "code");
+							if ((code != "200") &amp;&amp; (code != "204")) {
+								imgSpecial     = getXMLText("root", "imgSpecial");
+								msgSpecial     = "[" + code + "]" + getXMLText("root", "msgSpecial");
+								msgSpecialNote = getXMLText("root", "msgSpecialNote");
+							}
+							else {
+								if (plPos &lt; (totalResults-1)) {
+									writeStringToFile(fileQueryMenuItemOnce, idx);
+									jumpToLink("refreshItem");
+								}
+								else {
+									itemPerPage = yvItemPerPage;
+									if ((idx - hasPrevPage) == 0) {
+										if (plPos &gt; itemPerPage)
+											writeStringToFile(fileQueryMenuItemOnce, itemPerPage);
+										else
+											writeStringToFile(fileQueryMenuItemOnce, (itemPerPage-1));
+										jumpToLink("prevPageItem");
+									}
+									else {
+										writeStringToFile(fileQueryMenuItemOnce, (idx-1));
+										jumpToLink("refreshItem");
+									}
+								}
+							}
+						}
+					}
+					redrawDisplay();
+					ret = "true";
+				}
 			}
 			else if (userInput == "enter") {
 				if (getItemInfo(idx, "click_play") == "yes") {
@@ -526,7 +690,6 @@
 						playItemURL(realURL, 0);
 					}
 					cancelIdle();
-					ret = "true";
 				}
 			}
 			ret;
@@ -534,38 +697,248 @@
 	</onUserInput>
 </mediaDisplay>
 
+<getInputFromUser>
+	inputPrefs = readStringFromFile("<?php echo $fileLocalInputPrefs; ?>");
+	input = null;
+	if ((inputPrefs == null) || (inputPrefs == "")
+	 || (((inputType = getStringArrayAt(inputPrefs, 0)) != "1") &amp;&amp; (inputType != "2"))
+	 || ((inputMethod = getStringArrayAt(inputPrefs, 1)) == null)
+	 || (inputMethod == "")) {
+		input = getInput("Enter a keyword");
+	}
+	else {
+		input = doModalRss(inputMethod, "mediaDisplay", "search", 0);
+	}
+</getInputFromUser>
+
+<?php
+	if (!empty($useItemTemplate)) {
+		switch ($useItemTemplate) {
+			case 'YouTube':
+?>
+<item_template>
+	<title><script>
+		idx = getQueryItemIndex();
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1))
+			"上一頁";
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1))
+			"下一頁";
+		else
+			getStringArrayAt(titleArray, (idx - hasPrevPage));
+	</script></title>
+	<link><script>
+		idx = getQueryItemIndex();
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1)) {
+			writeStringToFile(fileQueryMenuItem, "0");
+			"<?php echo $urlPrevPage; ?>";
+		}
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1)) {
+			writeStringToFile(fileQueryMenuItem, "0");
+			"<?php echo $urlNextPage; ?>";
+		}
+		else {
+			writeStringToFile(fileQueryMenuItem, getFocusItemIndex());
+			kind = getStringArrayAt(kindArray, (idx - hasPrevPage));
+			if (kind == "video") {
+				"<?php echo $scriptsURLprefix . '/' . $myBaseName . '.link.php?uid=' . $user_id; ?>"
+					+ "&amp;cc_prefs="      + "<?php echo urlencode($videoCCPrefs); ?>"
+					+ "&amp;fmt_prefs="     + "<?php echo urlencode($videoFmtPrefs); ?>"
+					+ "&amp;yv_rmt_src="    + "<?php echo urlencode($youtubeVideoRemoteSource); ?>"
+					+ "&amp;youtube_video=" + "<?php echo urlencode($localhostYoutubeVideo); ?>"
+					+ "&amp;query=" + getStringArrayAt(idArray, (idx - hasPrevPage))
+						+ "," + urlEncode(getStringArrayAt(titleArray, (idx - hasPrevPage)))
+						+ "," + urlEncode("<?php echo $continueFlag; ?>" + "|" + contentCount + "|" + (idx - hasPrevPage));
+			}
+			else if (kind == "playlist") {
+				urlPara = "playlistId";
+				"<?php echo $scriptsURLprefix . '/' . $myBaseName . '.query.php?uid=' . $user_id; ?>"
+					+ "&amp;cc_prefs="      + "<?php echo urlencode($videoCCPrefs); ?>"
+					+ "&amp;fmt_prefs="     + "<?php echo urlencode($videoFmtPrefs); ?>"
+					+ "&amp;yv_rmt_src="    + "<?php echo urlencode($youtubeVideoRemoteSource); ?>"
+					+ "&amp;youtube_video=" + "<?php echo urlencode($localhostYoutubeVideo); ?>"
+					+ "&amp;query=1"
+						+ ",%26amp%3B" + urlPara + "%3D" + urlEncode(itemId = getStringArrayAt(idArray, (idx - hasPrevPage)))
+						+ "," + urlEncode(getStringArrayAt(titleArray, (idx - hasPrevPage)))
+						+ "," + urlEncode(kind + "|<?php echo $continueFlag; ?>|" + itemId + "|" + youtubeType);
+			}
+			else if (kind == "channel") {
+				executeScript("getItemInfo");
+				urlPara = "id";
+				"<?php echo $scriptsURLprefix . '/' . $myBaseName . '.query.php?uid=' . $user_id; ?>"
+					+ "&amp;cc_prefs="      + "<?php echo urlencode($videoCCPrefs); ?>"
+					+ "&amp;fmt_prefs="     + "<?php echo urlencode($videoFmtPrefs); ?>"
+					+ "&amp;yv_rmt_src="    + "<?php echo urlencode($youtubeVideoRemoteSource); ?>"
+					+ "&amp;youtube_video=" + "<?php echo urlencode($localhostYoutubeVideo); ?>"
+					+ "&amp;query=1"
+						+ ",%26amp%3B" + urlPara + "%3D" + urlEncode(itemId = getStringArrayAt(idArray, (idx - hasPrevPage)))
+						+ "," + urlEncode(getStringArrayAt(titleArray, (idx - hasPrevPage)))
+						+ "," + urlEncode(kind + "|<?php echo $continueFlag; ?>|" + itemId);
+			}
+			else if (kind == "channel-playlist") {
+				urlPara = "channelId";
+				"<?php echo $scriptsURLprefix . '/' . $myBaseName . '.query.php?uid=' . $user_id; ?>"
+					+ "&amp;cc_prefs="      + "<?php echo urlencode($videoCCPrefs); ?>"
+					+ "&amp;fmt_prefs="     + "<?php echo urlencode($videoFmtPrefs); ?>"
+					+ "&amp;yv_rmt_src="    + "<?php echo urlencode($youtubeVideoRemoteSource); ?>"
+					+ "&amp;youtube_video=" + "<?php echo urlencode($localhostYoutubeVideo); ?>"
+					+ "&amp;query=1"
+						+ ",%26amp%3B" + urlPara + "%3D" + urlEncode(getStringArrayAt(idArray, (idx - hasPrevPage)))
+						+ "," + urlEncode(getStringArrayAt(titleArray, (idx - hasPrevPage)))
+						+ "," + urlEncode("search|<?php echo $continueFlag; ?>|&amp;amp;type=playlist");
+			}
+		}
+	</script></link>
+	<image><script>
+		idx = getQueryItemIndex();
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1))
+			"<?php echo myImage('left'); ?>";
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1))
+			"<?php echo myImage('right'); ?>";
+		else
+			getStringArrayAt(imageArray, (idx - hasPrevPage));
+	</script></image>
+	<note_one><script>
+		idx = getQueryItemIndex();
+		kind = getStringArrayAt(kindArray, (idx - hasPrevPage));
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1))
+			"";
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1))
+			"";
+		else
+			"<?php echo $caption_publish . ': '; ?>" + getStringArrayAt(pubTimeArray, (idx - hasPrevPage));
+	</script></note_one>
+	<note_two><script>
+		idx = getQueryItemIndex();
+		kind = getStringArrayAt(kindArray, (idx - hasPrevPage));
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1))
+			"";
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1))
+			"";
+		else {
+			executeScript("getItemInfo");
+			getStringArrayAt(itemInfo, 0);
+		}
+	</script></note_two>
+	<note_three><script>
+		idx = getQueryItemIndex();
+		kind = getStringArrayAt(kindArray, (idx - hasPrevPage));
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1))
+			"";
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1))
+			"";
+		else {
+			executeScript("getItemInfo");
+			getStringArrayAt(itemInfo, 1);
+		}
+	</script></note_three>
+	<note_four><script>
+		idx = getQueryItemIndex();
+		kind = getStringArrayAt(kindArray, (idx - hasPrevPage));
+		if ((idx == 0) &amp;&amp; (hasPrevPage == 1))
+			"";
+		else if ((idx == (itemCount-1)) &amp;&amp; (hasNextPage == 1))
+			"";
+		else {
+			executeScript("getItemInfo");
+			getStringArrayAt(itemInfo, 2);
+		}
+	</script></note_four>
+	<mediaDisplay />
+</item_template>
+
+<getItemInfo>
+	if (kind == "channel-playlist") {
+		itemInfo = null;
+		itemInfo = pushBackStringArray(itemInfo, "");
+		itemInfo = pushBackStringArray(itemInfo, "");
+		itemInfo = pushBackStringArray(itemInfo, "");
+	}
+	else {
+		itemId = getStringArrayAt(idArray, (idx - hasPrevPage));
+		kindItemId = kind + "Id_" + itemId;
+		if (cachedItemId == kindItemId) {
+			itemInfo = cachedItemInfo;
+		}
+		else {
+			fileItemInfo = getStoragePath("tmp") + "ims_yv_api." + kindItemId;
+			itemInfo = readStringFromFile(fileItemInfo);
+			if ((itemInfo == null) || (itemInfo == "")) {
+				if ((kind == "video") || (kind == "channel"))
+					cmd = kind + "s?part=snippet,contentDetails,statistics&amp;id=" + itemId;
+				else if (kind == "playlist")
+					cmd = kind + "s?part=snippet,contentDetails&amp;id=" + itemId;
+				urlYVapi = urllocalhostYV
+							+ "?query=yv_api"
+							+ "&amp;yv_rmt_src=" + urlEncode(urlYVRemoteSrc)
+							+ "&amp;cmd=" + urlEncode(cmd);
+				xmlYVapi = loadXMLFile(urlYVapi);
+				if (xmlYVapi != null) {
+					httpStatus = getXMLText("root", "code");
+					if (httpStatus == "200") {
+						itemInfo = null;
+						if (kind == "video") {
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_uploader . ': '; ?>" + getXMLText("root", "snippet", "channelTitle"));
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_length . ': '; ?>" + getXMLText("root", "contentDetails", "duration"));
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_view . ': '; ?>" + getXMLText("root", "statistics", "viewCount"));
+						}
+						else if (kind == "playlist") {
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_uploader . ': '; ?>" + getXMLText("root", "snippet", "channelTitle"));
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_itemcount . ': '; ?>" + getXMLText("root", "contentDetails", "itemCount"));
+						}
+						else if (kind == "channel") {
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_subscriber . ': '; ?>" + getXMLText("root", "statistics", "subscriberCount"));
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_itemcount . ': '; ?>" + getXMLText("root", "statistics", "videoCount"));
+							itemInfo = pushBackStringArray(itemInfo, "<?php echo $caption_view . ': '; ?>" + getXMLText("root", "statistics", "viewCount"));
+							itemInfo = pushBackStringArray(itemInfo, getStringArrayAt(pubTimeArray, (idx - hasPrevPage)));
+							plItem = "uploads";
+							executeScript("saveChannelInfo");
+							plItem = "favorites";
+							executeScript("saveChannelInfo");
+							plItem = "likes";
+							executeScript("saveChannelInfo");
+							plItem = "watchHistory";
+							executeScript("saveChannelInfo");
+							plItem = "watchLater";
+							executeScript("saveChannelInfo");
+						}
+						cachedItemInfo = itemInfo;
+						cachedItemId   = kindItemId;
+						if ((youtubeType != "mine") || (typeExtraInfo != "playlists"))
+							writeStringToFile(fileItemInfo, itemInfo);
+					}
+				}
+			}
+		}
+	}
+</getItemInfo>
+
+<saveChannelInfo>
+	if (((plID = getXMLText("root", "relatedPlaylists", plItem)) != null) &amp;&amp; (plID != "")) {
+		itemInfo = pushBackStringArray(itemInfo, plItem);
+		itemInfo = pushBackStringArray(itemInfo, plID);
+	}
+</saveChannelInfo>
+
+<prevPageItem><link><?php echo $urlPrevPage; ?></link></prevPageItem>
+<nextPageItem><link><?php echo $urlNextPage; ?></link></nextPageItem>
+<?php
+				break;
+			default:
+				break;
+		}
+	}
+?>
+
 <channel>
 
 	<title><?php echo $pageTitle; ?></title>
 
 <?php
-	if ($page > 1) {
+	if (empty($disableStaticPageControl) && ($page > 1)) {
 ?>
 	<item>
-		<?php
-			$sThisFile = $wholeURL;
-			$url = $sThisFile . '?uid=' . $user_id  .
-				'&amp;input_method='  . urlencode($inputMethod) .
-				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
-				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
-				'&amp;query=' . ($page-1) . ',';
-			if (isset($search)) {
-				$url = $url . urlencode($search);
-			}
-			$url = $url . ',';
-			if (isset($cat)) {
-				$url = $url . urlencode($cat);
-			}
-			$url = $url . ',';
-			if (isset($extra_02_query)) {
-				$url = $url . urlencode($extra_02_query);
-			}
-		?>
 		<title>上一頁</title>
-		<link><?php echo $url;?></link>
-		<annotation>上一頁</annotation>
+		<link><?php echo $urlPrevPage;?></link>
 		<image><?php echo myImage('left'); ?></image>
 		<mediaDisplay name="threePartsView" />
 	</item>
@@ -578,33 +951,11 @@
 ?>
 
 <?php
-	if (($page > 0) && (!isset($pageMax) || ($page < $pageMax))) {
+	if (empty($disableStaticPageControl) && (($page > 0) && (!isset($pageMax) || ($page < $pageMax)))) {
 ?>
 	<item>
-		<?php
-			$sThisFile = $wholeURL;
-			$url = $sThisFile . '?uid=' . $user_id  .
-				'&amp;input_method='  . urlencode($inputMethod) .
-				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
-				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
-				'&amp;query=' . ($page+1) . ',';
-			if (isset($search)) {
-				$url = $url . urlencode($search);
-			}
-			$url = $url . ',';
-			if (isset($cat)) {
-				$url = $url . urlencode($cat);
-			}
-			$url = $url . ',';
-			if (isset($extra_02_query)) {
-				$url = $url . urlencode($extra_02_query);
-			}
-		?>
 		<title>下一頁</title>
-		<link><?php echo $url;?></link>
-		<annotation>下一頁</annotation>
+		<link><?php echo $urlNextPage;?></link>
 		<image><?php echo myImage('right'); ?></image>
 		<mediaDisplay name="threePartsView" />
 	</item>

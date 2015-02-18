@@ -32,25 +32,18 @@
 		$history = 0;
 	}
 
-	if(!empty($_GET['input_method'])) {
-		$inputMethod = $_GET['input_method'];
+	if(!empty($_GET['fmt_prefs'])) {
+		$videoFmtPrefs = $_GET['fmt_prefs'];
 	}
 	else {
-		$inputMethod = $defaultInputMethod;
+		$videoFmtPrefs = $defaultVideoFmtPrefs;
 	}
 
-	if(!empty($_GET['yv_fmt_prefs'])) {
-		$youtubeVideoFmtPrefs = $_GET['yv_fmt_prefs'];
+	if(!empty($_GET['cc_prefs'])) {
+		$videoCCPrefs = $_GET['cc_prefs'];
 	}
 	else {
-		$youtubeVideoFmtPrefs = $defaultYoutubeVideoFmtPrefs;
-	}
-
-	if(!empty($_GET['yv_cc_prefs'])) {
-		$youtubeVideoCCPrefs = $_GET['yv_cc_prefs'];
-	}
-	else {
-		$youtubeVideoCCPrefs = $defaultYoutubeVideoCCPrefs;
+		$videoCCPrefs = $defaultVideoCCPrefs;
 	}
 
 	if(!empty($_GET['yv_rmt_src'])) {

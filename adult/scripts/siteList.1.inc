@@ -10,11 +10,10 @@
 		"\t<item>\r\n"  .
 			"\t\t<title>瀏覽觀看與收藏</title>\r\n" .
 			"\t\t<link>"  . $scriptsURLprefix  . '/history.php?uid=' . $user_id .
-				'&amp;input_method='           . urlencode($inputMethod) .
-				'&amp;youtube_video='          . urlencode($localhostYoutubeVideo) .
-				'&amp;yv_fmt_prefs='           . urlencode($youtubeVideoFmtPrefs) .
-				'&amp;yv_cc_prefs='            . urlencode($youtubeVideoCCPrefs) .
+				'&amp;cc_prefs='               . urlencode($videoCCPrefs) .
+				'&amp;fmt_prefs='              . urlencode($videoFmtPrefs) .
 				'&amp;yv_rmt_src='             . urlencode($youtubeVideoRemoteSource) .
+				'&amp;youtube_video='          . urlencode($localhostYoutubeVideo) .
 				'&amp;history_peer_path='      . urlencode($history_peer_path) .
 				'&amp;history_peer_path_supp=' . urlencode($history_peer_path_supp) .
 				'&amp;history_peer_name='      . urlencode($history_peer_name) .
@@ -53,27 +52,6 @@
 				"\t</item>\r\n\r\n";
 		}
 	}
-
-	// 02 -> play
-/*
-	// Moved to 01 -> 02 -> play on Feb. 5, 2015
-	$sites = array(
-		array('timtube', 'http://www.timtube.com/'),
-	);
-	foreach($sites as $site) {
-		if (in_array($site[0], $sitesTurnedOff) === false) {
-			$itemTotal ++;
-			$itemXML   .=
-				"\t<item>\r\n"  .
-					"\t\t<title>" . $site[0] . "</title>\r\n" .
-					"\t\t<link>"  . $scriptsURLprefix . '/' . $site[0] . ".query.php?uid=" . $user_id .
-						"&amp;query=1," . urlencode($site[1]) . ",,</link>\r\n" .
-					"\t\t" . siteLogo($site[0]) . "\r\n" .
-					"\t\t<mediaDisplay />\r\n" .
-				"\t</item>\r\n\r\n";
-		}
-	}
-*/
 
 	// podcast
 	$podcast_include = local_file_get_contents('10_podcast.inc');

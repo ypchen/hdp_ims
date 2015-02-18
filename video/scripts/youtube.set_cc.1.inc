@@ -13,11 +13,10 @@
 				"\t\t<title>" . ucfirst($site[4]) . ": " . $site[1] . "</title>\r\n" .
 				"\t\t<link>" .
 					$scriptsURLprefix . '/youtube.query.php?uid=' . $user_id .
-						'&amp;input_method='  . urlencode($inputMethod) .
-						'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-						'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-						'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
+						'&amp;fmt_prefs='     . urlencode($videoFmtPrefs) .
+						'&amp;cc_prefs='      . urlencode($videoCCPrefs) .
 						'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+						'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
 						'&amp;query=1' .
 							',' . $site[0] .
 							',' . urlencode($site[1]) .
@@ -29,11 +28,11 @@
 			"\t</item>\r\n";
 	}
 
-	// local cc prefs: $fileLocalYoutubeVideoCCPrefs
+	// local cc prefs: $fileLocalVideoCCPrefs
 	$sites = array(
 		array('',
 			'取消字幕嘗試載入', 'youtube',
-			' -- 確認後將改為使用預設值 (' . $youtubeVideoCCPrefs . ')'),
+			' -- 確認後將改為使用預設值 (' . $videoCCPrefs . ')'),
 		array('en',
 			'字幕嘗試載入順序: 英文', 'youtube',
 			' -- 確認後將設定為: en'),
@@ -57,7 +56,7 @@
 			"\t<item>\r\n" .
 				"\t\t<title>" . $site[1] . "</title>\r\n" .
 				"\t\t<onClick>\r\n" .
-					"\t\t\tdataFile = \"" . $fileLocalYoutubeVideoCCPrefs . "\";\r\n" .
+					"\t\t\tdataFile = \"" . $fileLocalVideoCCPrefs . "\";\r\n" .
 					"\t\t\tdataStr  = \"" . $site[0] . "\";\r\n" .
 					"\t\t\twriteStringToFile(dataFile, dataStr);\r\n" .
 					"\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
@@ -72,10 +71,10 @@
 				"\t\t" . siteLogo($site[2]) . "\r\n" .
 				"\t\t<note>\r\n" .
 					"\t\t\t<script>\r\n" .
-						"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoCCPrefs . "\";\r\n" .
+						"\t\t\t\tdataFile = \"" . $fileLocalVideoCCPrefs . "\";\r\n" .
 						"\t\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 						"\t\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
-							"\t\t\t\t\tnoteStr = \"目前本機無字幕順序設定 (正使用預設值: " . $youtubeVideoCCPrefs . ")\";\r\n" .
+							"\t\t\t\t\tnoteStr = \"目前本機無字幕順序設定 (正使用預設值: " . $videoCCPrefs . ")\";\r\n" .
 						"\t\t\t\t}\r\n" .
 						"\t\t\t\telse {\r\n" .
 							"\t\t\t\t\tnoteStr = \"目前嘗試載入字幕順序為: \" + localYoutubeVideoCCPrefs;\r\n" .
@@ -107,7 +106,7 @@
 				"\t\t<onClick>\r\n" .
 					"\t\t\t" . $site[0] . "\r\n" .
 					"\t\t\tif (input != null) {\r\n" .
-					"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoCCPrefs . "\";\r\n" .
+					"\t\t\t\tdataFile = \"" . $fileLocalVideoCCPrefs . "\";\r\n" .
 					"\t\t\t\twriteStringToFile(dataFile, input);\r\n" .
 					"\t\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 					"\t\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
@@ -122,10 +121,10 @@
 				"\t\t" . siteLogo($site[2]) . "\r\n" .
 				"\t\t<note>\r\n" .
 					"\t\t\t<script>\r\n" .
-						"\t\t\t\tdataFile = \"" . $fileLocalYoutubeVideoCCPrefs . "\";\r\n" .
+						"\t\t\t\tdataFile = \"" . $fileLocalVideoCCPrefs . "\";\r\n" .
 						"\t\t\t\tlocalYoutubeVideoCCPrefs = readStringFromFile(dataFile);\r\n" .
 						"\t\t\t\tif ((localYoutubeVideoCCPrefs == null) || (localYoutubeVideoCCPrefs == \"\")) {\r\n" .
-							"\t\t\t\t\tnoteStr = \"目前本機無字幕順序設定 (正使用預設值: " . $youtubeVideoCCPrefs . ")\";\r\n" .
+							"\t\t\t\t\tnoteStr = \"目前本機無字幕順序設定 (正使用預設值: " . $videoCCPrefs . ")\";\r\n" .
 						"\t\t\t\t}\r\n" .
 						"\t\t\t\telse {\r\n" .
 							"\t\t\t\t\tnoteStr = \"目前設定: \" + localYoutubeVideoCCPrefs;\r\n" .

@@ -34,6 +34,9 @@
 		unset($extra_02_query);
 	}
 
+	// To receive $extra propagated from included scripts
+	unset($extra_02_query_from_inc);
+
 	$itemTotal  = 0;
 	$pass_check = true;
 	try {
@@ -41,6 +44,11 @@
 	}
 	catch (Exception $e) {
 		$pass_check = false;
+	}
+
+	// Replace the original $extra by the explicitly propagated one
+	if (isset($extra_02_query_from_inc)) {
+		$extra_02_query = $extra_02_query_from_inc;
 	}
 
 	// Default display parameters
@@ -62,7 +70,9 @@
 	if (!isset($themeVersionFontSize)) $themeVersionFontSize = '10';
 
 	$titleComponents = explode('.', $myBaseName);
-	$pageTitleBase = $titleComponents[0];
+	$pageTitleBaseElements = explode('__', $titleComponents[0]);
+	$pageTitleBase = $pageTitleBaseElements[0];
+
 	$pageTitle = $pageTitleBase;
 	if (isset($cat)) {
 		$pageTitle = $pageTitle . ': ' . $cat;
@@ -93,10 +103,6 @@
 	dataWatchMax    = <?php echo $maxWatch; ?>;
 	dataFavoriteMax = <?php echo $maxFavorite; ?>;
 
-	/* Static items */
-	itemCount = getPageInfo("itemCount");
-	setRefreshTime(200);
-
 	history = <?php echo $history; ?>;
 	if (history == 0) {
 		/* Parameters */
@@ -108,10 +114,37 @@
 		<?php include('08_history.record.inc'); ?>
 	}
 
+	fileQueryMenuItem     = getStoragePath("tmp") + "<?php echo 'ims_query.' . $myBaseName . '-' . $uniquePageId . '.dat'; ?>";
+	fileQueryMenuItemOnce = getStoragePath("tmp") + "<?php echo 'ims_query.' . $myBaseName . '-once.dat'; ?>";
+
+	if (dynamicItem == 1) {
+		itemCount = itemSize;
+		queryMenuItem = readStringFromFile(fileQueryMenuItem);
+		if ((queryMenuItem == null) || (queryMenuItem == ""))
+			queryMenuItem = 0;
+		else
+			queryMenuItem = Integer(queryMenuItem);
+	}
+	else
+		itemCount = getPageInfo("itemCount");
+
+	queryMenuItemOnce = readStringFromFile(fileQueryMenuItemOnce);
+	if ((queryMenuItemOnce != null) &amp;&amp; (queryMenuItemOnce != "")) {
+		queryMenuItem = Integer(queryMenuItemOnce);
+		writeStringToFile(fileQueryMenuItemOnce, "");
+	}
+	setFocusItemIndex(queryMenuItem);
+
+	setRefreshTime(200);
+
 	x = itemCount;
 	<?php include('00_utils.digits.inc'); ?>
 	itemCountDigits = y;
 </onEnter>
+
+<onExit>
+	writeStringToFile(fileQueryMenuItem, getFocusItemIndex());
+</onExit>
 
 <onRefresh>
 	setRefreshTime(-1);
@@ -184,10 +217,10 @@
 			if ((inputNumCount == 0) ||
 					((inputNumCount == itemCountDigits) &amp;&amp;
 					((curNumVal &lt; 1) || (curNumVal &gt; itemCount)))) {
-				str = "[↕][↔]移動; [上下頁]最前後; [綠]至收藏夾; [黃]收藏本頁; [藍]收藏項目; [數字直選]";
+				str = "[↕↔上下頁]移動 [紅]收藏夾 [綠]收本頁 [黃]收項目 [數字直選]";
 			}
 			else {
-				str = "[↕][↔]移動; [上下頁]最前後; [綠]至收藏夾; [黃]收藏本頁; [藍]收藏項目; 第 " + curNumVal + " 項";
+				str = "[↕↔上下頁]移動 [紅]收藏夾 [綠]收本頁 [黃]收項目 第 " + curNumVal + " 項";
 			}
 			str + message;
 		</script>
@@ -211,7 +244,8 @@
 		backgroundColor="<?php echo $themeMainBackgroundColor; ?>"
 		foregroundColor="<?php echo $themeMainForegroundColor; ?>">
 		<script>
-			itemTitle;
+			if (msgSpecial == null)	itemTitle;
+			else msgSpecial;
 		</script>
 	</text>
 
@@ -296,8 +330,9 @@
 			if (
 				(userInput == "pagedown") ||
 				(userInput == "pageup") ||
+				(userInput == "option_red") ||
 				(userInput == "option_green") ||
-				(userInput == "option_blue") ||
+				(userInput == "option_yellow") ||
 				(userInput == "display") ||
 				(userInput == "one") ||
 				(userInput == "two") ||
@@ -316,11 +351,11 @@
 				else if (userInput == "pageup") {
 					idx = 0;
 				}
-				else if (userInput == "option_green") {
+				else if (userInput == "option_red") {
 					jumpToLink("historyItem");
 					redrawDisplay();
 				}
-				else if (userInput == "option_yellow") {
+				else if (userInput == "option_green") {
 					/* Parameters */
 					dataFile   = dataFavorite;
 					dataMax    = dataFavoriteMax;
@@ -330,7 +365,7 @@
 					<?php include('08_history.record.inc'); ?>
 					message    = " -- 本頁已收藏";
 				}
-				else if (userInput == "option_blue") {
+				else if (userInput == "option_yellow") {
 					/* Parameters */
 					dataFile   = dataFavorite;
 					dataMax    = dataFavoriteMax;
@@ -437,13 +472,26 @@
 						playItemURL(realURL, 0);
 					}
 					cancelIdle();
-					ret = "true";
 				}
 			}
 			ret;
 		</script>
 	</onUserInput>
 </mediaDisplay>
+
+<getInputFromUser>
+	inputPrefs = readStringFromFile("<?php echo $fileLocalInputPrefs; ?>");
+	input = null;
+	if ((inputPrefs == null) || (inputPrefs == "")
+	 || (((inputType = getStringArrayAt(inputPrefs, 0)) != "1") &amp;&amp; (inputType != "2"))
+	 || ((inputMethod = getStringArrayAt(inputPrefs, 1)) == null)
+	 || (inputMethod == "")) {
+		input = getInput("Enter a keyword");
+	}
+	else {
+		input = doModalRss(inputMethod, "mediaDisplay", "search", 0);
+	}
+</getInputFromUser>
 
 <channel>
 
@@ -456,11 +504,10 @@
 		<?php
 			$sThisFile = $wholeURL;
 			$url = $sThisFile . '?uid=' . $user_id  .
-				'&amp;input_method='  . urlencode($inputMethod) .
-				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
-				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+				'&amp;cc_prefs='        . urlencode($videoCCPrefs) .
+				'&amp;fmt_prefs='       . urlencode($videoFmtPrefs) .
+				'&amp;yv_rmt_src='      . urlencode($youtubeVideoRemoteSource) .
+				'&amp;youtube_video='   . urlencode($localhostYoutubeVideo) .
 				'&amp;query=' . ($page-1) . ',';
 			if (isset($search)) {
 				$url = $url . urlencode($search);
@@ -495,11 +542,10 @@
 		<?php
 			$sThisFile = $wholeURL;
 			$url = $sThisFile . '?uid=' . $user_id  .
-				'&amp;input_method='  . urlencode($inputMethod) .
-				'&amp;youtube_video=' . urlencode($localhostYoutubeVideo) .
-				'&amp;yv_fmt_prefs='  . urlencode($youtubeVideoFmtPrefs) .
-				'&amp;yv_cc_prefs='   . urlencode($youtubeVideoCCPrefs) .
-				'&amp;yv_rmt_src='    . urlencode($youtubeVideoRemoteSource) .
+				'&amp;cc_prefs='        . urlencode($videoCCPrefs) .
+				'&amp;fmt_prefs='       . urlencode($videoFmtPrefs) .
+				'&amp;yv_rmt_src='      . urlencode($youtubeVideoRemoteSource) .
+				'&amp;youtube_video='   . urlencode($localhostYoutubeVideo) .
 				'&amp;query=' . ($page+1) . ',';
 			if (isset($search)) {
 				$url = $url . urlencode($search);

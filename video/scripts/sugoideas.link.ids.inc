@@ -36,8 +36,10 @@
 		$videos = array_values($videos);
 		foreach($videos as $video) {
 			$video_data = explode('?', trim(str_between($video, ' src="', '"')));
-			$links[] = 
+			$links[] =
 				$localhostYoutubeVideo . '?query=site_dailymotion' .
+					'&amp;cc_prefs='   . urlencode($videoCCPrefs) .
+					'&amp;fmt_prefs='  . urlencode($videoFmtPrefs) .
 					'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
 					'&amp;link='       . urlencode($video_data[0]);
 		}

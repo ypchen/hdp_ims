@@ -34,6 +34,8 @@
 		foreach($ids as $id) {
 			$links[] =
 				$localhostYoutubeVideo . '?query=site_dailymotion' .
+					'&amp;cc_prefs='   . urlencode($videoCCPrefs) .
+					'&amp;fmt_prefs='  . urlencode($videoFmtPrefs) .
 					'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
 					'&amp;actual_src=' . urlencode($srcPrefix . $src) .
 					'&amp;link='       . urlencode('http://www.dailymotion.com/embed/video/' . $id);
