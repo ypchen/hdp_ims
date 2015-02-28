@@ -4,6 +4,7 @@
 	bufferSize  = 262144;
 	tmpItemSelected = getStoragePath("tmp") + "<?php echo 'ims_clips.' . $myBaseName . '-' . $uniquePageId . '.dat'; ?>";
 
+	writeStringToFile("/tmp/yv_url_redir.exit", "");
 <?php
 	$pass_check = true;
 	try {

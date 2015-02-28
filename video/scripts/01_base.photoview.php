@@ -60,6 +60,10 @@
 	if (!isset($themeTipsFontSize)) $themeTipsFontSize = '16';
 	if (!isset($themeVersionFontSize)) $themeVersionFontSize = '10';
 
+	$titleComponents = explode('.', $myBaseName);
+	$pageTitleBaseElements = explode('__', $titleComponents[0]);
+	$pageTitleBase = $pageTitleBaseElements[0];
+
 	// Create my own link
 	$params  = str_replace('&', '&amp;', $_SERVER['QUERY_STRING']);
 	$currUrl = $scriptsURLprefix . '/' . $myName . '.php?' . $params;

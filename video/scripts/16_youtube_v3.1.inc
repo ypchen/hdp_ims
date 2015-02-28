@@ -9,7 +9,7 @@
 	$disableStaticPageControl = true;
 	$useItemTemplate = 'YouTube';
 
-	$dataFilePath  = '/usr/local/etc/dvdplayer/';
+	$dataFilePath    = '/usr/local/etc/dvdplayer/';
 
 	switch ($youtubeType) {
 		case 'search':
@@ -37,6 +37,8 @@
 			break;
 	}
 ?>
+	writeStringToFile("/tmp/yv_url_redir.exit", "0");
+
 	urlYVRemoteSrc   = "<?php echo $youtubeVideoRemoteSource; ?>";
 	urllocalhostYV   = "<?php echo $localhostYoutubeVideo; ?>";
 	dataFilePath     = "<?php echo $dataFilePath; ?>";

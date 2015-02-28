@@ -3,6 +3,8 @@
 # It's just a reference implementation.
 # You need to modify it according to your local environment.
 
+progRM="/bin/rm"
+progTR="/usr/bin/tr"
 progCAT="/bin/cat"
 progCUT="/usr/bin/cut"
 progGREP="/bin/grep"
@@ -10,15 +12,106 @@ progECHO="/bin/echo"
 progNICE="/bin/nice"
 progCURL="/opt/bin/curl"
 
-fileURL="/usr/local/etc/dvdplayer/ims_yv_url_data.dat"
-dataURL="`${progCAT} ${fileURL}`"
+fileDataURL="/tmp/yv_url.data"
+fileStep="/tmp/yv_url_redir.step"
+fileExit="/tmp/yv_url_redir.exit"
+fileCallback="/tmp/yv_url_redir.callback"
+fileExtraOpt="/tmp/yv_url_redir.extraOpt"
 
-# Handle 302 redirect
-headLOC=`${progCURL} -s -k -I "${dataURL}" | ${progGREP} "Location:"`
-while [ $? -eq 0 ]
-do
-	dataURL=`${progECHO} "${headLOC}" | ${progCUT} -d " " -f 2`
-	headLOC=`${progCURL} -s -k -I "${dataURL}" | ${progGREP} "Location:"`
-done
+filePid="/tmp/${0}.pid"
+filePrefix="/tmp/${0}.$$"
+fileM3U8="${filePrefix}.m3u8"
+fileCurrSegNo="/tmp/${0}.currSegNo"
+#fileCurrSegNo="${filePrefix}.currSegNo"
+fileTimestamp="${filePrefix}.timestamp"
+fileStdErr="${filePrefix}.stderr"
 
-exec ${progNICE} -n 6 ${progCURL} -s -k -N -D - -o - "${dataURL}"
+valueNICE="4"
+optCURL="-s -k -N --stderr "${fileStdErr}" --retry 5 --retry-delay 1 --retry-max-time 15"
+
+got_signal() {
+	${progRM} -f ${filePrefix}.*
+	exit 0
+}
+trap "got_signal" PIPE QUIT TERM
+
+if [ -s "${fileStep}" ]; then
+	currStep=`${progCAT} "${fileStep}"`
+	if [ "${currStep}" == "1" ]; then
+
+		${progECHO} "2" > "${fileStep}"
+
+		# Redirect to the local agent to obtain the request header
+		callback=`${progCAT} "${fileCallback}"`
+		${progECHO} "HTTP/1.1 302 Found"
+		${progECHO} "Location: ${callback}"
+		${progECHO} ""
+
+		exit 0
+
+	elif [ "${currStep}" == "3" ]; then
+
+		${progECHO} "1" > "${fileStep}"
+
+		extraOpt=`${progCAT} "${fileExtraOpt}"`
+		dataURL=`${progCAT} "${fileDataURL}"`
+
+		m3u8Test=`${progECHO} "${dataURL}" | ${progGREP} -i "m3u8"`
+		if [ $? -eq 0 ]; then
+			date +%s > "${fileTimestamp}"
+			# Handle m3u8 (YouTube HTTP Live Stream and/or others)
+			extraOpt=""
+			segSN="0"
+			while true; do
+				${progCURL} -o "${fileM3U8}" ${optCURL} ${extraOpt} "${dataURL}"
+				while read line; do
+					line=`${progECHO} "${line}" | ${progTR} -d '\r\n'`
+					lineTag=`${progECHO} "${line}" | ${progCUT} -d ':' -f 1`
+					if [ "${lineTag}" == "http" -o "${lineTag}" == "https" ]; then
+						if [ "${segSN}" == "0" ]; then
+							${progECHO} "HTTP/1.1 200 OK"
+							${progECHO} "Content-Type: application/octet-stream"
+							${progECHO} "Accept-Ranges: bytes"
+							${progECHO} "Content-Range: bytes 0-99/*"
+							${progECHO} "Connection: close"
+							${progECHO} ""
+						fi
+
+						segSN=$(($segSN+1))
+						${progECHO} "${segSN}" > "${fileCurrSegNo}"
+#						${progECHO} "${segSN} -- [$lineTag] ${line}" > "${fileCurrSegNo}"
+						${progNICE} -n ${valueNICE} ${progCURL} -o - ${optCURL} ${extraOpt} "${line}"
+
+						if [ -s "${fileExit}" ]; then
+							${progRM} -f ${filePrefix}.*
+							exit `${progCAT} "${fileExit}"`
+						elif [ -s "${filePid}" ]; then
+							pidInFile=`${progCAT} "${filePid}"`
+							if [ "${pidInFile}" != "$$" ]; then
+								myTS=`${progCAT} "${fileTimestamp}"`
+								otherTS=`${progCAT} "/tmp/${0}.${pidInFile}.timestamp"`
+								if [ "${myTS}" -le "${otherTS}" ]; then
+									${progRM} -f ${filePrefix}.*
+									exit 0
+								fi
+							fi
+						fi
+						${progECHO} $$ > "${filePid}"
+					elif [ "${lineTag}" == "#EXT-X-ENDLIST" ]; then
+						exit 0
+					fi
+				done < "${fileM3U8}"
+			done
+		else
+			# Handle 302 redirect
+			headLOC=`${progCURL} -I ${optCURL} ${extraOpt} "${dataURL}" | ${progGREP} "Location:"`
+			while [ $? -eq 0 ]
+			do
+				dataURL=`${progECHO} "${headLOC}" | ${progCUT} -d " " -f 2`
+				headLOC=`${progCURL} -I ${optCURL} ${extraOpt} "${dataURL}" | ${progGREP} "Location:"`
+			done
+
+			exec ${progNICE} -n ${valueNICE} ${progCURL} -D - -o - ${optCURL} ${extraOpt} "${dataURL}"
+		fi
+	fi
+fi

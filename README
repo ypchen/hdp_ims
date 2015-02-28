@@ -105,6 +105,7 @@
 				-- 連續、循環、隨機等播放模式之範圍限制於「同一頁」之中 (而非「整個播放清單內之項目」)
 			* 設定輸入方式
 				-- 可將本 IMS 中之輸入方式設定為播放機內建輸入法、hdp_input、或使用者自訂之輸入方式
+	18. [v3.1] 修復使用 curl_youtube 時短缺之選時功能; 利用 curl_youtube 配合 youtube.video.php 支援直播
 
 使用
 	1. 直接放在本機使用
@@ -203,6 +204,14 @@
 			http://ims.your.site/video/scripts/siteList.php?youtube_video=http%3A%2F%2Flocalhost%3A2345%2Futils%2Fyoutube.video.php
 		就是放在 utils 下，而 lighttpd 使用的 port 為 2345
 
+		--- v3.1 支援 YouTube 直播
+
+		A. 配合 curl_youtube 對 YouTube 直播視訊進行支援
+
+		B. 於先前版本中若使用 curl_youtube 將導致播放 YouTube (非直播) 視訊無法進行選時之狀況已修復
+
+		C. 新增「個別重覆」播放模式
+
 		--- v3.0 支援 YouTube Data API v3
 
 		A. 必須設定 YouTube 帳戶方能使用，詳情請見: http://hdp-ims.neocities.org/
@@ -299,11 +308,11 @@
 
 			如果整個 IMS code 是放在本機執行的話，自然就沒有這個功能了 (因為 IMS 來源是本機)
 
-		B. 可以用 yv_fmt_prefs 來指定 YouTube 的解析度喜好，預設為 22,35,34,18,5
+		B. 可以用 fmt_prefs 來指定 YouTube 的解析度喜好，預設為 22,35,34,18,5
 			請參考 http://en.wikipedia.org/wiki/YouTube
 
-			也可以把喜好放在本機檔案 /usr/local/etc/dvdplayer/ims_yv_fmt_prefs.dat
-			放在這個本機檔案的優先次序高於使用 yv_fmt_prefs 來進行的設定
+			也可以把喜好放在本機檔案 /usr/local/etc/dvdplayer/ims_fmt_prefs.dat
+			放在這個本機檔案的優先次序高於使用 fmt_prefs 來進行的設定
 
 			在 IMS code 中，有提供了幾個讓使用者可以簡單在本機上設定的功能:
 				最高 1920x1080、最高 1280x720、最高 854x480、以及取消本機解析度設定

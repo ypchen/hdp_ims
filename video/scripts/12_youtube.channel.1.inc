@@ -43,7 +43,7 @@
 	$itemTotal = count($videos);
 	include('05_check.base.inc');
 
-	if (strcmp($extraSettings[1], 'continue=1') == 0) {
+	if (strcmp($extraSettings[1], 'continue=3') == 0) {
 		$playContinue = true;
 	}
 	else {

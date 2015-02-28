@@ -31,12 +31,12 @@
 
 	$sites = array(
 		array('我的清單', $myBaseName, '預設: 正序連續播放',
-			'mine|continue=1|playlists'),
+			'mine|continue=3|playlists'),
 		array('我的頻道', $myBaseName, '預設: 正序連續播放',
-			'mine|continue=1|channels'),
+			'mine|continue=3|channels'),
 	);
 	foreach($sites as $site) {
-		$searchTitle   = $site[0] . ' {' . $site[2] . '}';
+		$searchTitle   = $site[0];
 
 		$itemTotal ++;
 		$itemXML   .=
@@ -59,13 +59,15 @@
 	$sites = array(
 		array('視訊搜索', $myBaseName, '預設: 個別視訊播放',
 			'search|continue=0|&amp;amp;type=video'),
+		array('直播搜索', $myBaseName, '預設: 個別視訊播放　　　　　　　直播較難成功啟動　　　　　　　　若持讀取資料卻未播放　　　　　　請停止並重試',
+			'search|continue=0|&amp;amp;type=video&amp;amp;eventType=live'),
 		array('清單搜索', $myBaseName, '預設: 正序連續播放',
-			'search|continue=1|&amp;amp;type=playlist'),
+			'search|continue=3|&amp;amp;type=playlist'),
 		array('頻道搜索', $myBaseName, '預設: 正序連續播放',
-			'search|continue=1|&amp;amp;type=channel'),
+			'search|continue=3|&amp;amp;type=channel'),
 	);
 	foreach($sites as $site) {
-		$searchTitle   = $site[0] . ' {' . $site[2] . '}';
+		$searchTitle   = $site[0];
 
 		$itemTotal ++;
 		$itemXML   .=
@@ -187,7 +189,7 @@
 
 	$sites = array(
 		array('新增播放清單', $myBaseName, '新增播放清單至 YouTube 帳戶',
-			'playlist-add|continue=1|'),
+			'playlist-add|continue=3|'),
 	);
 	foreach($sites as $site) {
 		$itemTotal ++;

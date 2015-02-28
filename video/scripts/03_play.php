@@ -50,13 +50,14 @@
 ?>
 
 <getContMsg>
-	continueFlagTotal = 6;
+	continueFlagTotal = 7;
 	if (continueFlag == "0") contMsg = "{個別播放} ";
-	else if (continueFlag == "1") contMsg = "{正序連續} ";
-	else if (continueFlag == "2") contMsg = "{正序循環} ";
-	else if (continueFlag == "3") contMsg = "{隨機播放} ";
-	else if (continueFlag == "4") contMsg = "{反序連續} ";
-	else if (continueFlag == "5") contMsg = "{反序循環} ";
+	else if (continueFlag == "1") contMsg = "{個別重覆} ";
+	else if (continueFlag == "2") contMsg = "{隨機播放} ";
+	else if (continueFlag == "3") contMsg = "{正序連續} ";
+	else if (continueFlag == "4") contMsg = "{正序循環} ";
+	else if (continueFlag == "5") contMsg = "{反序連續} ";
+	else if (continueFlag == "6") contMsg = "{反序循環} ";
 	else contMsg = "";
 </getContMsg>
 
@@ -74,7 +75,7 @@
 		n = Integer(n);
 	}
 	if ((continueFlag == null) || (continueFlag == "")) {
-		continueFlag = "<?php echo (isset($continueFlag) ? $continueFlag : '1') ;?>";
+		continueFlag = "<?php echo (isset($continueFlag) ? $continueFlag : '3') ;?>";
 	}
 	executeScript("getContMsg");
 
@@ -354,14 +355,14 @@
 			}
 			else if (playStatus == 0) {
 				if ((continueFlag == "0") ||
-					((continueFlag == "1") &amp;&amp; ((n+1) &gt; (itemCount-1))) ||
-					((continueFlag == "4") &amp;&amp; ((n-1) &lt; 0))) {
+					((continueFlag == "3") &amp;&amp; ((n+1) &gt; (itemCount-1))) ||
+					((continueFlag == "5") &amp;&amp; ((n-1) &lt; 0))) {
 					playItemURL(-1, 1);
 					setRefreshTime(-1);
 					postMessage("return");
 				}
 				else {
-					if (continueFlag == "3") {
+					if ((continueFlag == "2") &amp;&amp; (itemCount &gt; 1)) {
 						if (randSeed == 97) {
 							urlYVRemoteSrc = "<?php echo $youtubeVideoRemoteSource; ?>";
 							urllocalhostYV = "<?php echo $localhostYoutubeVideo; ?>";
@@ -382,9 +383,9 @@
 						}
 						n = m;
 					}
-					else if ((continueFlag == "1") || (continueFlag == "2"))
+					else if ((continueFlag == "3") || (continueFlag == "4"))
 						n = Add(n, 1);
-					else
+					else if ((continueFlag == "5") || (continueFlag == "6"))
 						n = n-1;
 
 					if (n &lt; 0)
@@ -419,7 +420,7 @@
 		offsetXPC="0" offsetYPC="12"
 		widthPC="0" heightPC="6"
 		backgroundColor="0:0:0" foregroundColor="255:255:255">
-		<script>runningHeadTwo;</script>
+		<script>contMsg + runningHeadTwo;</script>
 		<widthPC>
 			<script>
 				if ((runningHeadTwo == null) || (runningHeadTwo == ""))
@@ -661,7 +662,6 @@
 			widthPC="100" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:150">
 			<script>
-				executeScript("getContMsg");
 				contMsg + "請於視訊順利播放後再進行選集、選段、或其他操作";
 			</script>
 		</text>
@@ -769,14 +769,11 @@
 						runningHeadTwo = getStringArrayAt(extraInfoArray, n);
 					}
 				}
-
 				/* Pressing display always hides the CC status */
 				showCCStatusWidthPC = 0;
-
 				/* Pressing display always hides the select clip status */
 				selectClip = 0;
 				selectClipStatusWidthPC = 0;
-
 				/* Toggle the playback status display */
 				runningHeadWidthPC = displayRunningHeadWidthPC - runningHeadWidthPC;
 				ret = "true";

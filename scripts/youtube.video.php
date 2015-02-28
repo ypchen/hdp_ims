@@ -78,6 +78,12 @@
 
 	$yp_http_response_header = null;
 
+	$fileStep      = '/tmp/yv_url_redir.step';
+	$fileCallback  = '/tmp/yv_url_redir.callback';
+	$fileExtraOpt  = '/tmp/yv_url_redir.extraOpt';
+	$fileDataURL   = '/tmp/yv_url.data';
+	$fileDataRedir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
+
 	// Check the existence because this part of code may be re-loaded and re-evaluated
 	if (function_exists('yp_str_between_2_1') === false) {
 		function yp_str_between_2_1($string, $start, $end) {
@@ -92,13 +98,20 @@
 		}
 	}
 
-	if (function_exists('curl_redirect_exec_2_1') === false) {
+	if (function_exists('curl_redirect_exec_3_1') === false) {
 		// http://www.php.net/manual/en/function.curl-setopt.php#95027
 		// http://stackoverflow.com/questions/3890631/php-curl-with-curlopt-followlocation-error
-		function curl_redirect_exec_2_1($ch, $url_array, &$redirects, $curlopt_header = false) {
+		function curl_redirect_exec_3_1($ch, $url_array, &$redirects, $curlopt_header = false) {
+			$retryMax = 5;
+			$retryDelay = 1;
 			curl_setopt($ch, CURLOPT_HEADER, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$data = curl_exec($ch);
+			for ($retry = 0 ; $retry < $retryMax ; $retry ++) {
+				if (($data = curl_exec($ch)) !== false) break;
+				sleep($retryDelay);
+				simpleFileWrite_2_4_1('/tmp/yv.error.curl.' . strval($retry),
+					'[' . ($curlErrCode = curl_errno($ch)) . ']: ' . curl_error($ch));
+			}
 			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			if ($http_code == 301 || $http_code == 302) {
 				list($header) = explode("\r\n\r\n", $data, 2);
@@ -136,7 +149,7 @@
 						$url .= '#' . $url_array['fragment'];
 					curl_setopt($ch, CURLOPT_URL, $url);
 					$redirects ++;
-					return curl_redirect_exec_2_1($ch, $url_array, $redirects);
+					return curl_redirect_exec_3_1($ch, $url_array, $redirects);
 				}
 			}
 			if ($curlopt_header)
@@ -185,7 +198,7 @@
 				curl_setopt ($curl, CURLOPT_URL, $url);
 				// The first one must be a complete url
 				$redirects = 0;
-				list($response_header, $html) = curl_redirect_exec_2_1($curl, parse_url($url), $redirects, true);
+				list($response_header, $html) = curl_redirect_exec_3_1($curl, parse_url($url), $redirects, true);
 				$yp_http_response_header = explode("\r\n", $response_header);
 				curl_close ($curl);
 				return $html;
@@ -371,6 +384,40 @@
 		}
 	}
 
+	// http://php.net/manual/en/function.getallheaders.php
+	if (function_exists('getallheaders') === false) {
+		function getallheaders() {
+			$headers = '';
+			foreach ($_SERVER as $name => $value)
+				if (substr($name, 0, 5) == 'HTTP_')
+					$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			return $headers;
+		}
+	}
+
+	if (function_exists('setupCallBack_3_1') === false) {
+		function setupCallBack_3_1($filePathName) {
+			$urlCallback = "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]?query=yv_url_redir";
+			if (!empty($_GET['yv_rmt_src']))
+				$urlCallback .= ('&yv_rmt_src=' . urlencode($_GET['yv_rmt_src']));
+			simpleFileWrite_2_4_1($filePathName, $urlCallback);
+			return $urlCallback;
+		}
+	}
+
+	if (function_exists('yp_str_between_rev_3_1') === false) {
+		function yp_str_between_rev_3_1($string, $end, $start) {
+			if (($ini = strpos($string, $end)) === false)
+				return '';
+			$lenStart = strlen($start);
+			$len = ($ini - ($startExists = strrpos($string, $start, $ini-strlen($string)))) - $lenStart;
+			if ($startExists === false)
+				return substr($string, $ini);
+			else
+				return substr($string, $startExists+$lenStart, $len);
+		}
+	}
+
 	// If there is no 'query',
 	// respond to the request of youtube.video.php
 	if (($evalLevel == 0) && empty($_GET['query'])) {
@@ -512,12 +559,7 @@
 	$videoColorBars = array('eSw6mfuLiFo', 'lTzgMwi_SZ8');
 	$posColorBars = 0;
 
-	if (strcmp($id, 'get_a_random_int') == 0) {
-		$xmlReturn = '<root><int>' . strval(rand(1, 30000)) . '</int></root>' . "\r\n";
-		echo $xmlReturn;
-		return;
-	}
-	else if (strcmp($id, 'yv_api') == 0) {
+	if (strcmp($id, 'yv_api') == 0) {
 		$docUrl       = 'http://hdp-ims.neocities.org';
 		$docUrlS      = 'http://qr.net/Rwwd';
 		$qrGenUrl     = 'http://api.qrserver.com/v1/create-qr-code/?size=300x300&data=';
@@ -693,7 +735,8 @@
 						fwrite($fileIds, $idInfo[$itemKind . 'Id'] . "\n");
 					else
 						fwrite($fileIds, $idInfo['id'] . "\n");
-					fwrite($fileTitles, $snippet['title'] . "\n");
+					// Change the comma (%2C) into unicode &sbquo; to avoid conflicts
+					fwrite($fileTitles, str_replace(',', '‚', $snippet['title']) . "\n");
 					fwrite($filePubTime, str_replace('.000Z', '', $snippet['publishedAt']) . "\n");
 					if (!empty($snippet['thumbnails'])) {
 						if (!empty($snippet['thumbnails']['medium']))
@@ -894,6 +937,39 @@
 			$id = $videoColorBars[$posColorBars ++];
 		}
 	}
+	else if (strcmp($id, 'yv_url_redir') == 0) {
+		$timestamp = '';
+		// for debugging purpose
+		//$timestamp = ('.' . strval(time()));
+		if (file_exists($fileStep)) {
+			$currStep = intval(trim(local_file_get_contents($fileStep)));
+			if ($currStep == 2) {
+				simpleFileWrite_2_4_1(($fileMethod = '/tmp/yv_url_redir.requestMethod' . $timestamp), $_SERVER['REQUEST_METHOD']);
+				simpleFileWrite_2_4_1(($fileHeader = '/tmp/yv_url_redir.requestHeader' . $timestamp), print_r(($rh = getallheaders()), true));
+				$extraOpt = '';
+				foreach ($rh as $rhn => $rhv) {
+					if ((strcmp($rhn, 'Range')) == 0) {
+						list(, $v) = explode('=', $rhv);
+						$extraOpt .= " -r $v";
+					}
+				}
+				simpleFileWrite_2_4_1($fileExtraOpt, $extraOpt);
+
+				if (file_exists($fileDataRedir) &&
+					(strlen($localURLredir = trim(local_file_get_contents($fileDataRedir))) > 0)) {
+					$urlRedir = $localURLredir;
+					simpleFileWrite_2_4_1($fileStep, strval($currStep+1));
+				}
+				header('Location: ' . $urlRedir);
+			}
+		}
+		return;
+	}
+	else if (strcmp($id, 'get_a_random_int') == 0) {
+		$xmlReturn = '<root><int>' . strval(rand(1, 30000)) . '</int></root>' . "\r\n";
+		echo $xmlReturn;
+		return;
+	}
 
 	do {
 		// Two ways to get youtube videos
@@ -924,6 +1000,49 @@
 		else
 			break;
 	} while(true);
+
+	// HTTP Live Stream
+	$separators = array(
+		array('"hlsvp":"', '"'),
+	);
+	foreach ($separators as $separator) {
+		$timestamp = '';
+		// for debugging purpose
+		//$timestamp = ('.' . strval(time()));
+		if (strpos($html, $separator[0]) !== false) {
+			if (strlen($hlsvp = str_replace('\/', '/', trim(yp_str_between_2_1($html, $separator[0], $separator[1])))) <= 0)
+				break;
+
+			$strM3U8 = yp_file_get_contents_3($hlsvp);
+			$strMark = '#EXTM3U';
+			if (strcmp(substr($strM3U8, 0, strlen($strMark)), $strMark) != 0)
+				break;
+
+			simpleFileWrite_2_4_1('/tmp/yv_hls_top.m3u8' . $timestamp, $strM3U8);
+
+			$mapRes = array(
+				'37' => '1920x1080', '22' => '1280x720', '35' => '854x480', '18' => '640x360', '34' => '640x360', '5' => '426x240'
+			);
+			foreach ($formats as $format) {
+				if (array_key_exists($format, $mapRes) && (strpos($strM3U8, ($resolution = $mapRes[$format])) !== false)) {
+					$urlM3U8 = trim(yp_str_between_2_1($strM3U8, $resolution, '#'));
+					setupCallBack_3_1($fileCallback);
+					if (file_exists($fileDataRedir) &&
+						(strlen($localURLredir = trim(local_file_get_contents($fileDataRedir))) > 0)) {
+						$urlRedir = $localURLredir;
+						simpleFileWrite_2_4_1($fileDataURL, $urlM3U8);
+						$urlToGo = $urlRedir;
+						simpleFileWrite_2_4_1($fileStep, '1');
+						writeExtraInfo_2_4_1('CODECS=' . trim(yp_str_between_rev_3_1($strM3U8, $resolution, 'CODECS=')) . $resolution);
+					}
+
+					// Redirect to the video stream
+					header('Location: ' . $urlToGo);
+					return;
+				}
+			}
+		}
+	}
 
 	// Get the format list
 	$separators = array(
@@ -1030,11 +1149,6 @@
 
 						$decFuncName = trim(yp_str_between_2_1($signature, 'ReferenceError:', 'is not'));
 					}
-				}
-				else {
-					// Fallback to the previous handler
-					$signature = execFuncJS_2_2_3_19($codeJS,
-						$decFuncName = trim(yp_str_between_2_1($codeJS, 'signature=', '(')), array($s));
 				}
 			}
 			catch (Exception $e) {
@@ -1201,12 +1315,13 @@
 		simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_cc_status.dat', $ccStatus);
 		writeExtraInfo_2_4_1($extraInfo);
 
-		$fileLocalYoutubeVideoURLredir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
-		if (file_exists($fileLocalYoutubeVideoURLredir) &&
-			(strlen($localURLredir = trim(local_file_get_contents($fileLocalYoutubeVideoURLredir))) > 0)) {
+		setupCallBack_3_1($fileCallback);
+		if (file_exists($fileDataRedir) &&
+			(strlen($localURLredir = trim(local_file_get_contents($fileDataRedir))) > 0)) {
 			$urlRedir = $localURLredir;
-			simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_yv_url_data.dat', $urlToGo);
+			simpleFileWrite_2_4_1($fileDataURL, $urlToGo);
 			$urlToGo = $urlRedir;
+			simpleFileWrite_2_4_1($fileStep, '1');
 		}
 
 		// Redirect to the video stream

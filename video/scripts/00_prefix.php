@@ -50,6 +50,8 @@
 	$myScriptName     = $_SERVER['SCRIPT_NAME'];
 
 	$serverName       = $_SERVER['HTTP_HOST'];
+	if (strpos($serverName, ':') !== false)
+		list($serverName,) = explode(':', $serverName);
 	$serverPort       = $_SERVER['SERVER_PORT'];
 	if (!empty($imsOnHeroku))
 		$remoteIPStr  = getRealIPAddress();
