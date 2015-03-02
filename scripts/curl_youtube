@@ -27,7 +27,7 @@ fileTimestamp="${filePrefix}.timestamp"
 fileStdErr="${filePrefix}.stderr"
 
 valueNICE="4"
-optCURL="-s -k -N --stderr "${fileStdErr}" --retry 5 --retry-delay 1 --retry-max-time 15"
+optCURL="-s -k -N --retry 5 --retry-delay 1 --retry-max-time 15"
 
 got_signal() {
 	${progRM} -f ${filePrefix}.*
@@ -63,7 +63,7 @@ if [ -s "${fileStep}" ]; then
 			extraOpt=""
 			segSN="0"
 			while true; do
-				${progCURL} -o "${fileM3U8}" ${optCURL} ${extraOpt} "${dataURL}"
+				${progCURL} -o "${fileM3U8}" ${optCURL} ${extraOpt} --stderr "${fileStdErr}" "${dataURL}"
 				while read line; do
 					line=`${progECHO} "${line}" | ${progTR} -d '\r\n'`
 					lineTag=`${progECHO} "${line}" | ${progCUT} -d ':' -f 1`
@@ -80,7 +80,7 @@ if [ -s "${fileStep}" ]; then
 						segSN=$(($segSN+1))
 						${progECHO} "${segSN}" > "${fileCurrSegNo}"
 #						${progECHO} "${segSN} -- [$lineTag] ${line}" > "${fileCurrSegNo}"
-						${progNICE} -n ${valueNICE} ${progCURL} -o - ${optCURL} ${extraOpt} "${line}"
+						${progNICE} -n ${valueNICE} ${progCURL} -o - ${optCURL} ${extraOpt} --stderr "${fileStdErr}" "${line}"
 
 						if [ -s "${fileExit}" ]; then
 							${progRM} -f ${filePrefix}.*
@@ -103,15 +103,18 @@ if [ -s "${fileStep}" ]; then
 				done < "${fileM3U8}"
 			done
 		else
+			filePrefix="/tmp/${0}"
+			fileStdErr="${filePrefix}.stderr"
+
 			# Handle 302 redirect
-			headLOC=`${progCURL} -I ${optCURL} ${extraOpt} "${dataURL}" | ${progGREP} "Location:"`
+			headLOC=`${progCURL} -I ${optCURL} ${extraOpt} --stderr "${fileStdErr}" "${dataURL}" | ${progGREP} "Location:"`
 			while [ $? -eq 0 ]
 			do
 				dataURL=`${progECHO} "${headLOC}" | ${progCUT} -d " " -f 2`
-				headLOC=`${progCURL} -I ${optCURL} ${extraOpt} "${dataURL}" | ${progGREP} "Location:"`
+				headLOC=`${progCURL} -I ${optCURL} ${extraOpt} --stderr "${fileStdErr}" "${dataURL}" | ${progGREP} "Location:"`
 			done
 
-			exec ${progNICE} -n ${valueNICE} ${progCURL} -D - -o - ${optCURL} ${extraOpt} "${dataURL}"
+			exec ${progNICE} -n ${valueNICE} ${progCURL} -D - -o - ${optCURL} ${extraOpt} --stderr "${fileStdErr}" "${dataURL}"
 		fi
 	fi
 fi

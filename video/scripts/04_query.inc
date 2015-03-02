@@ -2,7 +2,9 @@
 	if (!isset($pageStart) || ($pageStart < 0))
 		$pageStart = 1;
 
-	if (!isset($queryLevel) || (strlen($queryLevel) == 0))
+	if (isset($queryLevelEmpty))
+		$queryLevel = '';
+	else if (!isset($queryLevel) || (strlen($queryLevel) == 0))
 		$queryLevel = '.query';
 
 	if (!isset($data))
@@ -31,11 +33,14 @@
 					"\t<link>"        . $linkAll  . "</link>\r\n";
 		if (!isset($note))
 			echo	"\t<note></note>\r\n";
-		else if (is_array($note))
+		else if (is_array($note)) {
 			echo	"\t<note_one>"   . $note[0]   . "</note_one>\r\n" .
 					"\t<note_two>"   . $note[1]   . "</note_two>\r\n" .
 					"\t<note_three>" . $note[2]   . "</note_three>\r\n" .
 					"\t<note_four>"  . $note[3]   . "</note_four>\r\n";
+			if (count($note) > 4)
+			echo	"\t<note_five>"  . $note[4]   . "</note_five>\r\n";
+		}
 		else
 			echo	"\t<note>"        . $note     . "</note>\r\n";
 		echo		"\t<site_link>"   . $link     . "</site_link>\r\n" .

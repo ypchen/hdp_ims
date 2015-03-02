@@ -267,11 +267,12 @@
 				focus = getFocusItemIndex();
 				if(focus == idx) {
 					itemTitle  = getItemInfo(idx, "title");
+					img        = getItemInfo(idx, "image");
 					noteOne    = getItemInfo(idx, "note_one");
 					noteTwo    = getItemInfo(idx, "note_two");
 					noteThree  = getItemInfo(idx, "note_three");
 					noteFour   = getItemInfo(idx, "note_four");
-					img        = getItemInfo(idx, "image");
+					msgSpecial = getItemInfo(idx, "note_five");
 					if (img == null) {
 						img = "<?php echo siteImage($myBaseName); ?>";
 					}

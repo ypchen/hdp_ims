@@ -2,12 +2,12 @@
 	$siteURLprefix = '';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, '" href="', '"'));
-		$title = trim(str_between($video, '">', '</a>'));
+		$link  = $siteURLprefix . trim(str_between($video, ' href="', '"'));
+		$title = trim(str_between($video, ' title="', '"'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = $imageAll;
+		$image  = '';
 		$note   = array();
 		$note[] = '';
 		$note[] = '';

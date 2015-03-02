@@ -84,7 +84,8 @@
 	$fileDataURL   = '/tmp/yv_url.data';
 	$fileDataRedir = '/usr/local/etc/dvdplayer/ims_yv_url_redir.dat';
 
-	// Check the existence because this part of code may be re-loaded and re-evaluated
+	// Check the existence of all the function definitions because this part of code may be re-loaded and re-evaluated
+
 	if (function_exists('yp_str_between_2_1') === false) {
 		function yp_str_between_2_1($string, $start, $end) {
 			if (($ini = strpos($string, $start)) === false)
@@ -384,8 +385,8 @@
 		}
 	}
 
-	// http://php.net/manual/en/function.getallheaders.php
 	if (function_exists('getallheaders') === false) {
+		// http://php.net/manual/en/function.getallheaders.php
 		function getallheaders() {
 			$headers = '';
 			foreach ($_SERVER as $name => $value)
@@ -418,8 +419,7 @@
 		}
 	}
 
-	// If there is no 'query',
-	// respond to the request of youtube.video.php
+	// If there is no 'query', respond to the request of youtube.video.php
 	if (($evalLevel == 0) && empty($_GET['query'])) {
 		// Check if memcache is used
 		$useMemcache = false;
@@ -456,14 +456,12 @@
 		return;
 	}
 
-	// If there is 'query' and 'yv_rmt_src',
-	// request youtube.video.php if yv_rmt_src is given
+	// If there is 'query' and 'yv_rmt_src', request youtube.video.php if yv_rmt_src is given
 	if (($evalLevel == 0) && (!empty($_GET['yv_rmt_src']))) {
 		$rmtSrcURL = $_GET['yv_rmt_src'];
 		// Check if it's really "remote"
 		if ((strpos($rmtSrcURL, '://localhost') === false) &&
 			(strpos($rmtSrcURL, '://127.0.0.1') === false)) {
-
 			// 1. a local copy in /tmp exists
 			// 2. from the remote source
 			$fileTmpRmtSrc = '/tmp/yv.rmt.src';
@@ -498,8 +496,7 @@
 	$userAgent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1';
 	ini_set('user_agent', $userAgent);
 
-	// No matter it's the local source or remote source,
-	// 'query' is given.
+	// No matter it's the local source or remote source, 'query' is given.
 	$id = $_GET['query'];
 
 	// Check if only URL is wanted
@@ -547,12 +544,10 @@
 		$ccPrefs = $localCCPrefs;
 	}
 
-	if (!empty($ccPrefs) && (strlen($ccPrefs) > 0)) {
+	if (!empty($ccPrefs) && (strlen($ccPrefs) > 0))
 		$ccPreferredLangs = explode(',', $ccPrefs);
-	}
-	else {
+	else
 		unset($ccPreferredLangs);
-	}
 
 	$videoUnavailable = false;
 	$msgUnavailable = '';
@@ -796,7 +791,6 @@
 				return;
 
 			default:
-				# code...
 				break;
 		}
 
@@ -811,9 +805,7 @@
 		$link = str_replace('dailymotion.com/video', 'dailymotion.com/embed/video', $_GET['link']);
 		$html = yp_file_get_contents_3($link);
 
-		$mapRes = array(
-			'37' => 'hd1080_', '22' => 'hd_', '35' => 'hq_', '18' => 'ld_', '34' => 'ld_', '5' => ''
-		);
+		$mapRes = array('37' => 'hd1080_', '22' => 'hd_', '35' => 'hq_', '18' => 'ld_', '34' => 'ld_', '5' => '');
 
 		if (strpos($html, '"error":{') === false) {
 			if (strpos($html, '"stream_h264_') !== false) {
@@ -841,28 +833,27 @@
 			header('Location: ' . $link);
 			return;
 		}
-		else {
-			$videoUnavailable = true;
-			$msgArray = json_decode('{"message":"' . yp_str_between_2_1($html, '"message":"', '"') . '"}', true);
-			$msgUnavailable = '** ' . $msgArray['message'] . ' **';
-			$id = $videoColorBars[$posColorBars ++];
-		}
+
+		$msgArray = json_decode('{"message":"' . yp_str_between_2_1($html, '"message":"', '"') . '"}', true);
+		$msgUnavailable = '[DM] ** ' . $msgArray['message'] . ' **';
+		$videoUnavailable = true;
+		$id = $videoColorBars[$posColorBars ++];
 	}
 	else if (strcmp($id, 'site_flvxz') == 0) {
 
-		$methodFlvxz = 0;
+		unset($flvToken);
+		unset($localFLVtoken);
+		$fileLocalFLVtoken = '/usr/local/etc/dvdplayer/ims_flv_token.dat';
+		if (file_exists($fileLocalFLVtoken) &&
+			(strlen($localFLVtoken = trim(local_file_get_contents($fileLocalFLVtoken))) > 0)) {
+			$flvToken = $localFLVtoken;
+		}
 
-		if ((!empty($USEcurl)) || (extension_loaded('openssl') && in_array('https', stream_get_wrappers()))) {
+		$methodFlvxz = 0;
+		if ((!empty($USEcurl)) || (extension_loaded('openssl') && in_array('https', stream_get_wrappers())))
 			$methodFlvxz = 1;
-		}
-		else {
-			$fileLocalFLVtoken = '/usr/local/etc/dvdplayer/ims_flv_token.dat';
-			if (file_exists($fileLocalFLVtoken) &&
-				(strlen($localFLVtoken = trim(local_file_get_contents($fileLocalFLVtoken))) > 0)) {
-				$flvToken = $localFLVtoken;
-				$methodFlvxz = 2;
-			}
-		}
+		else if (isset($flvToken))
+			$methodFlvxz = 2;
 
 		// Refer to $formats[0] as the highest acceptable resolution
 		// [0=>低清，1=>标清，2=>高清，3=>超清，4=>720P，5=>1080P，6=>高码1080P，7=>原画，8=>4K，9=>高码4K]
@@ -873,12 +864,12 @@
 		// '18/34': 360 -- <= 2
 		// '6':     270 -- <= 1
 		// '5':     240 -- <= 0
-		$resCutOff = array(
-			'9' => 9, '37' => 6, '22' => 4, '35' => 3, '18' => 2, '34' => 2, '6' => 1, '5' => 0
-		);
+		$resCutOff = array('9' => 9, '37' => 6, '22' => 4, '35' => 3, '18' => 2, '34' => 2, '6' => 1, '5' => 0);
 
+		$msgError = ':';
 		if ($methodFlvxz > 0) {
 			if ($methodFlvxz == 1) {
+				$msgError .= ' M=' . strval($methodFlvxz);
 				// Need to use curl or openssl for making https requests
 				$link = 'http://www.flv.cn/?url=' . ($forFlv = urlencode($_GET['link']));
 				$html = yp_file_get_contents_3($link);
@@ -887,60 +878,73 @@
 				$linkRef = $link;
 				$link = $urlBase . '/getFlv.php?url=' . $forFlv;
 				$html = yp_file_get_contents_3($link, array('Referer: ' . $linkRef));
+				if (file_exists($fileYVSnippet = (dirname(__FILE__) . '/ypYVSnippet.php')))
+					include($fileYVSnippet);
 				$flvToken = 'verify/' . trim(yp_str_between_2_1($html, '/verify/', '"'));
-
-				$urlAPI = str_replace('https', 'http', $urlBase);
-				$link = $urlAPI . '/api/url/' . $_GET['link'] .
-					'/jsonp/purejson/ftype/mp4.flv/' . $flvToken;
+				if (strlen($flvToken) > 7) {
+					$link = str_replace('https', 'http', $urlBase) . '/api/url/' . $_GET['link'] .
+						'/jsonp/purejson/ftype/mp4.flv/' . $flvToken;
+				}
+				else if (isset($localFLVtoken)) {
+					$methodFlvxz = 2;
+					$flvToken = $localFLVtoken;
+				}
+				else
+					$link = '';
 			}
-			else if ($methodFlvxz == 2) {
+			// Directly call method 2 or fallback from the failure of calling method 1
+			if ($methodFlvxz == 2) {
+				$msgError .= ' M=' . strval($methodFlvxz);
 				// Call flvxz.com (flv.cn) to resolve the video url
 				$link = 'http://api.flvxz.com/url/' . $_GET['link'] .
 					'/jsonp/purejson/ftype/mp4.flv/' . $flvToken;
 			}
 
 			$json = yp_file_get_contents_3($link);
-			if (empty($json)) return;
-
-			$res = json_decode($json, true);
-			if (empty($res) || count($res) <= 0) return;
-
-			// Go through each entries and look for the best fit
-			$indexBest = -1;
-			$indexBestRes = -1;
-			$countItems = count($res);
-			$hdCutOff = intval($resCutOff[$formats[0]]);
-			$strHDavail = '';
-			for ($index = 0 ; $index < $countItems ; $index ++) {
-				$item = $res[$index];
-				if (count($item['files']) > 1) continue;
-				$strHDavail .= (' ' . $item['hd'] . '-' . $item['files'][0]['ftype']);
-				if (($hd = intval($item['hd'])) > $hdCutOff) continue;
-				// Prefer: 1. higher resolution; 2. mp4
-				if (($hd > $indexBestRes) || (($hd == $indexBestRes) && (strcmp($item['files'][0]['ftype'], 'mp4') == 0))) {
-					$indexBestRes = $hd;
-					$indexBest = $index;
+			if (!empty($json)) {
+				$res = json_decode($json, true);
+				if ((!empty($res)) && (count($res) > 0)) {
+					// Go through each entries and look for the best fit
+					$indexBest = -1;
+					$indexBestRes = -1;
+					$indexBestFtype = '';
+					$countItems = count($res);
+					$hdCutOff = intval($resCutOff[$formats[0]]);
+					$strHDavail = '';
+					for ($index = 0 ; $index < $countItems ; $index ++) {
+						$item = $res[$index];
+						if (count($item['files']) > 1) continue;
+						$qualComp = explode('_', $item['quality']);
+						$strHDavail .= (' ' . $item['hd'] . '-' . ($ftype = $qualComp[count($qualComp)-1]));
+						if (($hd = intval($item['hd'])) > $hdCutOff) continue;
+						// Preference: 1. higher resolution; 2. mp4
+						if (($hd > $indexBestRes) || (($hd == $indexBestRes) && (strcasecmp($ftype, 'mp4') == 0))) {
+							$indexBestRes = $hd;
+							$indexBest = $index;
+							$indexBestFtype = $ftype;
+						}
+					}
+					$extraInfo = strval($indexBestRes) . '-' . $indexBestFtype . ' of' . $strHDavail .
+									'; S=' . $_GET['actual_src']. '; M=' . strval($methodFlvxz);
+					writeExtraInfo_2_4_1($extraInfo);
+					// Redirect to the video stream
+					header('Location: ' . $res[$indexBest]['files'][0]['furl']);
+					return;
 				}
+				else
+					$msgUnavailable = '[飛驢] ** 回傳無內容' . $msgError . ' **';
 			}
-
-			$extraInfo = strval($indexBestRes) . '-' . $res[$indexBest]['files'][0]['ftype'] . ' of' . $strHDavail .
-							'; S=' . $_GET['actual_src']. '; M=' . strval($methodFlvxz);
-			writeExtraInfo_2_4_1($extraInfo);
-
-			// Redirect to the video stream
-			header('Location: ' . $res[$indexBest]['files'][0]['furl']);
-			return;
+			else
+				$msgUnavailable = '[飛驢] ** 回傳空字串' . $msgError . ' **';
 		}
-		else {
-			$videoUnavailable = true;
-			$msgUnavailable = '無法使用飛驢--' . $_GET['actual_src'];
-			$id = $videoColorBars[$posColorBars ++];
-		}
+		else
+			$msgUnavailable = '[飛驢] ** 無法使用 -- ' . $_GET['actual_src'] . ' **';
+
+		$videoUnavailable = true;
+		$id = $videoColorBars[$posColorBars ++];
 	}
 	else if (strcmp($id, 'yv_url_redir') == 0) {
 		$timestamp = '';
-		// for debugging purpose
-		//$timestamp = ('.' . strval(time()));
 		if (file_exists($fileStep)) {
 			$currStep = intval(trim(local_file_get_contents($fileStep)));
 			if ($currStep == 2) {
@@ -993,7 +997,7 @@
 				$msgs = explode("\n", trim(yp_str_between_2_1(yp_str_between_2_1($html, '<h1 id="unavailable-message"', '/h1>'), '>', '<')));
 				if (!empty($msgUnavailable))
 					$msgUnavailable .= '; ';
-				$msgUnavailable .= '** ' . $msgs[count($msgs)-1] . ' **';
+				$msgUnavailable .= '[YV] ** ' . $msgs[count($msgs)-1] . ' **';
 			}
 			$id = $videoColorBars[$posColorBars ++];
 		}

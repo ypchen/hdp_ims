@@ -649,30 +649,24 @@
 	<progressBar backgroundColor="-1:-1:-1"
 		offsetXPC="10" offsetYPC="64"
 		widthPC="80" heightPC="24">
-
 		<bar offsetXPC="40" offsetYPC="46"
 			widthPC="55" heightPC="10"
 			barColor="200:200:200"
 			progressColor="26:129:211"
 			bufferColor="-1:-1:-1"
 			cornerRounding="10" />
-
 		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="-40"
 			widthPC="100" heightPC="24"
-			backgroundColor="-1:-1:-1" foregroundColor="255:255:150">
-			<script>
-				contMsg + "請於視訊順利播放後再進行選集、選段、或其他操作";
-			</script>
+			backgroundColor="-1:-1:-1" foregroundColor="255:255:100">
+			<script>contMsg + "請於視訊順利播放後再進行選集、選段、或其他操作";</script>
 		</text>
-
 		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="0"
 			widthPC="100" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
 			<script>currentTitle;</script>
 		</text>
-
 		<text align="left" fontSize="20"
 			offsetXPC="1" offsetYPC="40"
 			widthPC="40" heightPC="24"
@@ -688,21 +682,16 @@
 				showstr;
 			</script>
 		</text>
-
 		<text align="left" fontSize="20"
 			offsetXPC="-1" offsetYPC="80"
 			widthPC="100" heightPC="24"
 			backgroundColor="-1:-1:-1" foregroundColor="255:255:255">
-			<script>
-				"[藍/9]字幕 [信息/4] [重覆/6] {[上下頁/↔]±1,[↕]±10}+[放大/5]";
-			</script>
+			<script>"[藍/9]字幕 [信息/4] [重覆/6] {[上下頁/↔]±1,[↕]±10}+[放大/5]";</script>
 		</text>
-
 		<destructor offsetXPC="0" offsetYPC="0"
 			widthPC="100" heightPC="100"
 			Color="-1:-1:-1">
 		</destructor>
-
 	</progressBar>
 
 	<onUserInput>

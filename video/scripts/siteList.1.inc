@@ -31,10 +31,7 @@
 		array('ted',				'TED Talks on TED / YouTube / podcast',		'※ 需安裝 youtube.video.php'),
 		array('youtube__v3',		'YouTube 帳戶功能',							'※ 需安裝 youtube.video.php　　 ※ 需設妥 YouTube 帳戶相關資料'),
 		array('prefs',				'字幕、解析度、輸入方式設定',				'字幕: YouTube, TED　　　　　　解析度: YouTube, DM, 飛驢　　　輸入方式: 各需輸入功能處'),
-		array('youtube',			'YouTube 搜索與設定　 (API v2: 將失效)',	'※ 需安裝 youtube.video.php　　 -- 將於 April 20, 2015 失效'),
-		array('youtube__channel',	'YouTube 自行輸入頻道 (API v2: 將失效)',	'※ 需安裝 youtube.video.php　　 -- 將於 April 20, 2015 失效'),
 		array('appledaily',			'台灣蘋果動新聞',							''),
-		array('news',				'媒體新聞 on YouTube (API v2: 將失效)',		'※ 需安裝 youtube.video.php　　 -- 將於 April 20, 2015 失效'),
 		array('CNN',				'CNN 影音播放 podcast',						''),
 		array('ims_search',			'IMS 搜索 (HAOIMS / HDPfans)',				''),
 	);

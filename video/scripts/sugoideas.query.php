@@ -1,1 +1,1 @@
-02_query.photoview.php
+02_query.php

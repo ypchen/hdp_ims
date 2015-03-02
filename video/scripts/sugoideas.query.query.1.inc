@@ -1,15 +1,16 @@
 <?php
-	$link = $search;
+	include('15_3_columns.inc');
+
+	$link = $search . '?lcp_page0=' . strval($page);
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$imageAll = str_between(
-					str_between($html, '<div class="singleview">', '</div>'),
-					' src="',
-					'"'
-				);
+	if (strpos($html, "class='lcp_paginator'>") === false)
+		$pageMax = 1;
+	else if (strpos($html, '>>></a>') === false)
+		$pageMax = $page;
 
-	$videos = explode('<li>', ($htmlToExplode = trim(str_between($html, '<h3>Episodes:</h3>', '</div>'))));
+	$videos = explode('<li>', ($htmlToExplode = str_between($html, '_episode">', '</div>')));
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 

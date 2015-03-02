@@ -1,21 +1,14 @@
 <?php
-	$itemNo = intval($extra);
-
-	if ($itemNo == 0) {
-		// Show
-		include('15_4_columns.inc');
-	}
-	else {
-		// Drama
-		include('15_2_columns.inc');
-	}
-
-	$link = $search;
+	$link = $search . 'page/' . strval($page) . '/';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
+	if (strpos($html, "'wp-pagenavi'") === false)
+		$pageMax = 1;
+	else if (strpos($html, '">&raquo;<') === false)
+		$pageMax = $page;
+
 	$videos = explode('<div class="upcomingad"', ($htmlToExplode = $html));
-	unset($videos[count($videos)-1]);	// Ads
 	unset($videos[0]);					// Prefix
 	$videos = array_values($videos);
 
