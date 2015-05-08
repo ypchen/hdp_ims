@@ -17,7 +17,7 @@
 		$note[] = $caption_publish . ': ' .
 					trim(str_between($video, '<div class="datetime">', '</div>'));
 		$note[] = $caption_view . ': ' .
-					trim(str_between($video, '<span class="aneye">', '</span>'));
+					trim(str_between($video, '<span class="viewcount">', '</span>'));
 		$note[] = '';
 		$note[] = '';
 

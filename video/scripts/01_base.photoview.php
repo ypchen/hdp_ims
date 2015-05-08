@@ -2,6 +2,9 @@
 	require('00_prefix.php');
 	$myName = basename($myScriptName, '.php');
 	$myBaseName = $myName;
+	$titleComponents = explode('.', $myBaseName);
+	$pageTitleBaseElements = explode('__', $titleComponents[0]);
+	$pageTitleBase = $pageTitleBaseElements[0];
 
 	// Sites that are turned off
 	if (strcasecmp($imsDirectory, 'video') == 0) {
@@ -59,10 +62,6 @@
 	if (!isset($themeItemFontSizeUnfocused)) $themeItemFontSizeUnfocused = $themeItemFontSizeFocused;
 	if (!isset($themeTipsFontSize)) $themeTipsFontSize = '16';
 	if (!isset($themeVersionFontSize)) $themeVersionFontSize = '10';
-
-	$titleComponents = explode('.', $myBaseName);
-	$pageTitleBaseElements = explode('__', $titleComponents[0]);
-	$pageTitleBase = $pageTitleBaseElements[0];
 
 	// Create my own link
 	$params  = str_replace('&', '&amp;', $_SERVER['QUERY_STRING']);

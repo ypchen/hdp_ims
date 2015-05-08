@@ -2,6 +2,9 @@
 	require('00_prefix.php');
 	$myName = basename($myScriptName, '.php');
 	$myBaseName = basename($myName, '.link');
+	$titleComponents = explode('.', $myBaseName);
+	$pageTitleBaseElements = explode('__', $titleComponents[0]);
+	$pageTitleBase = $pageTitleBaseElements[0];
 
 	// Sites that are turned off
 	if (strcasecmp($imsDirectory, 'video') == 0) {
@@ -34,10 +37,6 @@
 	}
 
 	include($myName . '.inc');
-
-	$titleComponents = explode('.', $myBaseName);
-	$pageTitleBaseElements = explode('__', $titleComponents[0]);
-	$pageTitleBase = $pageTitleBaseElements[0];
 
 	$pageTitle = $pageTitleBase;
 	if (isset($title)) {

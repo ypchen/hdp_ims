@@ -19,7 +19,7 @@
 	// Disable the page control
 	$pageMax = $page = 0;
 
-	$videos = explode('class="an-list-box-', $htmlToExplode);
+	$videos = explode('class="an-list-box"', $htmlToExplode);
 	unset($videos[0]);
 	$videos = array_values($videos);
 
