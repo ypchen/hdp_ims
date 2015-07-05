@@ -2,7 +2,12 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$totalPage = intval(trim(str_between(str_between($html, 'class="listmore', '<'), 'data-totalpage="', '"')));
+	if (strpos($html, 'class="listmore') !== false) {
+		$totalPage = intval(trim(str_between(str_between($html, 'class="listmore', '<'), 'data-totalpage="', '"')));
+	}
+	else {
+		$totalPage = 1;
+	}
 
 	$siteURLprefix = 'http://www.appledaily.com.tw';
 	$link = $siteURLprefix . trim(str_between(str_between($html, ".listmore').click", "</script>"), 'url: "', '"'));
