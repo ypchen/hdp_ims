@@ -805,23 +805,16 @@
 		$link = str_replace('dailymotion.com/video', 'dailymotion.com/embed/video', $_GET['link']);
 		$html = yp_file_get_contents_3($link);
 
-		$mapRes = array('37' => 'hd1080_', '22' => 'hd_', '35' => 'hq_', '18' => 'ld_', '34' => 'ld_', '5' => '');
+		$mapRes = array('37' => '1080', '22' => '720', '35' => '480', '18' => '360', '34' => '360', '5' => '240');
 
 		if (strpos($html, '"error":{') === false) {
-			if (strpos($html, '"stream_h264_') !== false) {
+			if (strpos($html, '{"type":"video\/mp4",') !== false) {
 				foreach ($formats as $format) {
-					$urlTag = '"stream_h264_' . $mapRes[$format] . 'url":"';
+					$urlTag = '"' . $mapRes[$format] . '":[{"type":"video\/mp4","url":"';
 					if (strlen($link = trim(yp_str_between_2_1($html, $urlTag, '"'))) > 0)
 						break;
 				}
 				$link = str_replace('\/', '/', $link);
-				$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
-			}
-			else if (
-				(strlen($link = trim(yp_str_between_2_1($html, '"sequence":"', '"'))) > 0) ||
-				(strlen($link = trim(yp_str_between_2_1($html, '<param name="flashvars" value="', '"'))) > 0)
-			) {
-				$link = urldecode(trim(yp_str_between_2_1(urldecode($link), '"video_url":"', '"')));
 				$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
 			}
 
