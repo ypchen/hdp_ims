@@ -864,9 +864,9 @@
 			if ($methodFlvxz == 1) {
 				$msgError .= ' M=' . strval($methodFlvxz);
 				// Need to use curl or openssl for making https requests
-				$link = 'http://www.flv.cn/?url=' . ($forFlv = urlencode($_GET['link']));
+				$link = 'http://flvxz.com/?url=' . ($forFlv = urlencode($_GET['link']));
 				$html = yp_file_get_contents_3($link);
-				$urlBase = trim(yp_str_between_2_1($html, "baseurl = '", "'"));
+				$urlBase = str_replace('www.flvxz.com', 'flvxz.com', trim(yp_str_between_2_1($html, "baseurl = '", "'")));
 
 				$linkRef = $link;
 				$link = $urlBase . '/getFlv.php?url=' . $forFlv;
