@@ -111,7 +111,15 @@
 				case 'VideoGroup':
 					$links = array();
 					foreach($res['elements'] as $element) {
-						$links[] = str_replace('\/', '/', trim(str_between($element, 'src=\"', '\"')));
+						if(strpos($link = urldecode(str_replace('\/', '/', trim(str_between($element, 'src="', '"')))), 'https') !== false) {
+							$link = $localhostYoutubeVideo . '?query=site_https_redir' .
+								'&amp;cc_prefs='   . urlencode($videoCCPrefs) .
+								'&amp;fmt_prefs='  . urlencode($videoFmtPrefs) .
+								'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+								'&amp;actual_src=' . urlencode($srcPrefix . $src) .
+								'&amp;link='       . urlencode($link);
+						}
+						$links[] = $link;
 					}
 					$itemTotal = count($links);
 					include('05_check.base.inc');

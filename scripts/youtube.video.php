@@ -833,7 +833,6 @@
 		$id = $videoColorBars[$posColorBars ++];
 	}
 	else if (strcmp($id, 'site_flvxz') == 0) {
-
 		unset($flvToken);
 		unset($localFLVtoken);
 		$fileLocalFLVtoken = '/usr/local/etc/dvdplayer/ims_flv_token.dat';
@@ -935,6 +934,24 @@
 
 		$videoUnavailable = true;
 		$id = $videoColorBars[$posColorBars ++];
+	}
+	else if (strcmp($id, 'site_https_redir') == 0) {
+		$urlToGo = $_GET['link'];
+		if (file_exists($fileDataRedir) &&
+			(strlen($localURLredir = trim(local_file_get_contents($fileDataRedir))) > 0)) {
+			$urlRedir = $localURLredir;
+			simpleFileWrite_2_4_1($fileDataURL, $urlToGo);
+			$urlToGo = $urlRedir;
+			simpleFileWrite_2_4_1($fileStep, '3');
+		}
+		$extraInfo = 'Redir';
+		if (!empty($_GET['actual_src']))
+			$extraInfo .= '; S=' . $_GET['actual_src'];
+		writeExtraInfo_2_4_1($extraInfo);
+
+		// Redirect to the video stream
+		header('Location: ' . $urlToGo);
+		return;
 	}
 	else if (strcmp($id, 'yv_url_redir') == 0) {
 		$timestamp = '';
@@ -1308,8 +1325,9 @@
 		else {
 			$extraInfo .= ' [-]';
 		}
-
 		simpleFileWrite_2_4_1('/usr/local/etc/dvdplayer/ims_cc_status.dat', $ccStatus);
+		if (!empty($_GET['actual_src']))
+			$extraInfo .= '; S=' . $_GET['actual_src'];
 		writeExtraInfo_2_4_1($extraInfo);
 
 		setupCallBack_3_1($fileCallback);
