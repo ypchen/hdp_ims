@@ -1,6 +1,6 @@
 <channel>
 
-<title>字幕、解析度、輸入方式設定</title>
+<title>解析度、字幕、輸入方式設定</title>
 
 <?php
 	if ($pass_check) {

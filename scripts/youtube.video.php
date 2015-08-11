@@ -1039,7 +1039,7 @@
 			);
 			foreach ($formats as $format) {
 				if (array_key_exists($format, $mapRes) && (strpos($strM3U8, ($resolution = $mapRes[$format])) !== false)) {
-					$urlM3U8 = trim(yp_str_between_2_1($strM3U8, $resolution, '#'));
+					$urlM3U8 = trim(yp_str_between_2_1(yp_str_between_2_1($strM3U8, $resolution, '#'), "\n", '.m3u8') . '.m3u8');
 					setupCallBack_3_1($fileCallback);
 					if (file_exists($fileDataRedir) &&
 						(strlen($localURLredir = trim(local_file_get_contents($fileDataRedir))) > 0)) {

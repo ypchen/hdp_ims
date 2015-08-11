@@ -2,12 +2,12 @@
 	$itemXML   = '';
 
 	$sites = array(
-		array('prefs.set_cc',
-			'設定: 字幕', $myBaseName,
-			'取消或設定: 嘗試載入順序 (YouTube)、字型大小 (YouTube, TED)、字幕顏色 (YouTube, TED)'),
 		array('prefs.set_resolution',
 			'設定: 影片解析度之喜好順序', $myBaseName,
 			'取消本機設定或設定影片解析度之喜好順序 (YouTube, Dailymotion, 飛驢)'),
+		array('prefs.set_cc',
+			'設定: 字幕', $myBaseName,
+			'取消或設定: 嘗試載入順序 (YouTube)、字型大小 (YouTube, TED)、字幕顏色 (YouTube, TED)'),
 		array('prefs.set_input',
 			'設定: 輸入方式', $myBaseName,
 			'設定輸入方式 (各需輸入功能處)'),
