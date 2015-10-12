@@ -807,7 +807,7 @@
 
 		$mapRes = array('37' => '1080', '22' => '720', '35' => '480', '18' => '360', '34' => '360', '5' => '240');
 
-		if (strpos($html, '"error":{') === false) {
+		if (strpos($html, '"status_code":') === false) {
 			if (strpos($html, '{"type":"video\/mp4",') !== false) {
 				foreach ($formats as $format) {
 					$urlTag = '"' . $mapRes[$format] . '":[{"type":"video\/mp4","url":"';
