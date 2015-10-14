@@ -4,7 +4,7 @@
 	include('05_check.file_contents.inc');
 
 	$title = trim(str_between($html, '<h3>', '</h3>'));
-	$title = convertUnicodePoints($title);
+	$title = str_replace('"', '＂', convertUnicodePoints($title));
 
 	$vidSources = explode(' data-data=', $html);
 	if (count($vidSources) >= 2) {
