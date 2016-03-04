@@ -3,10 +3,10 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	if (strpos($html, '<span>End</span>') !== false)
+	if (strpos($html, ' class="next">NEXT') === false)
 		$pageMax = $page;
 
-	$videos = explode('<div class="video">', ($htmlToExplode = $html));
+	$videos = explode('<!-- item -->', ($htmlToExplode = $html));
 	unset($videos[0]);
 	$videos = array_values($videos);
 

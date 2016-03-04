@@ -1,9 +1,18 @@
 <?php
 	$sortedVideos = array();
 
+	// 0: show; 1: drama
+	$type = 1;
+	if (strcmp($myBaseName, 'maplestage.show') == 0) {
+		$type = 0;
+	}
+
 	$siteURLprefix = 'http://maplestage.com';
 	foreach($videos as $video) {
-		$title = trim(str_between($video, '">', '</'));
+		if ($type == 0)
+			$title = trim(str_between($video, 'href="/show/', '/">'));
+		else
+			$title = trim(str_between($video, 'href="/drama/', '/">'));
 		$title = convertUnicodePoints($title);
 		$data  = '';
 		$link  = trim(str_between($video, ' href="', '"'));
@@ -23,11 +32,10 @@
 		);
 	}
 
-	if (strcmp($myBaseName, 'maplestage.show') == 0) {
+	if ($type == 0) {
 		usort($sortedVideos, "yp_cmp_videos_maplestage_show");
 	}
 	else {
-//	else if (strcmp($myBaseName, 'maplestage.drama') == 0) {
 		usort($sortedVideos, "yp_cmp_videos_maplestage_drama");
 	}
 

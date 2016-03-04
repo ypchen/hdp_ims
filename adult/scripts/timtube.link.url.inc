@@ -3,7 +3,13 @@
 	include('05_check.file_contents.inc');
 
 	$link = trim(str_between($html, '<iframe src="', '"'));
-	if (strpos($link, 'updatetube.com') !== false) {
+	if (strpos($link, 'redtube.com') !== false) {
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$link = trim(str_between($html, '<source src="', '"'));
+	}
+	else if (strpos($link, 'updatetube.com') !== false) {
 		$link = 'http://www.updatetube.com/player/embed.xml?video_id=' . trim(str_between($link, '/embed/', '/'));
 		$html = yp_file_get_contents($link);
 		include('05_check.file_contents.inc');

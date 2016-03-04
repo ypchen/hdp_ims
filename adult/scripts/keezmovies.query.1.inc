@@ -6,7 +6,7 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	if (strpos($html, '<li class="next" id="paginator_next">') === false)
+	if (strpos($html, '<li id="paginator_next">') === false)
 		$pageMax = $page;
 
 	$videos = explode("id='video_", ($htmlToExplode = $html));
