@@ -7,17 +7,15 @@
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, ' src="', '"'));
-		$dataA  = explode('<div class="video-cont-wrapper">', $video);
+		$image  = trim(str_between($video, 'src="', '"'));
 		$note   = array();
 		$note[] = $caption_length . ': ' .
-					trim(str_between($video, '<strong>', '</strong>'));
+					trim(str_between($video, '<div class="video_duration">', '</div>'));
 		$note[] = $caption_eval . ': ' .
-					trim(str_between($video, 'vote-percentage">', '</div>'));
+					trim(str_between($video, '<span class="float-left">', '</span>'));
 		$note[] = $caption_view . ': ' .
-					trim(str_between($dataA[2], '<div class="video-right-text float-right">', ' views'));
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($dataA[3], '<div class="video-right-text float-right">', '</div>'));
+					trim(str_between($video, '<div class="video_views">', '</div>'));
+		$note[] = '';
 
 		$clickPlay = 'no';
 		include('04_query.items.link.inc');

@@ -1,23 +1,17 @@
 <?php
-	require('../../common/Aes.class.php');
-	require('../../common/AesCtr.class.php');
+	// Redirect to the local youtube.video.php because of IP locking
+	$src  = 'Tube8';
 
-	$html = yp_file_get_contents($link);
-	include('05_check.file_contents.inc');
-
-	$link = trim(str_replace('\/', '/', str_between($html, '"video_url":"', '"')));
-
-	$encrypted = trim(str_between($html, '"encrypted":', ','));
-	if (strcmp($encrypted, 'true') == 0) {
-		$key  = trim(str_replace('\/', '/', str_between($html, '"video_title":"', '"')));
-		$link = trim(urldecode(AesCtr::decrypt($link, $key, 256)));
-	}
-
-	$link = str_replace('&', '&amp;', $link);
-	include('05_check.link.inc');
-
+	$link =
+		$localhostYoutubeVideo . '?query=site_tube8' .
+			'&amp;cc_prefs='   . urlencode($videoCCPrefs) .
+			'&amp;fmt_prefs='  . urlencode($vdeoFmtPrefs) .
+			'&amp;yv_rmt_src=' . urlencode($youtubeVideoRemoteSource) .
+			'&amp;actual_src=' . urlencode($src) .
+			'&amp;link='       . urlencode($link);
 	$links = array($link);
 	$titles = array($title);
-
+			
 	$itemTotal = count($links);
+	include('05_check.base.inc');
 ?>

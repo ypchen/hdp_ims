@@ -3,7 +3,11 @@
 	include('05_check.file_contents.inc');
 
 	$link = '';
-	if (strpos($html, '<source src="') !== false) {
+	if (strpos($html, '"video_url":"') !== false) {
+		$link = trim(urldecode(str_between($html, '"video_url":"', '"')));
+		$link = str_replace('\/', '/', $link);
+	}
+	else if (strpos($html, '<source src="') !== false) {
 		$link = trim(urldecode(str_between($html, '<source src="', '"')));
 	}
 	else if (strpos($html, '<iframe id="embedPlayer"') !== false) {
@@ -13,6 +17,7 @@
 		include('05_check.file_contents.inc');
 
 		$separators = array(
+			array('<source src="', '"'),
 			array(".video_url = '", "'"),
 			array(".cdnPath720         = '", "'"),
 			array(".cdnPath480         = '", "'"),
@@ -26,6 +31,8 @@
 		}
 		if (strpos($link, '://') === false)
 			$link = urldecode($link);
+		if (strpos($link, '//') == 0)
+			$link = 'http:' . $link;
 	}
 	$link = str_replace('&', '&amp;', $link);
 	include('05_check.link.inc');

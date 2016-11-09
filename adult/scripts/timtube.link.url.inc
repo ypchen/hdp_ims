@@ -3,7 +3,23 @@
 	include('05_check.file_contents.inc');
 
 	$link = trim(str_between($html, '<iframe src="', '"'));
-	if (strpos($link, 'redtube.com') !== false) {
+	if (strpos($link, 'youporn.com') !== false) {
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$link = trim(str_between($html, "720: '", "',"));
+		if (strlen($link) <= 0)
+			$link = trim(str_between($html, "480: '", "',"));
+		if (strlen($link) <= 0)
+			$link = trim(str_between($html, "240: '", "',"));
+	}
+	else if (strpos($link, 'alotporn.com') !== false) {
+		$html = yp_file_get_contents($link);
+		include('05_check.file_contents.inc');
+
+		$link = trim(str_between($html, "video_url: '", "',"));
+	}
+	else if (strpos($link, 'redtube.com') !== false) {
 		$html = yp_file_get_contents($link);
 		include('05_check.file_contents.inc');
 

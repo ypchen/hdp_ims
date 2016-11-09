@@ -27,7 +27,6 @@
 		array('netstartv',			'众遥电视　 (原网星、不卡)',				'※ 需安裝 youtube.video.php'),
 		array('maplestage',			'綜藝戲劇　 (楓林網)',						'※ 需安裝 youtube.video.php'),
 		array('sugoideas',			'綜藝戲劇　 (sugoideas)',					'※ 需安裝 youtube.video.php'),
-		array('ck101',				'卡提諾影音 (ck101)',						'※ 需安裝 youtube.video.php'),
 		array('ted',				'TED Talks on TED / YouTube / podcast',		'※ 需安裝 youtube.video.php'),
 		array('youtube__v3',		'YouTube 帳戶功能',							'※ 需安裝 youtube.video.php　　 ※ 需設妥 YouTube 帳戶相關資料'),
 		array('prefs',				'字幕、解析度、輸入方式設定',				'字幕: YouTube, TED　　　　　　解析度: YouTube, DM, 飛驢　　　輸入方式: 各需輸入功能處'),

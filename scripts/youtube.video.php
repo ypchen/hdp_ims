@@ -808,14 +808,21 @@
 		$mapRes = array('37' => '1080', '22' => '720', '35' => '480', '18' => '360', '34' => '360', '5' => '240');
 
 		if (strpos($html, '"status_code":') === false) {
-			if (strpos($html, '{"type":"video\/mp4",') !== false) {
-				foreach ($formats as $format) {
-					$urlTag = '"' . $mapRes[$format] . '":[{"type":"video\/mp4","url":"';
-					if (strlen($link = trim(yp_str_between_2_1($html, $urlTag, '"'))) > 0)
-						break;
+			$config = json_decode($jj = '{' . trim(yp_str_between_2_1($html, 'var config = {', '};')) . '}', TRUE);
+			$qualities = $config['metadata']['qualities'];
+			$done = false;
+			foreach ($formats as $format) {
+				if (array_key_exists(($res = intval($mapRes[$format])), $qualities)) {
+					foreach ($qualities[$res] as $item) {
+						if (strcmp($item['type'], 'video/mp4') == 0) {
+							$link = $item['url'];
+							$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
+							$done = true;
+							break;
+						}
+					}
 				}
-				$link = str_replace('\/', '/', $link);
-				$extraInfo = 'H264-' . trim(yp_str_between_2_1($link, 'H264-', '/'));
+				if ($done !== false) break;
 			}
 
 			if (!empty($_GET['actual_src']))
@@ -829,6 +836,49 @@
 
 		$msgArray = json_decode('{"message":"' . yp_str_between_2_1($html, '"message":"', '"') . '"}', true);
 		$msgUnavailable = '[DM] ** ' . $msgArray['message'] . ' **';
+		$videoUnavailable = true;
+		$id = $videoColorBars[$posColorBars ++];
+	}
+	else if (strcmp($id, 'site_tube8') == 0) {
+		// It's a tube8 request
+		// 'link' must be given
+		$html = yp_file_get_contents_3($link = $_GET['link']);
+
+		$msg  = '';
+		if (strpos($html, 'quality_') !== false) {
+			$link = '';
+			$separators = array(
+				array("720p", '"quality_720p":"', '"'),
+				array("480p", '"quality_480p":"', '"'),
+				array("240p", '"quality_240p":"', '"'),
+				array("180p", '"quality_180p":"', '"'),
+			);
+			foreach ($separators as $separator) {
+				$link = trim(yp_str_between_2_1($html, $separator[1], $separator[2]));
+				if (!empty($link)) {
+					$extraInfo = $separator[0];
+					break;
+				}
+			}
+
+			if (!empty($link)) {
+				$link = str_replace('\/', '/', $link);
+
+				if (!empty($_GET['actual_src']))
+					$extraInfo .= '; S=' . $_GET['actual_src'];
+				writeExtraInfo_2_4_1($extraInfo);
+
+				// Redirect to the video stream
+				header('Location: ' . $link);
+				return;
+			}
+			else
+				$msg = 'no link';
+		}
+		else
+			$msg = 'no mark';
+
+		$msgUnavailable = '[Tube8] ** ' . $msg . ' **';
 		$videoUnavailable = true;
 		$id = $videoColorBars[$posColorBars ++];
 	}

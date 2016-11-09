@@ -20,8 +20,7 @@
 					trim(str_between($video, '<div class="box_left">', '<br'));
 		$note[] = $caption_view . ': ' .
 					$dataB[0];
-		$note[] = $caption_publish . ': ' .
-					trim(str_between($dataA[3], '/>', '</div>'));
+		$note[] = '';
 		$note[] = '';
 
 		$clickPlay = 'no';

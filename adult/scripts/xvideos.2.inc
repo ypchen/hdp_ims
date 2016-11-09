@@ -5,10 +5,10 @@
 	if ($pass_check) {
 		$siteURLprefix = 'http://www.xvideos.com';
 		foreach($videos as $video) {
-			$title = trim(str_between($video, '">', '</a>'));
+			$title = trim(str_between($video, '</span>', '</a>'));
 			$title = convertUnicodePoints($title);
 			$data  = '';
-			$link  = $siteURLprefix . trim(str_between($video, 'href="', '"'));
+			$link  = $siteURLprefix . trim(str_between($video, '<a href="', '"'));
 			$image = '';
 			$note  = '';
 			$extra = '';

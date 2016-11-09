@@ -1,11 +1,13 @@
 <?php
-	$link = $search = 'http://www.xvideos.com';
+	$link = $search = 'http://www.xvideos.com/porn/japanese';
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
-	$htmlBody = explode('<div id="categories"', $html);
+	$htmlBody = explode('<div class="main-categories"', $html);
+	$htmlBody2 = explode('</ul>', $htmlBody[1]);
 
-	$videos = explode('<li>', ($htmlToExplode = $htmlBody[1]));
+	$videos = explode('<li>', ($htmlToExplode = $htmlBody2[0]));
+	unset($videos[count($videos)-1]);
 	unset($videos[0]);
 	$videos = array_values($videos);
 

@@ -12,7 +12,7 @@
 			array('en',		'TED Talks 英文字幕', '',			'提供英文字幕的 TED Talks'),
 		);
 
-		$siteURLprefix = 'http://www.ted.com/talks/browse';
+		$siteURLprefix = 'http://www.ted.com/talks';
 		foreach ($videos as $video) {
 			$title  = $video[1];
 			$data   = '';

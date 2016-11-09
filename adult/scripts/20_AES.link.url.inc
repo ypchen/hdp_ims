@@ -5,6 +5,8 @@
 	$html = yp_file_get_contents($link);
 	include('05_check.file_contents.inc');
 
+// Apparently, this file is no longer used.
+
 	$separators = array(
 		// keezmovies -- obsolete since Feb. 5, 2015
 //		array('&amp;video_url=', '',
@@ -12,12 +14,12 @@
 //				array('&amp;video_url='), '&amp;',
 //				'&amp;encrypted=', '"',
 //				'&amp;video_title=', '&amp;'),
-		// pornhub
-		array('http://www.pornhub.com/view_video.php?viewkey=', '"',
-				false,
-				array('"quality_480p":"', '"quality_240p":"', '"quality_180p":"'), '"',
-				'"encrypted":', ',',
-				'"video_title":"', '"')
+		// pornhub -- obsolete since Oct. 27, 2016
+//		array('http://www.pornhub.com/view_video.php?viewkey=', '"',
+//				false,
+//				array('"quality_480p":"', '"quality_240p":"', '"quality_180p":"'), '"',
+//				'"encrypted":', ',',
+//				'"video_title":"', '"')
 	);
 
 	$link = '';

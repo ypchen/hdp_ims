@@ -7,7 +7,7 @@
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
-		$image  = trim(str_between($video, ' data-mediumthumb="', '"'));
+		$image  = trim(str_between($video, 'data-mediumthumb="', '"'));
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					trim(str_between($video, '<var class="duration">', '</var>'));

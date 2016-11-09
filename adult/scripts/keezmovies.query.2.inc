@@ -2,12 +2,14 @@
 	$siteURLprefix = 'http://www.keezmovies.com';
 	foreach($videos as $video) {
 
-		$link  = $siteURLprefix . trim(str_between($video, 'href="', '"'));
+		$link  = trim(str_between($video, 'href="', '"'));
 		$title = trim(str_between($video, 'title="', '"'));
 		$title = convertUnicodePoints($title);
 		$extra = '';
 
 		$image  = trim(str_between($video, 'data-srcdata="', '"'));
+		if (strpos($image, '//') == 0)
+			$image = 'http:' . $image;
 		$note   = array();
 		$note[] = $caption_length . ': ' .
 					trim(str_between(str_between($video, 'class="vd_dr">', '</div>'), '<span>', '</span>'));

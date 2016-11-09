@@ -26,43 +26,14 @@
 		A. 眾遙電視 (不卡點播、網星電視)
 		B. 楓林網
 		C. sugoideas
-		D. 卡提諾影音 (ck101)
-		E. TED Talks on TED / YouTube / podcast
-		F. YouTube 帳戶功能 (YouTube Data API v3)
+		D. TED Talks on TED / YouTube / podcast
+		E. YouTube 帳戶功能 (YouTube Data API v3)
 			個人清單建立與播放、YouTube 搜索
-		G. 台灣蘋果動新聞
-		H. CNN 影音 podcast
-		I. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
-		J. 近三十個成人影片網站
+		F. 台灣蘋果動新聞
+		G. CNN 影音 podcast
+		H. IMS 搜索: 以本機 hdp_input 或播放機機內建或線上 hdp_input 搭配 HDPfans/HAOIMS 進行搜索
+		I. 成人影片網站
 	3. 兩種層級搭配 (01_base 和 02_query) 可做出數種不同觀看流程
-		A. 眾遙電視 (不卡點播、網星電視)
-				01 -> 02 -> 02 -> 播放
-		B. 楓林網
-			a. 每日熱門、最新節目
-				01 -> 02 -> 播放
-			b. 綜藝節目、偶像戲劇
-				01 -> 02 -> 02 -> 播放
-		C. sugoideas
-				01 -> 02 -> 02 -> 播放
-		D. 卡提諾影音 (ck101)
-				01 -> 02 -> 02 -> 播放
-		E. TED Talks on TED / YouTube / podcast
-			a. TED Talks on TED / YouTube
-				01 -> 02 -> 播放
-			b. podcast
-				01 -> podcast
-		F. YouTube 帳戶功能 (YouTube Data API v3)
-				複雜交互叫用流程
-		G. 台灣蘋果動新聞
-				01 -> 01 -> 02 -> 02 -> 播放
-		H. CNN 影音 podcast
-				01 -> podcast
-		I. IMS 搜索
-				01 -> HDPfans/HAOIMS 搜索各大站台
-		J. 近三十個成人影片網站
-				01 -> 01 -> 02 -> 播放
-				01 -> 02 -> 播放
-				01 -> podcast
 	4. 可以播放 YouTube 的搜索結果、頻道、以及公開的播放清單 (YouTube Data API v2)
 	5. 內建歷史自動記錄功能: 最近瀏覽、最近觀看、本地收藏
 	6. 具有當網站錯誤發生時通知管理者進行處理的功能
@@ -106,6 +77,7 @@
 			* 設定輸入方式
 				-- 可將本 IMS 中之輸入方式設定為播放機內建輸入法、hdp_input、或使用者自訂之輸入方式
 	18. [v3.1] 修復使用 curl_youtube 時短缺之選時功能; 利用 curl_youtube 配合 youtube.video.php 支援直播
+	19. [v3.1.2] 楓林網僅支持 back-end 為 youtube 與 dailymotion
 
 使用
 	1. 直接放在本機使用
