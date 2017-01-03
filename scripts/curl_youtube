@@ -36,13 +36,13 @@ got_signal() {
 trap "got_signal" PIPE QUIT TERM
 
 if [ -s "${fileStep}" ]; then
-	currStep=`${progCAT} "${fileStep}"`
+	currStep=`${progCAT} "${fileStep}" 2>/dev/null`
 	if [ "${currStep}" == "1" ]; then
 
 		${progECHO} "2" > "${fileStep}"
 
 		# Redirect to the local agent to obtain the request header
-		callback=`${progCAT} "${fileCallback}"`
+		callback=`${progCAT} "${fileCallback}" 2>/dev/null`
 		${progECHO} "HTTP/1.1 302 Found"
 		${progECHO} "Location: ${callback}"
 		${progECHO} ""
@@ -53,8 +53,8 @@ if [ -s "${fileStep}" ]; then
 
 		${progECHO} "1" > "${fileStep}"
 
-		extraOpt=`${progCAT} "${fileExtraOpt}"`
-		dataURL=`${progCAT} "${fileDataURL}"`
+		extraOpt=`${progCAT} "${fileExtraOpt}" 2>/dev/null`
+		dataURL=`${progCAT} "${fileDataURL}" 2>/dev/null`
 
 		m3u8Test=`${progECHO} "${dataURL}" | ${progGREP} -i "m3u8"`
 		if [ $? -eq 0 ]; then
@@ -84,12 +84,12 @@ if [ -s "${fileStep}" ]; then
 
 						if [ -s "${fileExit}" ]; then
 							${progRM} -f ${filePrefix}.*
-							exit `${progCAT} "${fileExit}"`
+							exit `${progCAT} "${fileExit}" 2>/dev/null`
 						elif [ -s "${filePid}" ]; then
-							pidInFile=`${progCAT} "${filePid}"`
+							pidInFile=`${progCAT} "${filePid}" 2>/dev/null`
 							if [ "${pidInFile}" != "$$" ]; then
-								myTS=`${progCAT} "${fileTimestamp}"`
-								otherTS=`${progCAT} "/tmp/${0}.${pidInFile}.timestamp"`
+								myTS=`${progCAT} "${fileTimestamp}" 2>/dev/null`
+								otherTS=`${progCAT} "/tmp/${0}.${pidInFile}.timestamp" 2>/dev/null`
 								if [ "${myTS}" -le "${otherTS}" ]; then
 									${progRM} -f ${filePrefix}.*
 									exit 0
