@@ -12,7 +12,7 @@
 	}
 	elseif (strpos($html, $mark = 'id="my-video"') !== false) {
 		$parts = explode($mark, $html);
-		$link = trim(urldecode(str_between($parts[1], $mark = 'source src="', '"')));
+		$link = trim(urldecode(str_between($parts[1], $mark = ' src="', '"')));
 	}
 	$link = str_replace('&', '&amp;', $link);
 	include('05_check.link.inc');
